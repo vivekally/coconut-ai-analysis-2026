@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>Coconut AI — An Independent Product Analysis</title>
+<meta name="description" content="An independent, public-source analysis of Coconut AI (coconut.dev): what the product does, how it is built, who it competes with, and what could kill it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A5%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f4f2ed;
+    --surface: #fdfcf9;
+    --ink: #1a1815;
+    --ink-2: #514c44;
+    --muted: #837c71;
+    --line: #e2ded4;
+    --accent: #0f6b4f;
+    --accent-2: #a8622a;
+    --red: #a52222;
+    --amber: #9a6a00;
+    --blue: #2358a8;
+    --wash: #ebe8e0;
+    --code: #f0ede5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121110; --surface: #1b1a18; --ink: #f3f1ec; --ink-2: #bab4a9;
+      --muted: #8b857a; --line: #2e2c28; --accent: #57b593; --accent-2: #d1935c;
+      --red: #e06b6b; --amber: #d9a441; --blue: #6ba4ee; --wash: #211f1c; --code: #232120;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f2ed; --surface: #fdfcf9; --ink: #1a1815; --ink-2: #514c44;
+    --muted: #837c71; --line: #e2ded4; --accent: #0f6b4f; --accent-2: #a8622a;
+    --red: #a52222; --amber: #9a6a00; --blue: #2358a8; --wash: #ebe8e0; --code: #f0ede5;
+  }
+  :root[data-theme="dark"] {
+    --bg: #121110; --surface: #1b1a18; --ink: #f3f1ec; --ink-2: #bab4a9;
+    --muted: #8b857a; --line: #2e2c28; --accent: #57b593; --accent-2: #d1935c;
+    --red: #e06b6b; --amber: #d9a441; --blue: #6ba4ee; --wash: #211f1c; --code: #232120;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-size: 17px; line-height: 1.65;
+    -webkit-text-size-adjust: 100%;
+  }
+  .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .mono, .eyebrow, .chip, .meta, .ticker, .stat, .tag, .fig-note, .kicker, .lbl {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2.5px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .prose { max-width: 74ch; }
+
+  /* Masthead */
+  .masthead { background: var(--surface); border-bottom: 1px solid var(--line); padding: 40px 0 0; }
+  .mast-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 18px; }
+  .themebtn {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px; letter-spacing: 0.06em; color: var(--ink-2); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer;
+    white-space: nowrap; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .themebtn:hover { color: var(--ink); border-color: var(--muted); }
+  h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800; letter-spacing: -0.022em; line-height: 1.05;
+    font-size: clamp(36px, 5.6vw, 58px); margin: 0 0 20px; max-width: 20ch; text-wrap: balance;
+  }
+  .dek { font-size: 20px; line-height: 1.55; color: var(--ink-2); max-width: 64ch; margin: 0 0 30px; }
+  .ticker {
+    display: flex; flex-wrap: wrap; gap: 10px 30px; font-size: 12.5px; color: var(--ink-2);
+    letter-spacing: 0.02em; padding: 16px 0 22px; border-top: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  .ticker b { color: var(--ink); font-weight: 600; }
+  .band { display: flex; height: 5px; }
+  .band span { flex: 1; }
+
+  /* Tabs */
+  .tabs { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .tabs-in { display: flex; flex-wrap: nowrap; gap: 0 4px; overflow-x: auto; scrollbar-width: none; }
+  .tabs-in::-webkit-scrollbar { display: none; }
+  .tabs a {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none;
+    color: var(--ink-2); padding: 13px 12px 11px; border-bottom: 2px solid transparent; white-space: nowrap;
+  }
+  .tabs a:hover { color: var(--ink); }
+  .tabs a[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .tabs a.ext { color: var(--accent-2); }
+
+  main { padding: 44px 0 90px; }
+  [role="tabpanel"][hidden] { display: none; }
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 750; letter-spacing: -0.015em; font-size: clamp(26px, 3.4vw, 36px);
+    margin: 0 0 14px; line-height: 1.15; text-wrap: balance;
+  }
+  h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700; font-size: 20px; margin: 40px 0 10px; letter-spacing: -0.01em;
+  }
+  h4 { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 650; font-size: 16px; margin: 26px 0 6px; }
+  p { margin: 0 0 17px; }
+  .lede { font-size: 19px; color: var(--ink-2); max-width: 68ch; margin-bottom: 26px; }
+  .kicker { font-size: 11.5px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  ul, ol { margin: 0 0 17px; padding-left: 22px; }
+  li { margin-bottom: 7px; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.87em; background: var(--code); padding: 1.5px 5px; border-radius: 3px; }
+
+  /* Components */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; margin: 0 0 18px; }
+  .grid { display: grid; gap: 16px; }
+  @media (min-width: 720px) { .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3,1fr); } }
+  .tag {
+    display: inline-block; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 4px; border: 1px solid var(--line); color: var(--ink-2); background: var(--bg);
+  }
+  .tag.hi { color: var(--red); border-color: color-mix(in srgb, var(--red) 40%, var(--line)); }
+  .tag.med { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 40%, var(--line)); }
+  .tag.ok { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+  .tag.info { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 40%, var(--line)); }
+
+  .callout { border-left: 3px solid var(--accent); background: var(--wash); padding: 16px 20px; margin: 0 0 20px; border-radius: 0 8px 8px 0; }
+  .callout.warn { border-left-color: var(--amber); }
+  .callout.dang { border-left-color: var(--red); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .kicker { color: var(--ink-2); }
+
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin: 0 0 18px; }
+  .tw { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .tw table { margin: 0; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-2);
+    background: var(--wash); position: sticky; top: 0; font-weight: 500;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rank { color: var(--muted); font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+
+  figure { margin: 26px 0; }
+  .fig-note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  .diagram { width: 100%; height: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: block; }
+  .diagram text { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0 0 20px; }
+  .steps li { counter-increment: s; position: relative; padding-left: 44px; margin-bottom: 18px; }
+  .steps li::before {
+    content: counter(s, decimal-leading-zero); position: absolute; left: 0; top: 1px;
+    font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--accent);
+    border: 1px solid var(--line); border-radius: 5px; padding: 3px 7px; background: var(--surface);
+  }
+  .steps b { display: block; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15.5px; }
+
+  .verdict { border: 1px solid var(--line); border-left: 4px solid var(--accent-2); border-radius: 0 10px 10px 0; padding: 20px 24px; background: var(--surface); margin: 26px 0; }
+  .scale { display: flex; gap: 3px; margin: 8px 0 14px; }
+  .scale i { height: 7px; flex: 1; background: var(--line); border-radius: 2px; }
+  .scale i.on { background: var(--red); }
+  .scale i.on.m { background: var(--amber); }
+
+  footer { border-top: 1px solid var(--line); background: var(--surface); padding: 30px 0 44px; font-size: 14px; color: var(--ink-2); }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-bottom: 14px; font-size: 13px; }
+  .srcs { columns: 2; column-gap: 34px; font-size: 13.5px; }
+  @media (max-width: 700px) { .srcs { columns: 1; } }
+  .srcs li { break-inside: avoid; margin-bottom: 6px; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 12px; top: 12px; background: var(--surface); padding: 10px 16px; z-index: 99; border: 1px solid var(--accent); border-radius: 6px; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell">
+    <div class="mast-top">
+      <p class="eyebrow">Independent Product Analysis · Public sources only</p>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">
+        <span class="glyph" id="themeglyph">◐</span><span id="themelabel">Auto</span>
+      </button>
+    </div>
+    <h1>Coconut is betting that context outlives the tool</h1>
+    <p class="dek">
+      Coconut AI sells a shared, governed context layer that every AI tool in an organization
+      draws from. The thesis is sound and unusually well validated. The problem is that
+      roughly a dozen other teams reached it in the same twelve months, one of them is free
+      and written by the president of Y Combinator, and the runtime Coconut is built on
+      belongs to a company that could ship this itself.
+    </p>
+    <div class="ticker">
+      <span><b>Compiled</b> 8 Aug 2026</span>
+      <span><b>Subject</b> Coconut AI Inc. · coconut.dev</span>
+      <span><b>Status</b> Invite-only · v1.0 shipped 3 Jun 2026</span>
+      <span><b>Company age</b> ~12 months</span>
+      <span><b>Competitors mapped</b> 47</span>
+      <span><b>Sourcing</b> Public only</span>
+    </div>
+  </div>
+  <div class="band" aria-hidden="true">
+    <span style="background:var(--accent)"></span>
+    <span style="background:var(--accent-2)"></span>
+    <span style="background:var(--amber)"></span>
+    <span style="background:var(--red)"></span>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="shell tabs-in" role="tablist">
+    <a role="tab" href="#product"  id="t-product"  aria-selected="true"  aria-controls="p-product">Product</a>
+    <a role="tab" href="#arch"     id="t-arch"     aria-selected="false" aria-controls="p-arch">Architecture</a>
+    <a role="tab" href="#flows"    id="t-flows"    aria-selected="false" aria-controls="p-flows">Workflows</a>
+    <a role="tab" href="#rivals"   id="t-rivals"   aria-selected="false" aria-controls="p-rivals">Competitors</a>
+    <a role="tab" href="#threat"   id="t-threat"   aria-selected="false" aria-controls="p-threat">Existential Threat</a>
+    <a role="tab" href="#stack"    id="t-stack"    aria-selected="false" aria-controls="p-stack">Stack Fit</a>
+    <a role="tab" href="#method"   id="t-method"   aria-selected="false" aria-controls="p-method">Method</a>
+    <a class="ext" href="competitors.html">Competitor Database ↗</a>
+  </div>
+</nav>
+
+<main id="main">
+<div class="shell">
+
+<!-- ================= PRODUCT ================= -->
+<section role="tabpanel" id="p-product" aria-labelledby="t-product">
+  <div class="prose">
+    <p class="kicker">01 — The product</p>
+    <h2>What Coconut actually does</h2>
+    <p class="lede">
+      Coconut connects an organization's scattered documents, tools, and undocumented
+      know-how into one living, governed source that any AI tool draws from through a
+      permission-aware MCP connector. It is not a chatbot, not a search box, and not a wiki.
+      It is the layer underneath all three.
+    </p>
+
+    <h3>The problem, stated precisely</h3>
+    <p>
+      Coconut argues organizational AI context fails in three compounding ways, and the
+      framing is worth repeating because it is the sharpest part of the pitch:
+    </p>
+    <ul>
+      <li><b>Fragmented</b> — AI tools do not share context with each other, so every session starts from zero.</li>
+      <li><b>Stale</b> — context goes out of date the moment things change, so AI works from last month's reality.</li>
+      <li><b>Inconsistent</b> — without a shared source, output varies across every tool, team, and session.</li>
+    </ul>
+    <p>
+      The distinction Coconut draws against enterprise search is the crispest sentence on
+      the site: <i>search helps people find information; a context layer gives AI the
+      knowledge to act on it.</i> That is a real difference, and it is the argument that has
+      to survive contact with Glean.
+    </p>
+  </div>
+
+  <h3>The five layers</h3>
+  <p class="prose">
+    Context is organized into a fixed taxonomy running from stable facts to live state.
+    This is the most opinionated thing about the product and the thing most likely to be
+    either its moat or its onboarding tax.
+  </p>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:34px">#</th><th style="width:150px">Layer</th><th>What it holds</th><th style="width:30%">Investor-firm example</th></tr></thead>
+      <tbody>
+        <tr><td class="rank">01</td><td><b>Identity</b></td><td>Who you are and what you are trying to do — mission, goals, OKRs</td><td>Fund thesis, mandate, investment criteria</td></tr>
+        <tr><td class="rank">02</td><td><b>Domain</b></td><td>What you work on and the language around it — product, segments, competitors</td><td>Focus areas, markets, portfolio, live deals</td></tr>
+        <tr><td class="rank">03</td><td><b>Process</b></td><td>How work gets done — templates, frameworks, checklists</td><td>Sourcing, diligence, the IC process</td></tr>
+        <tr><td class="rank">04</td><td><b>Relationships</b></td><td>The human layer — stakeholder maps, who owns what, landmines</td><td>Founders, co-investors, LPs, network</td></tr>
+        <tr><td class="rank">05</td><td><b>State</b></td><td>The living layer — current initiatives, recent decisions, open questions, metrics</td><td>Same</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn prose">
+    <p class="kicker">Naming conflict on Coconut's own site</p>
+    <p>
+      The <a href="https://www.coconut.dev/product/platform">platform page</a> calls layer 02
+      <b>Domain</b>. The <a href="https://www.coconut.dev/faq">FAQ</a> still calls it
+      <b>Product</b>. Both were live on 8 August 2026. Prior research — including the
+      Notion brief — carried "Product" forward. For a company whose entire pitch is that
+      inconsistent context produces inconsistent answers, having two names for the same
+      layer on two pages of its own marketing site is the kind of detail a sharp
+      prospect will notice.
+    </p>
+  </div>
+
+  <div class="prose">
+    <h3>What is genuinely differentiated</h3>
+    <p>
+      Three things hold up under scrutiny, and none of them is the five-layer taxonomy.
+    </p>
+  </div>
+  <div class="grid g3">
+    <div class="card">
+      <p class="kicker">Metadata as a query surface</p>
+      <p style="font-size:15px;margin:0">
+        Every page carries typed key-value metadata — scores, stages, dates, owners, sources —
+        that stays queryable across a space. "Every deal in diligence with conviction above
+        0.7, ranked" becomes one query instead of a spreadsheet someone re-keys. Prose carries
+        judgment, metadata carries the facts that churn.
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker">Lineage, not overwrite</p>
+      <p style="font-size:15px;margin:0">
+        When a decision changes, the previous version is <i>superseded, not overwritten</i>.
+        Every page is versioned, any two versions diff, and rollback is one step. That is a
+        real governance primitive, not a marketing word.
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker">Space agents as principals</p>
+      <p style="font-size:15px;margin:0">
+        Each space has a dedicated agent with standing instructions that runs on a schedule —
+        folding transcripts into memos, appending sources, flagging stale coverage. It is
+        treated as a permissioned principal: read-only outside explicit grants, every run
+        recorded.
+      </p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h3>What is claimed but not yet shipped</h3>
+    <div class="callout dang">
+      <p class="kicker">Marked "coming soon" on the platform page</p>
+      <p>
+        <b>Propose-then-publish review.</b> The review-and-approval workflow is the load-bearing
+        beam of the governance pitch — tiered propagation where low-risk updates flow
+        automatically and high-impact changes require confirmation. The FAQ describes it in the
+        present tense. The platform page labels it <b>Coming soon</b>.
+      </p>
+      <p>
+        Governance is the wedge Coconut has chosen against both the free open-source option and
+        the platform incumbents. Shipping the rest of it is the highest-leverage thing on the
+        roadmap.
+      </p>
+    </div>
+
+    <h3>Pricing and access</h3>
+    <p>
+      Three contact-sales tiers, no public figures. <b>Team</b> for a first pilot,
+      <b>Company</b> for multi-team workspaces, <b>Enterprise</b> for org-wide rollout with
+      SSO/SCIM and procurement support. Access is still invite-only and demo-gated as of
+      8 August 2026; the docs site says so on its front page.
+    </p>
+    <p class="fig-note">
+      Prior research recorded these tiers as Starter / Growth / Enterprise. They are now
+      Team / Company / Enterprise. Small, but it dates every document that still says otherwise.
+    </p>
+
+    <h3>Security posture</h3>
+    <p>
+      AWS, AES-256 at rest, TLS 1.2+ in transit, RBAC, MFA, least privilege, audit logging,
+      regular penetration testing. Three deployment models: multi-tenant SaaS, single-tenant
+      hosted, and self-hosted in your own environment.
+    </p>
+    <div class="callout warn">
+      <p class="kicker">The gap an enterprise buyer will find in minute one</p>
+      <p>
+        <b>No SOC 2 claim appears anywhere on the public site.</b> Not on the security page, not
+        in the FAQ. The language is "assurance artifacts available to customers under NDA."
+        Meanwhile Dust advertises SOC 2 Type II and GDPR, and Mem0 advertises SOC 2 Type II —
+        both smaller-scoped products. For a company selling governance to regulated buyers,
+        an unstated certification status is read as an absent one.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section role="tabpanel" id="p-arch" aria-labelledby="t-arch" hidden>
+  <div class="prose">
+    <p class="kicker">02 — Architecture</p>
+    <h2>A context layer wrapped around a coding agent</h2>
+    <p class="lede">
+      The published architecture diagrams in circulation — including the one in the Notion
+      brief — describe Coconut as connectors feeding a knowledge index feeding a context
+      layer. That is accurate but incomplete, and the omission matters. Reading the API
+      reference and the skills documentation changes the picture.
+    </p>
+
+    <div class="callout">
+      <p class="kicker">The finding that reframes everything else</p>
+      <p>
+        Per Coconut's own <a href="https://docs.coconut.dev/integrations/skills">skills documentation</a>:
+        a Coconut skill is a <code>SKILL.md</code> file that runs on a Coconut instance —
+        <b>"a VM with the <code>nut</code> CLI installed and a <code>.nut/</code> directory for
+        state,"</b> where <b>"Claude Code (or any equivalent agent loop) on the instance reads
+        the SKILL.md and executes <code>nut</code> subcommands."</b>
+      </p>
+      <p>
+        A "Coconut" is not a database row. It is a provisioned virtual machine running an
+        agent loop. That explains the otherwise puzzling API surface — full git operations
+        including worktrees and branches, interactive terminal sessions over WebSocket, code
+        sessions, image/audio/video generation. Coconut is a context layer <i>and</i> an agent
+        execution environment, sold as the former.
+      </p>
+    </div>
+  </div>
+
+  <figure>
+    <svg class="diagram" viewBox="0 0 1020 560" role="img" aria-labelledby="archtitle archdesc">
+      <title id="archtitle">Coconut AI system architecture</title>
+      <desc id="archdesc">Source systems feed connectors into per-organization Coconut instances. Each instance is a virtual machine holding a git-versioned .nut directory, running an agent loop built on Claude Code alongside a governance layer, and exposing an access layer of REST, WebSocket, MCP and A2A endpoints. That access layer serves client surfaces and an OAuth-scoped MCP server, which in turn serves third-party AI tools.</desc>
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <g fill="none" stroke="currentColor" color="var(--muted)" stroke-width="1.3" marker-end="url(#ar)" opacity="0.7">
+        <path d="M180,190 H211"/>
+        <path d="M330,190 H352 V135 H375"/>
+        <path d="M472,196 V212"/>
+        <path d="M668,196 V212"/>
+        <path d="M472,316 V332"/>
+        <path d="M668,316 V332"/>
+        <path d="M759,360 H784 V136 H802"/>
+        <path d="M759,404 H796 V265 H802"/>
+        <path d="M903,308 V328"/>
+      </g>
+
+      <g>
+        <rect x="20" y="120" width="160" height="140" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="100" y="143" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SOURCES</text>
+        <text x="100" y="167" text-anchor="middle" font-size="12" fill="var(--ink)">Slack · Drive</text>
+        <text x="100" y="187" text-anchor="middle" font-size="12" fill="var(--ink)">Notion · HubSpot</text>
+        <text x="100" y="207" text-anchor="middle" font-size="12" fill="var(--ink)">Linear · Asana</text>
+        <text x="100" y="227" text-anchor="middle" font-size="12" fill="var(--ink)">Box · Fireflies</text>
+        <text x="100" y="247" text-anchor="middle" font-size="12" fill="var(--ink)">Git · Email</text>
+      </g>
+
+      <g>
+        <rect x="215" y="150" width="115" height="80" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="272" y="173" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">INGEST</text>
+        <text x="272" y="196" text-anchor="middle" font-size="12" fill="var(--ink)">Connectors</text>
+        <text x="272" y="215" text-anchor="middle" font-size="12" fill="var(--ink)">Scheduled sync</text>
+      </g>
+
+      <rect x="365" y="58" width="410" height="404" rx="12" fill="none" stroke="var(--accent)" stroke-dasharray="5 4" opacity="0.85"/>
+      <text x="570" y="46" text-anchor="middle" font-size="11" fill="var(--accent)" letter-spacing="1.4">A &quot;COCONUT&quot; = ONE VM PER ORG / SPACE</text>
+
+      <g>
+        <rect x="381" y="74" width="378" height="122" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="570" y="96" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">.NUT DIRECTORY — GIT-VERSIONED</text>
+        <text x="570" y="120" text-anchor="middle" font-size="12" fill="var(--ink)">context/ · knowledge/ · skills/ · jobs/</text>
+        <text x="570" y="140" text-anchor="middle" font-size="12" fill="var(--ink)">tasks/ · mcp/ · resources/ · chats/</text>
+        <text x="570" y="160" text-anchor="middle" font-size="12" fill="var(--ink)">config.json</text>
+        <text x="570" y="183" text-anchor="middle" font-size="11.5" fill="var(--accent)">Markdown-first · every page versioned</text>
+      </g>
+
+      <g>
+        <rect x="381" y="212" width="182" height="104" rx="8" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="472" y="234" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">AGENT LOOP</text>
+        <text x="472" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">Claude Code reads</text>
+        <text x="472" y="277" text-anchor="middle" font-size="12" fill="var(--ink)">SKILL.md</text>
+        <text x="472" y="300" text-anchor="middle" font-size="11.5" fill="var(--accent-2)">nut CLI · terminal</text>
+      </g>
+
+      <g>
+        <rect x="577" y="212" width="182" height="104" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="668" y="234" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">GOVERNANCE</text>
+        <text x="668" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">Owners · RBAC</text>
+        <text x="668" y="277" text-anchor="middle" font-size="12" fill="var(--ink)">Lineage · rollback</text>
+        <text x="668" y="300" text-anchor="middle" font-size="11.5" fill="var(--amber)">Review: coming soon</text>
+      </g>
+
+      <g>
+        <rect x="381" y="332" width="378" height="104" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="570" y="355" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">ACCESS LAYER</text>
+        <text x="570" y="379" text-anchor="middle" font-size="12" fill="var(--ink)">REST /api/v1 · WebSocket · MCP · A2A card</text>
+        <text x="570" y="404" text-anchor="middle" font-size="11.5" fill="var(--muted)">scopes: tasks / knowledge / context / jobs / skills</text>
+      </g>
+
+      <g>
+        <rect x="802" y="74" width="198" height="128" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="901" y="97" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SURFACES</text>
+        <text x="901" y="121" text-anchor="middle" font-size="12" fill="var(--ink)">Studio · Control Plane</text>
+        <text x="901" y="141" text-anchor="middle" font-size="12" fill="var(--ink)">VS Code / Cursor ext</text>
+        <text x="901" y="161" text-anchor="middle" font-size="12" fill="var(--ink)">CLI: nut · iOS app</text>
+        <text x="901" y="184" text-anchor="middle" font-size="11.5" fill="var(--muted)">Clerk auth / orgs</text>
+      </g>
+
+      <g>
+        <rect x="802" y="226" width="198" height="82" rx="8" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="901" y="249" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">MCP SERVER</text>
+        <text x="901" y="272" text-anchor="middle" font-size="12" fill="var(--ink)">app.coconut.dev/mcp</text>
+        <text x="901" y="294" text-anchor="middle" font-size="11.5" fill="var(--accent)">26 tools · OAuth scoped</text>
+      </g>
+
+      <g>
+        <rect x="802" y="328" width="198" height="134" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="901" y="351" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">AI TOOLS · MODEL-AGNOSTIC</text>
+        <text x="901" y="376" text-anchor="middle" font-size="12" fill="var(--ink)">Claude · ChatGPT</text>
+        <text x="901" y="397" text-anchor="middle" font-size="12" fill="var(--ink)">Copilot · Gemini</text>
+        <text x="901" y="418" text-anchor="middle" font-size="12" fill="var(--ink)">Cursor</text>
+        <text x="901" y="443" text-anchor="middle" font-size="11.5" fill="var(--muted)">any MCP client</text>
+      </g>
+
+      <g>
+        <rect x="20" y="488" width="980" height="52" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="510" y="510" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">INFRASTRUCTURE</text>
+        <text x="510" y="530" text-anchor="middle" font-size="12" fill="var(--ink)">AWS · AES-256 at rest · TLS 1.2+ · RBAC + MFA · audit logging · managed SaaS / single-tenant hosted / self-hosted</text>
+      </g>
+    </svg>
+    <figcaption class="fig-note">
+      Reconstructed from Coconut's public API reference, <code>.nut</code> directory
+      specification, connectors documentation, skills documentation, and security page,
+      read 8 August 2026. The VM-and-agent-loop detail comes from the skills docs and is
+      the material correction to previously circulated diagrams. Internal retrieval
+      mechanics — indexing method, ranking, the canonical store — remain undocumented and
+      are not drawn here.
+    </figcaption>
+  </figure>
+
+  <div class="prose">
+    <h3>The distribution surface</h3>
+    <p>
+      The MCP server at <code>app.coconut.dev/mcp</code> exposes 26 tools gated by
+      granular OAuth scopes — <code>coconuts:read</code>, <code>tasks:write</code>,
+      <code>knowledge:read</code>, <code>context:read</code>, <code>jobs:write</code>,
+      <code>skills:write</code> and others. Scope-level authorization is genuinely more
+      careful than most MCP servers ship, and it is the concrete thing behind the
+      "permission-aware" claim. Skill write operations are restricted to organization
+      admins, with organizations managed through Clerk.
+    </p>
+    <p>
+      Coconut also publishes an <b>A2A agent card</b> endpoint. That is a bet on
+      agent-to-agent interoperability beyond MCP, and neither prior research report
+      noticed it.
+    </p>
+
+    <h3>Three architectural risks</h3>
+    <ol>
+      <li>
+        <b>A VM per organization is a heavy unit of deployment.</b> It buys strong isolation
+        and a credible self-hosted story. It also means per-tenant cost scales with tenants
+        rather than usage, which is an uncomfortable shape for a seat-priced product and
+        makes a free tier hard to offer against a competitor whose unit is a database row.
+      </li>
+      <li>
+        <b>The agent loop is Claude Code.</b> Documented as "Claude Code (or any equivalent
+        agent loop)," and the AI chat endpoint defaults to Claude Sonnet 4.5 via the Vercel
+        AI SDK. "Model-agnostic" describes what Coconut <i>distributes to</i>, not what it
+        <i>runs on</i>. Those are different claims and the marketing does not distinguish them.
+      </li>
+      <li>
+        <b>Retrieval is undocumented.</b> Coconut says knowledge is "indexed and available for
+        retrieval" and stops there. Hyper publicly describes query expansion, reciprocal rank
+        fusion over embeddings and Postgres full-text search, and a ZeroEntropy reranker. A
+        technical evaluator comparing the two will notice which one is willing to show its work.
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= WORKFLOWS ================= -->
+<section role="tabpanel" id="p-flows" aria-labelledby="t-flows" hidden>
+  <div class="prose">
+    <p class="kicker">03 — End-user workflows</p>
+    <h2>Four workflows, and only one of them is the demo</h2>
+    <p class="lede">
+      Coconut's documentation organizes usage around what it calls <b>loops</b> — recurring,
+      scheduled agent workflows rather than one-off prompts. This is the most concrete
+      articulation of the product and it is buried in the docs rather than on the marketing site.
+    </p>
+
+    <h3>A. Onboarding — the first two weeks</h3>
+    <ol class="steps">
+      <li><b>Request a demo</b> Access is invite-only. There is no self-serve path, so evaluation begins with a 30-minute sales call.</li>
+      <li><b>Bootstrap from templates</b> Coconut builds initial context from templates plus materials you already have. The explicit promise is "no blank screen."</li>
+      <li><b>Connect sources</b> Slack, Google Drive, Notion, HubSpot, Linear, Asana, Box, Fireflies, Git, email.</li>
+      <li><b>Assign owners</b> Each space gets an owner and role-based access. This is the step that makes the governance story real, and the step most likely to stall.</li>
+      <li><b>Install the MCP connector</b> Added as a custom connector in Claude, ChatGPT, Copilot, or Gemini, with OAuth scopes chosen at grant time.</li>
+      <li><b>Verify grounding</b> Ask a question whose answer you already know and check that every figure traces to a source.</li>
+    </ol>
+
+    <h3>B. Daily use — the drafting loop</h3>
+    <p>
+      A team member asks their normal AI tool for a board deck, a memo, or call prep. The MCP
+      connector performs a permission check, fetches relevant pages across the five layers,
+      and injects them. The output arrives sourced, with each figure traceable. Coconut's own
+      illustration claims a first draft in about 12 minutes.
+    </p>
+    <p>
+      The return path matters more than the draft. When the user finds something wrong, they
+      open a <b>Task</b> — a change proposal against the context layer. An owner reviews and
+      approves, and the change propagates downstream. This is the loop that makes context
+      compound instead of decay, and it is <a href="#product">the part still marked coming soon</a>.
+    </p>
+
+    <h3>C. Background — space agents on a schedule</h3>
+    <p>
+      Each space's agent runs unattended: folding new call transcripts into the right memo,
+      appending the sources it used, refreshing research pages, flagging coverage that has
+      gone stale. Documented recurring loops include:
+    </p>
+    <div class="grid g2">
+      <div class="card">
+        <p class="kicker">Research loops</p>
+        <ul style="margin:0;font-size:15px">
+          <li><b>Daily Research Brief</b> — a fresh read on one topic each morning</li>
+          <li><b>Track a Company</b> — one maintained document per company, product, or person</li>
+          <li><b>Rolling Calendar</b> — what is coming, refreshed every run</li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="kicker">Product &amp; marketing loops</p>
+        <ul style="margin:0;font-size:15px">
+          <li><b>Competitor Intelligence Loop</b> — a weekly read on named competitors</li>
+          <li><b>Product Improvement Loop</b> — one validated proposal per run, or an honest report that nothing cleared the bar</li>
+          <li><b>POV Voice Loop</b> — what your team's distinctive voices actually said, mined weekly</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fig-note">
+      "One validated proposal per run, or an honest report of why nothing cleared the bar" is
+      a notably disciplined default. Most agent products in this category are tuned to always
+      produce output.
+    </p>
+
+    <h3>D. The developer workflow — the hidden second product</h3>
+    <p>
+      <code>nut init</code> creates a git-versioned <code>.nut</code> directory. From there:
+      <code>nut context</code> sets role and memory, <code>nut skill</code> installs packaged
+      behaviors, <code>nut code</code> runs AI-assisted implementation, <code>nut task</code>
+      opens change proposals, and full git operations run through the API — branches,
+      worktrees, commits, diffs, push.
+    </p>
+    <div class="callout">
+      <p class="kicker">Read this way</p>
+      <p>
+        This is not a thin CLI wrapper on a knowledge product. Interactive terminal sessions
+        over WebSocket, git worktree management, code sessions that dispatch to a selected AI
+        agent, and task plan-steps add up to a coding-agent platform sitting inside a context
+        product. The go-to-market points entirely at Product, Ops, VC/PE, and GTM leaders.
+        Either the developer surface is a strategic second act or it is scope that a two-to-ten
+        person team is paying to maintain without a buyer attached to it.
+      </p>
+    </div>
+
+    <h3>Who this is sold to</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th style="width:170px">Segment</th><th>The job Coconut does</th></tr></thead>
+        <tbody>
+          <tr><td><b>Leadership</b></td><td>One grounded source for board prep, synthesis, and in-the-moment questions.</td></tr>
+          <tr><td><b>Investors (VC/PE)</b></td><td>One page per target: the body is a living investment memo, metadata carries stage, conviction score, sources, review dates. The Monday partner list becomes a query instead of a re-keyed spreadsheet. <b>This is the sharpest-fit segment on the site.</b></td></tr>
+          <tr><td><b>Operating functions</b></td><td>Marketing, sales, CS, product, ops, people — campaign briefs, call prep, renewals, specs grounded in current context.</td></tr>
+          <tr><td><b>Developers</b></td><td>CLI, IDE extension, git-versioned context, skills. Real surface area, no named buyer.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMPETITORS ================= -->
+<section role="tabpanel" id="p-rivals" aria-labelledby="t-rivals" hidden>
+  <div class="prose">
+    <p class="kicker">04 — Competitive landscape</p>
+    <h2>The category got named, and then it got crowded</h2>
+    <p class="lede">
+      In its Summer 2026 Request for Startups, Y Combinator formally named this category the
+      <b>Company Brain</b>: a system that pulls knowledge out of fragmented sources, structures
+      it, keeps it current, and turns it into an executable skills file for AI. That is
+      Coconut's pitch, published as an open invitation to build it. At least six funded teams
+      accepted.
+    </p>
+  </div>
+
+  <h3>Top 10 most-funded close competitors</h3>
+  <p class="prose">
+    Ranked by capital raised among companies genuinely contesting "where does organizational
+    knowledge live for AI." Acquired companies are included and marked — being owned by
+    ServiceNow or Workday makes a competitor more dangerous, not less, because it arrives
+    with platform distribution attached.
+  </p>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr><th style="width:34px">#</th><th style="width:150px">Company</th><th style="width:150px">Capital</th><th>Position against Coconut</th><th style="width:96px">Threat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">01</td><td><b>Glean</b></td>
+          <td class="num">$765M raised<br><span style="color:var(--muted)">$7.2B val · $300M ARR</span></td>
+          <td>The comparison every enterprise buyer makes. ARR went ~$100M → $208M (end-2025) → $300M (May 2026), an 89% year-over-year jump on 1,648 employees. Not a slow incumbent — it is compounding faster than most startups in the category, and Glean Agents is closing the "search vs. act" gap Coconut relies on.</td>
+          <td><span class="tag hi">High</span></td>
+        </tr>
+        <tr>
+          <td class="rank">02</td><td><b>Moveworks</b><br><span class="tag info">ServiceNow</span></td>
+          <td class="num">$2.85B exit</td>
+          <td>Closed 15 Dec 2025 after a DOJ second request — the largest acquisition in ServiceNow's history. Read as proof the category exits into platform vendors, and as a credible endgame for Coconut itself.</td>
+          <td><span class="tag med">Medium</span></td>
+        </tr>
+        <tr>
+          <td class="rank">03</td><td><b>Stack Internal</b><br><span class="tag info">Prosus</span></td>
+          <td class="num">$1.8B (2022 acq.)</td>
+          <td>Stack Overflow's private Q&amp;A rebranded as an enterprise knowledge intelligence layer, with an MCP server over <i>verified</i> knowledge for Copilot, ChatGPT, Cursor, and M365. Closest incumbent on Coconut's exact combination of MCP plus governance.</td>
+          <td><span class="tag med">Medium</span></td>
+        </tr>
+        <tr>
+          <td class="rank">04</td><td><b>Capacity</b></td>
+          <td class="num">$155M+ raised</td>
+          <td>Roll-up of knowledge and support tooling, including Starmind's expertise network. Buying the pieces Coconut is building, aimed at a different buyer.</td>
+          <td><span class="tag ok">Low</span></td>
+        </tr>
+        <tr>
+          <td class="rank">05</td><td><b>Contextual AI</b></td>
+          <td class="num">$100M raised</td>
+          <td>Ex-FAIR founders selling the toolkit for teams that would rather build their own context system. Competes for the same budget with the opposite answer.</td>
+          <td><span class="tag ok">Low</span></td>
+        </tr>
+        <tr>
+          <td class="rank">06</td><td><b>DevRev</b></td>
+          <td class="num">$100.8M · $1.15B val</td>
+          <td>AgentOS over a real-time knowledge graph, anchored to support and product workflows rather than org-wide context.</td>
+          <td><span class="tag ok">Low</span></td>
+        </tr>
+        <tr>
+          <td class="rank">07</td><td><b>Guru</b></td>
+          <td class="num">~$68M raised</td>
+          <td>Shipped verification intervals and content ownership years before anyone said "context layer." Coconut's decay signals are the same idea rebuilt for agents. Guru has the install base; Coconut has the agent-native design.</td>
+          <td><span class="tag med">Medium</span></td>
+        </tr>
+        <tr>
+          <td class="rank">08</td><td><b>Dust</b></td>
+          <td class="num">$60M+ raised<br><span style="color:var(--muted)">$40M Series B, May 2026</span></td>
+          <td><b>The most underrated name on this list.</b> Series B led by Abstract and Sequoia with Snowflake Ventures and Datadog. 3,000+ organizations at 70%+ weekly active, 100+ data sources, built-in memory and governance. Dust also made "multiplayer AI" a category term in May 2026 — Coconut's blog adopted the same framing on 31 July 2026.</td>
+          <td><span class="tag hi">High</span></td>
+        </tr>
+        <tr>
+          <td class="rank">09</td><td><b>Shelf.io</b></td>
+          <td class="num">~$60.7M raised</td>
+          <td>Contact-center vertical. Same "stale knowledge is a liability" thesis, different buyer.</td>
+          <td><span class="tag ok">Low</span></td>
+        </tr>
+        <tr>
+          <td class="rank">10</td><td><b>Mem0</b></td>
+          <td class="num">$24.5M raised<br><span style="color:var(--muted)">62,829 GitHub stars</span></td>
+          <td>Named in the AI stack map at Layer 10 as <i>the</i> memory player — the slot Coconut argues it belongs in. Owns developer mindshare for "AI memory" outright, so every technical evaluator starts there.</td>
+          <td><span class="tag med">Medium</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fig-note prose">
+    Capital figures verified 8 August 2026 where marked in the
+    <a href="competitors.html">competitor database</a>. Capacity, Shelf, and DevRev totals
+    come from secondary trackers and are flagged accordingly.
+  </p>
+
+  <div class="prose">
+    <h3>The six that are actually the same product</h3>
+    <p>
+      Funding rank understates the real threat. These teams are building Coconut's architecture,
+      with Coconut's vocabulary, on Coconut's timeline — and most of them launched publicly
+      while Coconut stayed invite-only.
+    </p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:130px">Company</th><th style="width:110px">Batch</th><th>Why it is the same product</th></tr></thead>
+      <tbody>
+        <tr><td><b>GBrain</b></td><td>Open source<br><span style="color:var(--muted)">Garry Tan</span></td><td>Markdown-first, git-versioned, MCP-served, nightly consolidation, multi-user company-brain mode. Free. <b>28,015 stars and 4,102 forks, from a repo created 5 April 2026.</b> Authored by the president of the accelerator funding four of the rows below.</td></tr>
+        <tr><td><b>Hyper</b></td><td>YC P26</td><td>Provenance, staleness tracking, per-user access control, MCP injection on every prompt turn. Reported $1K MRR in 12 days, 50+ teams, paid pilots scoped with Razorpay and Snorkel AI. Publishes its retrieval architecture.</td></tr>
+        <tr><td><b>Cerenovus</b></td><td>YC S26</td><td>Single Markdown knowledge graph from files, PDFs, email, Slack, spreadsheets. Maps the company as a system and <i>infers</i> structure rather than imposing a fixed taxonomy.</td></tr>
+        <tr><td><b>Savant</b></td><td>YC Spring 26</td><td>Captures <i>undocumented procedures</i> and serves them at decision time — the harder, more defensible half of tribal knowledge.</td></tr>
+        <tr><td><b>Memory Store</b></td><td>YC P26</td><td>Self-updating "Briefs" are functionally Coconut's living pages. Founders previously shipped Julep, an open-source agent orchestrator with 7K+ stars.</td></tr>
+        <tr><td><b>Glen</b></td><td>YC S26</td><td>Unified context for agents and humans; distills completed work back into reusable skills. One employee — a directional signal, not yet a threat.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <div class="callout dang">
+      <p class="kicker">The uncomfortable arithmetic</p>
+      <p>
+        GBrain went from repository creation to <b>28,015 stars in four months</b>. Coconut's
+        public GitHub organization, created 28 August 2025, has three repositories and a
+        combined <b>two stars</b>. Those measure different things — one is an open-source
+        project, the other a commercial company's incidental public code — but they measure
+        the same thing to a developer deciding what to try on a Saturday, and that developer
+        is often the person who recommends the tool on Monday.
+      </p>
+    </div>
+
+    <h3>Names to drop from any competitive deck</h3>
+    <p>
+      Prior research included several companies that use "brain," "memory," or "context"
+      language while doing unrelated work: SuperHawk (revenue ops), Ego.ist (consumer
+      identity), HeyClicky (screen tutor), Iris (personal calendar), Stamp (email client).
+      None is an org-wide governed context layer. Including them in a competitive analysis
+      dilutes its credibility.
+    </p>
+    <p>
+      One correction worth making in the other direction: <b>Quivr</b> has 39,393 GitHub stars
+      and has not been pushed since 9 July 2025. It is the best available evidence that stars
+      are not traction and that build-your-own second-brain projects decay — which is
+      ammunition for Coconut's managed pitch, not against it.
+    </p>
+    <p style="margin-top:26px">
+      <a href="competitors.html"><b>→ Search the full 47-company database</b></a>, filterable
+      by tier, with each company's relationship to Coconut and a confidence flag on every entry.
+    </p>
+  </div>
+</section>
+
+<!-- ================= THREAT ================= -->
+<section role="tabpanel" id="p-threat" aria-labelledby="t-threat" hidden>
+  <div class="prose">
+    <p class="kicker">05 — Existential threat</p>
+    <h2>What actually kills this company</h2>
+    <p class="lede">
+      Not Glean. Not the YC cohort. The threats that end Coconut are structural, and two of
+      the three are consequences of decisions already made.
+    </p>
+
+    <h4>Threat 1 — The runtime owns the layer above</h4>
+    <div class="scale" aria-label="Severity: high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+    <p>
+      Coconut instances run Claude Code. Skills ship through the Claude Code plugin
+      marketplace. The AI endpoint defaults to Claude Sonnet 4.5. MCP — the distribution
+      mechanism the entire product depends on — is an Anthropic-authored standard, as is the
+      <code>SKILL.md</code> specification.
+    </p>
+    <p>
+      Anthropic is simultaneously Coconut's execution runtime, its distribution channel, its
+      standards body, and the vendor of a competing product one layer up. Every capability
+      Anthropic adds to Projects, Skills, or Cowork narrows the gap Coconut sells into, and
+      Coconut has no leverage over the roadmap or the pricing. The same applies to OpenAI
+      and Microsoft on the distribution side. This is not a partnership; it is a dependency
+      with a marketing page.
+    </p>
+    <p class="fig-note">
+      Note the asymmetry in the "model-agnostic" claim: Coconut is agnostic about which tool
+      <i>consumes</i> context, but not about what <i>runs</i> its agent loop. Those are
+      different properties and only one of them is defended.
+    </p>
+
+    <h4>Threat 2 — The free option is good, and its author funds the competition</h4>
+    <div class="scale" aria-label="Severity: high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    <p>
+      GBrain is MIT-licensed, Markdown-first, git-versioned, ships as an MCP server, has a
+      multi-user company-brain mode, and reportedly runs a 25-person brain for under $100 a
+      month. It has 28,015 stars four months after creation. It is written by Garry Tan, who
+      is also president and CEO of the accelerator that funded Hyper, Cerenovus, Savant,
+      Memory Store, and Glen.
+    </p>
+    <p>
+      A free, credible, well-distributed baseline does not have to win to hurt. It has to
+      make every paid product justify its delta at the start of every sales conversation.
+      Coconut's honest delta is managed connectors, permission enforcement done for you,
+      deployment options, and someone to call at 2am. That is a real answer — it is the same
+      answer GitLab gives against self-hosted git — but it prices Coconut against the
+      engineering cost of a self-hosted alternative rather than against the value of the
+      context itself. That is a much lower ceiling.
+    </p>
+
+    <h4>Threat 3 — Governance is the wedge, and the wedge is not finished</h4>
+    <div class="scale" aria-label="Severity: medium-high"><i class="on m"></i><i class="on m"></i><i class="on m"></i><i class="on m"></i><i></i><i></i></div>
+    <p>
+      Against platform-native memory, against free open source, and against capture-first
+      tools like Screenpipe, governance is the one defensible position Coconut has chosen.
+      It is the right choice. But propose-then-publish review is marked <b>coming soon</b>,
+      and there is no SOC 2 claim on the public site.
+    </p>
+    <p>
+      Meanwhile the deepest-pocketed competitors are moving onto the same ground: Glean sells
+      a permissions-aware knowledge graph as the governed context layer, Stack Internal ships
+      an MCP server over verified knowledge, and Guru has shipped verification workflows for
+      years. Coconut is defending a hill that better-funded companies are already climbing,
+      with part of its own fortification unbuilt.
+    </p>
+
+    <h4>Threat 4 — Surface area versus headcount</h4>
+    <div class="scale" aria-label="Severity: medium"><i class="on m"></i><i class="on m"></i><i class="on m"></i><i></i><i></i><i></i></div>
+    <p>
+      LinkedIn reports 2–10 employees. The shipped surface is: web Studio, Control Plane,
+      iOS app, VS Code/Cursor extension, CLI, REST API, MCP server, A2A endpoint, connectors
+      for ten-plus systems, an agent runtime, a skills marketplace, a mail system, image,
+      audio and video generation, an interactive terminal, and full git operations including
+      worktrees.
+    </p>
+    <p>
+      Every one of those needs maintenance, security review, and documentation. Some of it —
+      the media generation, the mail system, the terminal — has no obvious connection to the
+      buyer Coconut names on its own solutions pages. In a category where six funded teams
+      are attacking the same wedge, breadth is the expensive way to lose.
+    </p>
+
+    <h4>Threat 5 — The name</h4>
+    <div class="scale" aria-label="Severity: low-medium"><i class="on m"></i><i class="on m"></i><i></i><i></i><i></i><i></i></div>
+    <p>
+      "Coconut" collides with Coconut Software (banking), Coconut tax software, coconut.co
+      (video encoding), and a Meta research paper. The company sits at coconut.dev while the
+      Studio runs at app.coconut.md and the Control Plane at app.coconut.dev. Crunchbase and
+      PitchBook return the wrong companies. For a company that will be researched by
+      procurement teams and journalists, this is a persistent tax on every search.
+    </p>
+
+    <div class="verdict">
+      <p class="kicker">Verdict</p>
+      <p>
+        Coconut is building in a genuinely validated market gap. Your own stack report ranks
+        "Enterprise Context &amp; Data Governance Layer for AI" as a HIGH-rated, venture-scale
+        opportunity with a $5–10B TAM — the #2 opportunity across all tiers — and Coconut's
+        positioning maps onto it almost exactly. The product is real: a shipped 1.0, a
+        complete API, careful OAuth scoping, three deployment models, and a named reference
+        at Kohl's.
+      </p>
+      <p>
+        The concern is not the thesis. It is that being right about a category is worth
+        very little once the category has been named by Y Combinator, seeded with at least
+        six funded teams, given a free reference implementation by YC's president, and
+        entered by a $7.2B incumbent growing 89% year over year. Coconut's remaining edge is
+        governance depth and enterprise readiness — and both are unfinished in exactly the
+        places a buyer checks first.
+      </p>
+      <p style="margin-bottom:0">
+        <b>The three questions worth putting to the founder:</b> what is the plan for the day
+        Anthropic ships governed org context in Cowork; what happens to unit economics when
+        every customer is a VM; and when does propose-then-publish review, plus a SOC 2 report,
+        actually land.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STACK FIT ================= -->
+<section role="tabpanel" id="p-stack" aria-labelledby="t-stack" hidden>
+  <div class="prose">
+    <p class="kicker">06 — Stack map positioning</p>
+    <h2>Where Coconut sits in the maps</h2>
+    <p class="lede">
+      Mapped against
+      <a href="https://vivekally.github.io/ai-stack-report/">The AI Technology Stack</a>
+      (12 layers, silicon to verticals) and
+      <a href="https://vivekally.github.io/ai-robotics-stack-2026/">The Robotics Stack</a>
+      (14 layers, raw material to service).
+    </p>
+
+    <h3>The AI stack — three layers, not one</h3>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:190px">Layer</th><th style="width:104px">Fit</th><th>Reasoning</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>L10 · Middleware &amp; APIs</b><br><span style="color:var(--muted);font-size:12px">Primary</span></td>
+          <td><span class="tag hi">Direct</span></td>
+          <td>
+            Coconut belongs in the <b>MCP servers / connectors</b> sub-layer — which is
+            currently listed in the stack map <b>with no companies named at all</b>. It is
+            the cleanest available candidate to be the first entry. It also touches
+            <b>agent identity / auth</b> via OAuth scope gating and the A2A agent card.
+            The map already names Mem0 and Zep as the memory players here; Coconut competes
+            with both for the same slot with a governance layer they lack.
+          </td>
+        </tr>
+        <tr>
+          <td><b>L09 · Orchestration &amp; Dev Tooling</b><br><span style="color:var(--muted);font-size:12px">Stronger than previously assessed</span></td>
+          <td><span class="tag hi">Direct</span></td>
+          <td>
+            Prior analysis rated this "medium" on the grounds that <code>.nut</code> parallels
+            <code>.cursorrules</code> and <code>CLAUDE.md</code>. The VM-runs-Claude-Code
+            finding makes it stronger than that. Coconut ships skills, jobs, tasks with plan
+            steps, code sessions, interactive terminals, and full git worktree management —
+            the same territory as Claude Code and Cursor in this layer, not merely adjacent to it.
+          </td>
+        </tr>
+        <tr>
+          <td><b>L11 · Application Platforms</b><br><span style="color:var(--muted);font-size:12px">Secondary</span></td>
+          <td><span class="tag med">Partial</span></td>
+          <td>
+            Competes in <b>comms / collab AI</b> alongside Notion AI and Glean, and in
+            <b>agentic work platforms</b> alongside Cowork and Copilot Studio, for the
+            question "where does org knowledge live for AI." Coconut's answer is that it
+            should live in none of them — which is a position in this layer, taken against it.
+          </td>
+        </tr>
+        <tr>
+          <td><b>L05 · Data Infrastructure</b></td>
+          <td><span class="tag ok">Weak</span></td>
+          <td>
+            Not a warehouse and not a vector database. It plays the "data foundation for AI"
+            role one level up, over prose and process rather than rows. The stack map's
+            <b>Enterprise Context Platforms</b> sub-layer is the conceptual home.
+          </td>
+        </tr>
+        <tr>
+          <td><b>L12 · Verticals</b></td>
+          <td><span class="tag ok">Weak</span></td>
+          <td>Coconut enables vertical solutions — the VC/PE motion is the clearest — but is not itself vertical.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <div class="callout">
+      <p class="kicker">The strategic point</p>
+      <p>
+        The stack report identifies "Enterprise Context &amp; Data Governance Layer for AI"
+        as a <b>HIGH</b>-rated, venture-scale opportunity with a <b>$5–10B TAM within five
+        years</b>, and ranks it <b>#2 across all tiers</b>. The business case in the report
+        reads: "15–30 engineers build 'Okta for AI context' … $50–200/user/month … 5-year:
+        $500M+ ARR." Coconut is that company, arriving at that thesis independently.
+      </p>
+      <p style="margin-bottom:0">
+        Which is validation and warning in the same sentence. A HIGH rating on a
+        widely-read map means the opportunity is legible to everyone — and the evidence
+        from the competitor database is that roughly a dozen teams read it the same way in
+        the same twelve months.
+      </p>
+    </div>
+
+    <h3>The robotics stack — the honest answer is no</h3>
+    <p>
+      Coconut does not fit the 14-layer robotics stack, and forcing it in would be the wrong
+      call. That map runs raw material to service — magnets, actuators, lidar, end effectors,
+      batteries, onboard silicon, ROS 2, simulators, teleoperation rigs, VLAs, fleet ops,
+      OEMs, integrators, robot-delivered services. Every software layer in it is defined by
+      physical embodiment: motion planning, real-time safety runtimes, world models,
+      certification. Coconut has no embodied component and no robotics-specific data model.
+    </p>
+    <p>
+      Two honest adjacencies are worth stating rather than stretching:
+    </p>
+    <ul>
+      <li>
+        <b>L11 · Fleet Ops, Safety &amp; Certification</b> — a robotics company operating a
+        fleet has exactly the knowledge-governance problem Coconut solves: certification
+        evidence, incident reviews, standards documentation, remote-operations runbooks,
+        all of which must be current and traceable. Coconut would be a <b>buyer-side tool
+        for that team</b>, not a component of the stack. The distinction matters.
+      </li>
+      <li>
+        <b>The vertical slot already has an occupant.</b> Osseus (YC S26) is building a
+        "secure research brain for R&amp;D teams" — permissioned, version-aware memory
+        connecting CAD, schematics, BOMs, firmware, simulations, tests, and supplier
+        feedback for robotics and hardware R&amp;D. That is precisely the shape a
+        robotics-native Coconut would take, and someone is already building it. Entering
+        would require CAD, BOM, and firmware-aware connectors, not Slack and Drive.
+      </li>
+    </ul>
+    <p>
+      <b>Recommendation:</b> place Coconut on the AI stack map at L10 with cross-references
+      to L09 and L11, and leave the robotics map alone. A context layer that claims to be
+      everywhere is indistinguishable from one that is nowhere, and precision is the more
+      credible position.
+    </p>
+  </div>
+</section>
+
+<!-- ================= METHOD ================= -->
+<section role="tabpanel" id="p-method" aria-labelledby="t-method" hidden>
+  <div class="prose">
+    <p class="kicker">07 — Method</p>
+    <h2>How this was built, and what it is not</h2>
+
+    <div class="callout">
+      <p class="kicker">Scope</p>
+      <p>
+        <b>Public sources only.</b> Nothing on this page comes from hands-on use of the
+        product, private beta access, or any conversation with the company. Every claim
+        traces to coconut.dev, docs.coconut.dev, the GitHub API, a Y Combinator company
+        page, or published reporting, all read on 8 August 2026.
+      </p>
+    </div>
+
+    <h3>Verification tiers</h3>
+    <p>Every company in the <a href="competitors.html">database</a> carries one of three flags:</p>
+    <ul>
+      <li><b>verified</b> — confirmed 8 Aug 2026 against a primary source: the GitHub API, the company's own site, a YC company page, or a funding announcement.</li>
+      <li><b>reported</b> — consistent secondary sourcing (Tracxn, Sacra, trade press) without primary confirmation.</li>
+      <li><b>thin</b> — single-source or inherited from prior research and not re-confirmed. Treat as a lead, not a fact.</li>
+    </ul>
+
+    <h3>Conflicts log</h3>
+    <p>Where sources disagreed, the disagreement is published rather than smoothed.</p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:180px">Claim</th><th style="width:180px">Prior research said</th><th style="width:180px">This report says</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>Context layer 02</td><td>Product</td><td><b>Domain</b> (with Product still live in the FAQ)</td><td>Platform page is more detailed and carries operator/investor variants. Both were live 8 Aug 2026; the conflict is Coconut's, not the sources'.</td></tr>
+        <tr><td>Pricing tiers</td><td>Starter / Growth / Enterprise</td><td><b>Team / Company / Enterprise</b></td><td>Live pricing page, 8 Aug 2026.</td></tr>
+        <tr><td>Glean ARR</td><td>$200M / $100M</td><td><b>$300M (May 2026)</b></td><td>Multiple sources concur; $100M → $208M → $300M trajectory.</td></tr>
+        <tr><td>Glean raised</td><td>$765M / $615M / $768M</td><td><b>$765M</b></td><td>Three figures circulate. Tracxn's $765M over 6 rounds is used; the stack map's own $615M is older.</td></tr>
+        <tr><td>Dust funding</td><td>"VC-backed"</td><td><b>$60M+ ($40M Series B, May 2026)</b></td><td>Announced May 2026, led by Abstract and Sequoia. Prior research materially understated this.</td></tr>
+        <tr><td>GBrain stars</td><td>~23.6K</td><td><b>28,015</b></td><td>Live GitHub API, 8 Aug 2026. The gap is growth, not error — the number moves weekly.</td></tr>
+        <tr><td>Mem0 stars</td><td>41K+</td><td><b>62,829</b></td><td>Live GitHub API, 8 Aug 2026.</td></tr>
+        <tr><td>Coconut team size</td><td>2–10 <i>and</i> ~81 in the same document</td><td><b>2–10 (LinkedIn)</b>, unverified</td><td>The Notion brief contradicted itself. LinkedIn's 2–10 is the only sourced figure; self-reported LinkedIn ranges are unreliable and this should be confirmed directly.</td></tr>
+        <tr><td>Hyper batch</td><td>YC Spring 2026</td><td><b>YC P26 = Spring 2026</b></td><td>Same batch, two labels. Not a conflict.</td></tr>
+        <tr><td>Dashworks → HubSpot<br>Starmind → Capacity</td><td>Stated as fact</td><td><b>Unconfirmed</b></td><td>Could not be independently verified for this report. Flagged <i>thin</i> in the database.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h3>What this report does not cover</h3>
+    <ul>
+      <li><b>Product quality.</b> No hands-on evaluation. Retrieval accuracy, latency, connector reliability, and whether the five-layer model survives real use are all untested here.</li>
+      <li><b>Funding and team.</b> No disclosed rounds exist for Coconut AI Inc. Crunchbase and PitchBook return same-name companies. Leadership is not publicly named.</li>
+      <li><b>Customers.</b> One public reference: Ari Franklin, Group PM at Kohl's. No case studies, no scale metrics, no logo wall.</li>
+      <li><b>Pricing.</b> No public figures at any tier.</li>
+    </ul>
+
+    <h3>Known weaknesses in this analysis</h3>
+    <ol>
+      <li>The YC 2026 cohort is very early and moves weekly. Traction figures are point-in-time and self-reported at launch.</li>
+      <li>The VM-per-instance reading is inferred from documentation language ("a VM with the <code>nut</code> CLI installed"), not from an architecture document. It is well-supported by the API surface but not confirmed by the company.</li>
+      <li>Absence of a SOC 2 claim on a public site is not proof of absence of SOC 2. It is proof that it is not being marketed, which is itself informative but weaker.</li>
+      <li>Funding data for Capacity, Shelf, Bloomfire, Swimm, and DevRev is inherited and thinly sourced.</li>
+    </ol>
+
+    <h3>Primary sources</h3>
+    <ul class="srcs">
+      <li><a href="https://www.coconut.dev/">Coconut — Home</a></li>
+      <li><a href="https://www.coconut.dev/product/platform">Coconut — Platform</a></li>
+      <li><a href="https://www.coconut.dev/pricing">Coconut — Pricing</a></li>
+      <li><a href="https://www.coconut.dev/product/security">Coconut — Security</a></li>
+      <li><a href="https://www.coconut.dev/faq">Coconut — FAQ</a></li>
+      <li><a href="https://www.coconut.dev/blog">Coconut — Blog</a></li>
+      <li><a href="https://docs.coconut.dev/">Coconut Docs</a></li>
+      <li><a href="https://docs.coconut.dev/llms.txt">Coconut Docs — llms.txt</a></li>
+      <li><a href="https://docs.coconut.dev/nut/overview">Coconut Docs — .nut directory</a></li>
+      <li><a href="https://docs.coconut.dev/integrations/connectors">Coconut Docs — Connectors &amp; MCP</a></li>
+      <li><a href="https://docs.coconut.dev/integrations/skills">Coconut Docs — Skills</a></li>
+      <li><a href="https://github.com/lovelybunch">GitHub — lovelybunch (Coconut AI)</a></li>
+      <li><a href="https://github.com/garrytan/gbrain">GitHub — garrytan/gbrain</a></li>
+      <li><a href="https://www.ycombinator.com/companies/hyper-4">YC — Hyper</a></li>
+      <li><a href="https://www.ycombinator.com/companies/cerenovus">YC — Cerenovus</a></li>
+      <li><a href="https://www.ycombinator.com/companies/savant">YC — Savant</a></li>
+      <li><a href="https://www.ycombinator.com/companies/memory-store">YC — Memory Store</a></li>
+      <li><a href="https://www.ycombinator.com/companies/glen">YC — Glen</a></li>
+      <li><a href="https://www.glean.com/press/glean-raises-150m-series-f-at-7-2b-valuation-to-accelerate-enterprise-ai-agent-innovation-globally">Glean — Series F</a></li>
+      <li><a href="https://techcrunch.com/2026/05/28/gleans-top-line-crosses-300m-as-ai-budget-cutting-becomes-its-major-selling-point/">TechCrunch — Glean crosses $300M</a></li>
+      <li><a href="https://www.thesaasnews.com/news/dust-raises-40-million-series-b/">Dust — $40M Series B</a></li>
+      <li><a href="https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/">TechCrunch — Mem0 $24M</a></li>
+      <li><a href="https://www.moveworks.com/us/en/company/news/press-releases/servicenow-completes-acquisition-of-moveworks">ServiceNow completes Moveworks acquisition</a></li>
+      <li><a href="https://contextual.ai/blog/announcing-series-a">Contextual AI — Series A</a></li>
+      <li><a href="https://www.getguru.com/blog/guru-closes-30-million-series-c-funding-led-by-accel">Guru — Series C</a></li>
+      <li><a href="https://vivekally.github.io/ai-stack-report/">The AI Technology Stack (report 01)</a></li>
+      <li><a href="https://vivekally.github.io/ai-robotics-stack-2026/">The Robotics Stack (report 05)</a></li>
+    </ul>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-links">
+      <a href="competitors.html">Competitor database</a>
+      <a href="https://vivekally.github.io/">AI Intelligence hub</a>
+      <a href="https://vivekally.github.io/ai-stack-report/">01 · AI Stack</a>
+      <a href="https://vivekally.github.io/ai-robotics-stack-2026/">05 · Robotics Stack</a>
+    </div>
+    <p style="margin:0;max-width:76ch">
+      Independent analysis compiled 8 August 2026 from public sources. Not affiliated with,
+      commissioned by, or endorsed by Coconut AI Inc. No confidential or beta-access
+      information is included. Figures in a fast-moving private market go stale quickly;
+      verify before relying on any of them.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var KEY = "coconut-analysis-theme";
+  var root = document.documentElement;
+  var btn = document.getElementById("themebtn");
+  var glyph = document.getElementById("themeglyph");
+  var label = document.getElementById("themelabel");
+  var modes = ["auto", "light", "dark"];
+  var glyphs = { auto: "◐", light: "☀", dark: "☾" };
+  var labels = { auto: "Auto", light: "Light", dark: "Dark" };
+
+  function apply(m) {
+    if (m === "auto") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", m);
+    glyph.textContent = glyphs[m];
+    label.textContent = labels[m];
+  }
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  var mode = modes.indexOf(saved) > -1 ? saved : "auto";
+  apply(mode);
+  btn.addEventListener("click", function () {
+    mode = modes[(modes.indexOf(mode) + 1) % modes.length];
+    apply(mode);
+    try { localStorage.setItem(KEY, mode); } catch (e) {}
+  });
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('[role="tabpanel"]'));
+
+  function show(id, push) {
+    var found = false;
+    tabs.forEach(function (t) {
+      var on = t.getAttribute("href") === "#" + id;
+      if (on) found = true;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    if (!found) return false;
+    panels.forEach(function (p) {
+      p.hidden = p.getAttribute("aria-labelledby") !== "t-" + id;
+    });
+    if (push && history.replaceState) history.replaceState(null, "", "#" + id);
+    return true;
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function (e) {
+      e.preventDefault();
+      var id = t.getAttribute("href").slice(1);
+      show(id, true);
+      window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+    });
+    t.addEventListener("keydown", function (e) {
+      var i = tabs.indexOf(t), n = null;
+      if (e.key === "ArrowRight") n = tabs[(i + 1) % tabs.length];
+      if (e.key === "ArrowLeft") n = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (n) { e.preventDefault(); n.focus(); show(n.getAttribute("href").slice(1), true); }
+    });
+  });
+
+  function fromHash() {
+    var h = (location.hash || "").replace("#", "");
+    if (!h || !show(h, false)) show("product", false);
+  }
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+})();
+</script>
+</body>
+</html>
