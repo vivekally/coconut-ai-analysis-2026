@@ -23,6 +23,11 @@ DATA = ROOT / "data" / "competitors.json"
 PAGE = ROOT / "competitors.html"
 CSV_OUT = ROOT / "data" / "competitors.csv"
 
+KIT = ROOT / "setup-kit"
+SETUP_TEMPLATE = KIT / "setup.template.html"
+SETUP_OUT = ROOT / "setup.html"
+FILE_RE = re.compile(r"__FILE__([A-Za-z0-9_/.-]+)__")
+
 MARKER = "__COMPETITORS_JSON__"
 SCRIPT_RE = re.compile(
     r'(<script id="cdata" type="application/json">)(.*?)(</script>)',
@@ -131,6 +136,69 @@ def inject(db: dict) -> bool:
     return True
 
 
+def build_setup_guide() -> int | None:
+    """Render setup.html from the template, inlining every setup-kit file.
+
+    Returns the number of files inlined, or None if the template is absent.
+    Generated fresh from the template each run, so it stays idempotent.
+    """
+    if not SETUP_TEMPLATE.exists():
+        return None
+
+    html = SETUP_TEMPLATE.read_text(encoding="utf-8")
+    missing: list[str] = []
+    inlined: list[str] = []
+
+    def sub(m: re.Match[str]) -> str:
+        rel = m.group(1)
+        src = KIT / rel
+        if not src.exists():
+            missing.append(rel)
+            return m.group(0)
+        text = src.read_text(encoding="utf-8").rstrip("\n")
+        inlined.append(rel)
+        # Escaped for <pre><code>; the guide shows these files as literal text.
+        return (text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+    rendered = FILE_RE.sub(sub, html)
+
+    if missing:
+        for rel in missing:
+            fail(f"setup guide references missing file: setup-kit/{rel}")
+        return -1
+
+    leftover = FILE_RE.findall(rendered)
+    if leftover:
+        fail(f"unresolved placeholders remain: {leftover}")
+        return -1
+
+    if SETUP_OUT.exists() and SETUP_OUT.read_text(encoding="utf-8") == rendered:
+        print("  ok    setup.html already current")
+        return len(inlined)
+
+    SETUP_OUT.write_text(rendered, encoding="utf-8")
+    return len(inlined)
+
+
+def check_synthetic_labels() -> list[str]:
+    """Every file in setup-kit/signals/ must carry an unmissable synthetic warning.
+
+    These files are fabricated and live in a public repo. If a header is ever
+    edited away, the build fails rather than publishing unlabelled fake data.
+    """
+    errors: list[str] = []
+    sig_dir = KIT / "signals"
+    if not sig_dir.exists():
+        return errors
+    for f in sorted(sig_dir.glob("*.md")):
+        head = f.read_text(encoding="utf-8")[:600].upper()
+        if "SYNTHETIC" not in head:
+            errors.append(f"setup-kit/signals/{f.name}: missing SYNTHETIC marker in first 600 chars")
+        if "NOT REAL" not in head and "FABRICATED" not in head:
+            errors.append(f"setup-kit/signals/{f.name}: missing an explicit 'not real'/'fabricated' warning")
+    return errors
+
+
 def main() -> int:
     if not DATA.exists():
         fail(f"{DATA} not found")
@@ -169,6 +237,24 @@ def main() -> int:
         return 1
     size_kb = PAGE.stat().st_size / 1024
     print(f"  ok    injected data into {PAGE.relative_to(ROOT)} ({size_kb:.0f} KB)")
+
+    label_errors = check_synthetic_labels()
+    if label_errors:
+        print("\nSynthetic-data labelling check failed:\n", file=sys.stderr)
+        for e in label_errors:
+            fail(e)
+        return 1
+
+    n_files = build_setup_guide()
+    if n_files == -1:
+        return 1
+    if n_files is None:
+        print("  --    no setup-kit template, skipping setup guide")
+    else:
+        print(f"  ok    synthetic files all carry warning headers")
+        setup_kb = SETUP_OUT.stat().st_size / 1024
+        print(f"  ok    built {SETUP_OUT.relative_to(ROOT)} from {n_files} kit files ({setup_kb:.0f} KB)")
+
     print("\nBuild complete.")
     return 0
 

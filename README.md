@@ -10,10 +10,11 @@ and what could kill it.
 |---|---|---|
 | Analysis | **https://vivekally.github.io/coconut-ai-analysis-2026/** | Product, architecture, workflows, competitors, existential threat, stack-map fit, method |
 | Competitor database | **https://vivekally.github.io/coconut-ai-analysis-2026/competitors.html** | 47 companies, searchable and tier-filterable, each with its relationship to Coconut |
+| Dogfood setup guide | **https://vivekally.github.io/coconut-ai-analysis-2026/setup.html** | 10 steps to stand up a Coconut instance modelling Coconut, and run both product loops against it |
 
-Deep links work on both: `#threat`, `#stack`, `#method` open a tab on the analysis page;
+Deep links: `#threat`, `#stack`, `#method` open a tab on the analysis page;
 `competitors.html#c-gbrain`, `#c-glean`, `#c-hyper` open a specific company card (and clear
-any active filter that would otherwise hide it).
+any active filter that would otherwise hide it); `setup.html#s7` jumps to a numbered step.
 
 ## Scope and sourcing
 
@@ -48,6 +49,21 @@ This report re-verified rather than inherited. The material corrections:
 
 Full conflicts log is on the Method tab.
 
+## Setup kit
+
+[`setup-kit/`](setup-kit/) holds the source files for the setup guide: context documents,
+knowledge base, and the two skill-builder prompts, in two packs.
+
+**Pack A** (`setup-kit/base/`) is public facts only. **Pack B** (`setup-kit/signals/`) is
+**fabricated** customer feedback, support tickets, and churn notes — invented so the Product
+Improvement Loop has a signal to work with, because by design it refuses to invent one. No
+real Coconut customer said any of it and every company named in it is fictional. `build.py`
+fails the build if any Pack B file loses its warning header.
+
+The sequencing is the exercise: load Pack A, run the loop, and a correctly-built product
+files *"No signal this run — context gap"* rather than guessing. Then load Pack B and run
+again for a real proposal.
+
 ## Build
 
 `data/competitors.json` is the single source of truth. `build.py` validates it, writes
@@ -64,6 +80,9 @@ threat value, a negative or missing funding figure, or a relative URL.
 
 To add or edit a company, edit `data/competitors.json` and re-run the build. Never edit
 the injected JSON inside `competitors.html` directly.
+
+The same build renders `setup.html` from `setup-kit/setup.template.html`, inlining every
+`__FILE__<path>__` placeholder. Edit the kit files, never the generated page.
 
 ## Conventions
 

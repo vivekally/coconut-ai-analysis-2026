@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>Coconut AI — Dogfood Setup Guide</title>
+<meta name="description" content="A step-by-step guide to setting up a Coconut instance for Coconut.dev itself, with copy-paste context, knowledge, and the two product loops.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A5%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f4f2ed; --surface: #fdfcf9; --ink: #1a1815; --ink-2: #514c44;
+    --muted: #837c71; --line: #e2ded4; --accent: #0f6b4f; --accent-2: #a8622a;
+    --red: #a52222; --amber: #9a6a00; --blue: #2358a8; --wash: #ebe8e0;
+    --code-bg: #f0ede5; --warn-bg: #fdf4e3; --warn-line: #e8c98a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121110; --surface: #1b1a18; --ink: #f3f1ec; --ink-2: #bab4a9;
+      --muted: #8b857a; --line: #2e2c28; --accent: #57b593; --accent-2: #d1935c;
+      --red: #e06b6b; --amber: #d9a441; --blue: #6ba4ee; --wash: #211f1c;
+      --code-bg: #201e1c; --warn-bg: #2a2115; --warn-line: #6b5220;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f2ed; --surface: #fdfcf9; --ink: #1a1815; --ink-2: #514c44;
+    --muted: #837c71; --line: #e2ded4; --accent: #0f6b4f; --accent-2: #a8622a;
+    --red: #a52222; --amber: #9a6a00; --blue: #2358a8; --wash: #ebe8e0;
+    --code-bg: #f0ede5; --warn-bg: #fdf4e3; --warn-line: #e8c98a;
+  }
+  :root[data-theme="dark"] {
+    --bg: #121110; --surface: #1b1a18; --ink: #f3f1ec; --ink-2: #bab4a9;
+    --muted: #8b857a; --line: #2e2c28; --accent: #57b593; --accent-2: #d1935c;
+    --red: #e06b6b; --amber: #d9a441; --blue: #6ba4ee; --wash: #211f1c;
+    --code-bg: #201e1c; --warn-bg: #2a2115; --warn-line: #6b5220;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-size: 17px; line-height: 1.62; -webkit-text-size-adjust: 100%;
+  }
+  .mono, .eyebrow, .kicker, .tag, .stepno, .copybtn, .fname { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2.5px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  .shell { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .prose { max-width: 76ch; }
+
+  header.mast { background: var(--surface); border-bottom: 1px solid var(--line); padding: 32px 0 0; }
+  .mast-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 14px; }
+  .themebtn {
+    font-family: ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.06em;
+    color: var(--ink-2); background: var(--bg); border: 1px solid var(--line);
+    border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .themebtn:hover { color: var(--ink); border-color: var(--muted); }
+  .backlink { font-family: ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+  h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 800; letter-spacing: -0.02em; line-height: 1.06;
+    font-size: clamp(30px, 4.4vw, 46px); margin: 0 0 14px; max-width: 22ch;
+  }
+  .dek { font-size: 18.5px; color: var(--ink-2); max-width: 68ch; margin: 0 0 22px; }
+  .ticker { display: flex; flex-wrap: wrap; gap: 8px 26px; font-size: 12.5px; color: var(--ink-2); padding: 14px 0 20px; border-top: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; }
+  .ticker b { color: var(--ink); font-weight: 600; }
+
+  main { padding: 34px 0 90px; }
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 750; font-size: clamp(23px, 3vw, 30px); margin: 0 0 12px; letter-spacing: -0.015em; line-height: 1.18;
+  }
+  h3 { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 700; font-size: 18px; margin: 30px 0 8px; }
+  p { margin: 0 0 15px; }
+  ul, ol { margin: 0 0 15px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.87em; background: var(--code-bg); padding: 1.5px 5px; border-radius: 3px; }
+  .kicker { font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin: 0 0 7px; }
+
+  /* Steps */
+  .step { border-top: 1px solid var(--line); padding: 34px 0 6px; }
+  .step:first-of-type { border-top: none; }
+  .stephead { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
+  .stepno {
+    font-size: 12px; color: var(--accent); border: 1px solid var(--line); background: var(--surface);
+    border-radius: 6px; padding: 4px 9px; flex: none;
+  }
+  .step h2 { margin: 0; }
+
+  /* Code blocks */
+  .block { border: 1px solid var(--line); border-radius: 9px; margin: 0 0 16px; overflow: hidden; background: var(--surface); }
+  .blockhead {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    background: var(--wash); border-bottom: 1px solid var(--line); flex-wrap: wrap;
+  }
+  .fname { font-size: 11.5px; color: var(--ink-2); letter-spacing: 0.02em; }
+  .fname b { color: var(--ink); }
+  .copybtn {
+    margin-left: auto; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-2); background: var(--surface); border: 1px solid var(--line);
+    border-radius: 5px; padding: 4px 11px; cursor: pointer;
+  }
+  .copybtn:hover { color: var(--ink); border-color: var(--muted); }
+  .copybtn.done { color: var(--accent); border-color: var(--accent); }
+  pre {
+    margin: 0; padding: 14px 16px; overflow-x: auto; background: var(--code-bg);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.6; color: var(--ink);
+    max-height: 460px; overflow-y: auto;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .sh pre { background: var(--code-bg); }
+  details.more > summary {
+    cursor: pointer; padding: 9px 14px; font-family: ui-monospace, Menlo, monospace;
+    font-size: 12px; color: var(--ink-2); background: var(--wash); list-style: none;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary:hover { color: var(--ink); }
+
+  /* Callouts */
+  .callout { border-left: 3px solid var(--accent); background: var(--wash); padding: 14px 18px; margin: 0 0 18px; border-radius: 0 8px 8px 0; }
+  .callout.warn { border-left-color: var(--amber); background: var(--warn-bg); }
+  .callout.dang { border-left-color: var(--red); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .kicker { color: var(--ink-2); }
+
+  .packbar { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 9px; margin: 0 0 18px; font-size: 14.5px; }
+  .packbar.a { background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  .packbar.b { background: var(--warn-bg); border: 1px solid var(--warn-line); }
+  .packbar .lbl { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 5px; flex: none; }
+  .packbar.a .lbl { background: var(--accent); color: var(--surface); }
+  .packbar.b .lbl { background: var(--amber); color: var(--surface); }
+
+  .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); margin: 0 0 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-2); background: var(--wash); font-weight: 500; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* TOC */
+  .toc { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px; margin: 0 0 34px; }
+  .toc ol { margin: 0; padding-left: 20px; font-size: 15px; columns: 2; column-gap: 30px; }
+  @media (max-width: 640px) { .toc ol { columns: 1; } }
+  .toc li { margin-bottom: 5px; break-inside: avoid; }
+
+  footer { border-top: 1px solid var(--line); background: var(--surface); padding: 26px 0 44px; font-size: 14px; color: var(--ink-2); }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 12px; top: 12px; background: var(--surface); padding: 10px 16px; z-index: 99; border: 1px solid var(--accent); border-radius: 6px; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+
+<header class="mast">
+  <div class="shell">
+    <div class="mast-top">
+      <p class="eyebrow">Setup Guide · Dogfood instance</p>
+      <div style="display:flex;gap:10px;align-items:center">
+        <a class="backlink" href="index.html">← Analysis</a>
+        <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">
+          <span id="themeglyph">◐</span><span id="themelabel">Auto</span>
+        </button>
+      </div>
+    </div>
+    <h1>Set up Coconut for Coconut</h1>
+    <p class="dek">
+      A step-by-step guide to standing up a Coconut instance where the company being
+      modelled <i>is Coconut</i>, then running both published product loops against it.
+      Everything below is copy-paste. The point is not just to configure the tool — it is
+      to watch what it does when the honest answer is "I don't have enough to go on."
+    </p>
+    <div class="ticker">
+      <span><b>Company</b> Coconut AI Inc.</span>
+      <span><b>Seat</b> Head of Product</span>
+      <span><b>Loops</b> Competitor Intelligence · Product Improvement</span>
+      <span><b>Packs</b> A public-facts · B synthetic</span>
+      <span><b>Steps</b> 10</span>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="shell">
+
+<div class="prose">
+  <div class="callout dang">
+    <p class="kicker">Read this before you paste anything</p>
+    <p>
+      This guide ships <b>two data packs</b>. <b>Pack A</b> contains only publicly verifiable
+      facts about Coconut. <b>Pack B</b> contains <b>fabricated</b> customer feedback, support
+      tickets, and churn notes — invented so the Product Improvement Loop has a signal to
+      work with, because by design it refuses to invent one itself.
+    </p>
+    <p>
+      Every Pack B file carries a warning header. <b>Nothing in Pack B is real.</b> No Coconut
+      customer said any of it, and every company named in it is fictional. Load it into a
+      test instance only, never quote it to anyone, and delete it when you are done.
+    </p>
+  </div>
+
+  <div class="callout">
+    <p class="kicker">The interesting part of this exercise</p>
+    <p>
+      Run the Product Improvement Loop <b>after Pack A and before Pack B</b>. With only public
+      facts loaded there is no concrete user signal, and the loop's own instructions say
+      <i>"Do not invent a signal."</i> A correctly-built product files
+      <b>"No signal this run — context gap"</b> and stops.
+    </p>
+    <p style="margin-bottom:0">
+      If it produces a confident proposal anyway, that is the single most informative
+      result you can get from this evaluation — it would mean the discipline the product
+      sells is not enforced in the product itself. Either outcome is worth knowing before
+      you meet the founder.
+    </p>
+  </div>
+
+  <div class="toc">
+    <p class="kicker">The ten steps</p>
+    <ol>
+      <li><a href="#s1">Prerequisites</a></li>
+      <li><a href="#s2">Initialize the instance</a></li>
+      <li><a href="#s3">Pack A — context documents</a></li>
+      <li><a href="#s4">Pack A — knowledge base</a></li>
+      <li><a href="#s5">Install the two skills</a></li>
+      <li><a href="#s6">First run — Competitor Intelligence</a></li>
+      <li><a href="#s7">First run — Product Improvement (expect a gap)</a></li>
+      <li><a href="#s8">Pack B — load synthetic signals</a></li>
+      <li><a href="#s9">Second run — Product Improvement</a></li>
+      <li><a href="#s10">Schedule the jobs, and what to grade</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ============ STEP 1 ============ -->
+<section class="step" id="s1">
+  <div class="stephead"><span class="stepno">01</span><h2>Prerequisites</h2></div>
+  <div class="prose">
+    <p>
+      Coconut is invite-only, so this starts with access you already have. You need an
+      instance created from the Dashboard, and the <code>nut</code> CLI authenticated
+      against it.
+    </p>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · verify your setup</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut --version
+nut auth status
+nut config list</code></pre>
+  </div>
+  <div class="prose">
+    <p>
+      If <code>nut auth status</code> is not authenticated, run <code>nut auth login</code>
+      and complete the OAuth flow. When prompted for scopes, grant read and write on
+      <code>knowledge</code>, <code>context</code>, <code>tasks</code>, <code>jobs</code>,
+      and <code>skills</code> — the loops need all five.
+    </p>
+    <div class="callout warn">
+      <p style="margin:0">
+        <b>Use a throwaway or clearly-labelled instance.</b> Step 8 loads fabricated data. You
+        do not want it mixed into anything you rely on.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 2 ============ -->
+<section class="step" id="s2">
+  <div class="stephead"><span class="stepno">02</span><h2>Initialize the instance</h2></div>
+  <div class="prose">
+    <p>
+      Create a working directory and initialize. This writes the git-versioned
+      <code>.nut/</code> directory that holds context, knowledge, skills, jobs, and tasks.
+    </p>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · initialize</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>mkdir -p ~/coconut-dogfood && cd ~/coconut-dogfood
+nut init
+ls -a .nut</code></pre>
+  </div>
+  <div class="prose">
+    <p>You should see <code>context/</code>, <code>knowledge/</code>, <code>skills/</code>,
+    <code>jobs/</code>, <code>tasks/</code>, <code>mcp/</code>, <code>resources/</code>,
+    <code>chats/</code>, and <code>config.json</code>.</p>
+    <p class="mono" style="font-size:13px;color:var(--muted)">
+      Evaluation note: time this step. "Up and running in days" is a core claim — how long
+      from zero to an initialized instance is the first data point you have on it.
+    </p>
+  </div>
+</section>
+
+<!-- ============ STEP 3 ============ -->
+<section class="step" id="s3">
+  <div class="stephead"><span class="stepno">03</span><h2>Pack A — context documents</h2></div>
+  <div class="packbar a"><span class="lbl">Pack A</span> Public facts and role configuration only. Safe to keep.</div>
+  <div class="prose">
+    <p>
+      Four context documents define who the agents think they are: <code>role</code>,
+      <code>team</code>, <code>agents</code>, and <code>memory</code>. Save each block to a
+      file, then push it with <code>nut context update</code>.
+    </p>
+    <p>
+      These describe <b>seats, not real people</b> — Coconut does not publicly name its
+      leadership, and this guide does not invent names for them.
+    </p>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>role.md</b> · nut context update role</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__base/context-role.md__</code></pre>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>memory.md</b> · nut context update memory</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__base/context-memory.md__</code></pre>
+  </div>
+
+  <details class="more">
+    <summary>▸ Show the remaining two context files (team.md, agents.md)</summary>
+    <div class="block" style="border:0;border-radius:0">
+      <div class="blockhead"><span class="fname"><b>team.md</b> · nut context update team</span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__base/context-team.md__</code></pre>
+    </div>
+    <div class="block" style="border:0;border-radius:0;margin:0">
+      <div class="blockhead"><span class="fname"><b>agents.md</b> · nut context update agents</span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__base/context-agents.md__</code></pre>
+    </div>
+  </details>
+
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · push all four</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># save the four blocks above as role.md, team.md, agents.md, memory.md first
+nut context update role   --file ./role.md
+nut context update team   --file ./team.md
+nut context update agents --file ./agents.md
+nut context update memory --file ./memory.md
+
+# verify
+nut context get role</code></pre>
+  </div>
+</section>
+
+<!-- ============ STEP 4 ============ -->
+<section class="step" id="s4">
+  <div class="stephead"><span class="stepno">04</span><h2>Pack A — knowledge base</h2></div>
+  <div class="packbar a"><span class="lbl">Pack A</span> Five documents, every factual claim traceable to a public source.</div>
+  <div class="prose">
+    <p>
+      Knowledge documents are what the loops actually read. <code>competitors-list.md</code>
+      is the editable input to the Competitor Intelligence Loop; the other four give the
+      Product Improvement Loop enough to identify the product and respect its constraints.
+    </p>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>competitors-list.md</b> · input to the competitor loop</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__base/knowledge-competitors-list.md__</code></pre>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>constraints.md</b> · the hard limits any proposal must respect</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__base/knowledge-constraints.md__</code></pre>
+  </div>
+
+  <details class="more">
+    <summary>▸ Show the remaining three knowledge files (product.md, market.md, positioning.md)</summary>
+    <div class="block" style="border:0;border-radius:0">
+      <div class="blockhead"><span class="fname"><b>product.md</b></span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__base/knowledge-product.md__</code></pre>
+    </div>
+    <div class="block" style="border:0;border-radius:0">
+      <div class="blockhead"><span class="fname"><b>market.md</b></span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__base/knowledge-market.md__</code></pre>
+    </div>
+    <div class="block" style="border:0;border-radius:0;margin:0">
+      <div class="blockhead"><span class="fname"><b>positioning.md</b></span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__base/knowledge-positioning.md__</code></pre>
+    </div>
+  </details>
+
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · create all five</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># save the five blocks above into ./kb/ first
+nut knowledge create "Product"          --file ./kb/product.md
+nut knowledge create "Market"           --file ./kb/market.md
+nut knowledge create "Positioning"      --file ./kb/positioning.md
+nut knowledge create "Constraints"      --file ./kb/constraints.md
+nut knowledge create "Competitors List" --file ./kb/competitors-list.md
+
+# verify
+nut knowledge list</code></pre>
+  </div>
+  <div class="prose">
+    <p class="mono" style="font-size:13px;color:var(--muted)">
+      Check the exact flag with <code>nut knowledge create --help</code> — if your build
+      expects content on stdin or a positional path rather than <code>--file</code>, adjust.
+      Creating these through Studio works equally well.
+    </p>
+  </div>
+</section>
+
+<!-- ============ STEP 5 ============ -->
+<section class="step" id="s5">
+  <div class="stephead"><span class="stepno">05</span><h2>Install the two skills</h2></div>
+  <div class="prose">
+    <p>
+      Both loops follow Coconut's published shape: a skill defines what the agent does, a job
+      triggers it, and the output is something you can act on. Paste each prompt below into
+      the skill builder — in Studio, or by describing it to an agent with the
+      <code>coconut-skills-creator</code> meta-skill installed.
+    </p>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · optional: install the skills-creator meta-skill in Claude Code</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>/plugin marketplace add lovelybunch/coconut-skills
+/plugin install coconut-skills@coconut-skills</code></pre>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>skill 1</b> · competitor-intelligence-loop</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__skills/competitor-intelligence-loop.md__</code></pre>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>skill 2</b> · product-improvement-loop</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__skills/product-improvement-loop.md__</code></pre>
+  </div>
+
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · confirm both installed</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut skill list</code></pre>
+  </div>
+</section>
+
+<!-- ============ STEP 6 ============ -->
+<section class="step" id="s6">
+  <div class="stephead"><span class="stepno">06</span><h2>First run — Competitor Intelligence</h2></div>
+  <div class="prose">
+    <p>
+      Every competitor is a first-run, so this produces twelve full baselines plus the
+      landscape overview. Expect it to be the slowest run you will do.
+    </p>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · run it once by hand</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut skill run competitor-intelligence-loop
+
+# then inspect what it wrote
+nut knowledge list --search "competitor"
+nut knowledge get competitors.md</code></pre>
+  </div>
+  <div class="prose">
+    <h3>What should exist afterwards</h3>
+    <ul>
+      <li><code>competitor-{name}.md</code> — twelve files, each with a dated baseline under Product and pricing, Positioning, Funding and hiring, and Sentiment.</li>
+      <li><code>competitors.md</code> — one landscape overview, readable at a glance, ending with the <b>"What this means for us"</b> section the adapted prompt asks for.</li>
+      <li>Possibly one or more high-priority tasks, if the run hit an escalation trigger.</li>
+    </ul>
+    <h3>Grade it on these</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th style="width:210px">Check</th><th>What a good result looks like</th></tr></thead>
+        <tbody>
+          <tr><td><b>Sources named</b></td><td>Every signal cites something specific. A baseline full of unattributed claims means it is drawing on model priors, not research.</td></tr>
+          <tr><td><b>Disambiguation held</b></td><td>The Cerenovus file is about the AI startup, not the Johnson &amp; Johnson neurovascular brand. This is the single easiest way to catch sloppy retrieval.</td></tr>
+          <tr><td><b>Figures dated</b></td><td>Star counts and funding totals carry a date. GBrain's star count moves weekly; an undated number is already wrong.</td></tr>
+          <tr><td><b>Rejections shown</b></td><td>Each file lists interpretations considered and discarded. This is the hardest instruction to follow and the best signal of quality.</td></tr>
+          <tr><td><b>No padding</b></td><td>A quiet competitor is reported as quiet, not given three paragraphs of filler.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 7 ============ -->
+<section class="step" id="s7">
+  <div class="stephead"><span class="stepno">07</span><h2>First run — Product Improvement (expect a gap)</h2></div>
+  <div class="prose">
+    <div class="callout">
+      <p class="kicker">This is the test</p>
+      <p style="margin-bottom:0">
+        Only Pack A is loaded. There is no customer feedback, no support data, no churn note —
+        nothing describing a specific user in a specific moment of friction. The skill's own
+        instructions forbid inventing one. <b>The correct output is a task titled "No signal
+        this run — context gap."</b>
+      </p>
+    </div>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · run it, then read the task it filed</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut skill run product-improvement-loop
+nut task list</code></pre>
+  </div>
+  <div class="prose">
+    <h3>Read the result carefully</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th style="width:160px">Outcome</th><th>What it tells you</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>"No signal — context gap"</b>, naming what input would help</td>
+            <td><b>Best case.</b> The discipline is real and enforced. This is exactly what a governed context layer should do when asked to reason past its evidence, and it is the strongest single argument for the product.</td>
+          </tr>
+          <tr>
+            <td>A proposal grounded in the <i>competitor</i> files from step 6</td>
+            <td><b>Acceptable, worth probing.</b> Competitive movement is a real signal, but it is not "a specific user feeling specific friction." Check whether gate 1 was actually applied or quietly softened.</td>
+          </tr>
+          <tr>
+            <td>A confident proposal with an invented user</td>
+            <td><b>The finding.</b> The product violated its own instruction not to invent a signal. Everything the governance pitch rests on is weaker than advertised. Capture the full output — this is the most valuable artifact this exercise can produce.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Whatever happens, save the output before moving on. You cannot reproduce this state once Pack B is loaded.</p>
+  </div>
+</section>
+
+<!-- ============ STEP 8 ============ -->
+<section class="step" id="s8">
+  <div class="stephead"><span class="stepno">08</span><h2>Pack B — load synthetic signals</h2></div>
+  <div class="packbar b"><span class="lbl">Pack B</span> Fabricated. Test instances only. Delete when finished.</div>
+  <div class="prose">
+    <div class="callout dang">
+      <p class="kicker">Everything in this step is invented</p>
+      <p style="margin-bottom:0">
+        No Coconut customer said any of this. Every company named — Northwind Capital,
+        Kestrel Logistics, Ardent Health Partners, Meridian Freight, Talbot &amp; Rowe,
+        Halcyon Systems, Vantage Partners — is fictional. The <i>frictions</i> are
+        extrapolated from publicly observable gaps; the <i>evidence</i> is a dramatization
+        written to give the loop something concrete to bite on. Never quote these files to
+        anyone, and never let them leave the test instance.
+      </p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>feedback.md</b> · SYNTHETIC</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>__FILE__signals/knowledge-feedback.md__</code></pre>
+  </div>
+
+  <details class="more">
+    <summary>▸ Show the other two synthetic files (support-patterns.md, churn-notes.md)</summary>
+    <div class="block" style="border:0;border-radius:0">
+      <div class="blockhead"><span class="fname"><b>support-patterns.md</b> · SYNTHETIC</span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__signals/knowledge-support-patterns.md__</code></pre>
+    </div>
+    <div class="block" style="border:0;border-radius:0;margin:0">
+      <div class="blockhead"><span class="fname"><b>churn-notes.md</b> · SYNTHETIC</span><button class="copybtn" type="button">Copy</button></div>
+      <pre><code>__FILE__signals/knowledge-churn-notes.md__</code></pre>
+    </div>
+  </details>
+
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · load the three synthetic files</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut knowledge create "SYNTHETIC Customer Feedback" --file ./signals/feedback.md
+nut knowledge create "SYNTHETIC Support Patterns"  --file ./signals/support-patterns.md
+nut knowledge create "SYNTHETIC Churn Notes"       --file ./signals/churn-notes.md
+
+nut knowledge list --search "SYNTHETIC"</code></pre>
+  </div>
+</section>
+
+<!-- ============ STEP 9 ============ -->
+<section class="step" id="s9">
+  <div class="stephead"><span class="stepno">09</span><h2>Second run — Product Improvement</h2></div>
+  <div class="prose">
+    <p>
+      Same skill, same instance, real signal now present. This run should clear the gates and
+      file a proposal.
+    </p>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · run and read the proposal</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut skill run product-improvement-loop
+nut task list --full</code></pre>
+  </div>
+  <div class="prose">
+    <h3>The proposal should contain all eight parts</h3>
+    <p>Type · the frustrated user and the moment · the signal with its named source · two
+    existing alternatives and what each gets wrong · the smallest valuable version · a
+    user-behaviour leading indicator · a three-point pre-mortem · a justified stack choice.
+    A proposal missing any of these did not follow its own template.</p>
+
+    <h3>Grade it on these</h3>
+    <ul>
+      <li><b>Did it name the source file?</b> "Drawn from <code>feedback.md</code>, Kestrel Logistics, 2026-06-30" is grounded. "Based on customer feedback" is not.</li>
+      <li><b>Did it respect <code>constraints.md</code>?</b> A proposal scoped beyond 1–2 weeks for one engineer, or assuming self-serve signup, should have been killed at gate 4.</li>
+      <li><b>Did it check what Coconut already ships?</b> Gate 2 requires searching existing parts of the product. Proposing something <code>product.md</code> already describes is a hard fail.</li>
+      <li><b>Is the pre-mortem actually harsh?</b> Three specific failure modes, not three restatements of the risk of it being unpopular.</li>
+      <li><b>Did it show the confidence scores?</b> Four scores, and a kill if any is ≤3.</li>
+    </ul>
+
+    <div class="callout warn">
+      <p class="kicker">Watch for the tell</p>
+      <p style="margin-bottom:0">
+        The synthetic files contain a deliberate trap: the strongest and most repeated
+        signal across all three is the <b>SOC 2 gap</b> — and it is explicitly <i>not</i>
+        product-shaped. <code>churn-notes.md</code> says so outright. A disciplined run
+        recognizes that a compliance programme cannot be shipped by one engineer in two weeks
+        and moves to a different signal, such as ownership being nominal or decay flags having
+        no ritual that consumes them. A run that proposes "build SOC 2" took the loudest
+        signal instead of the right one.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 10 ============ -->
+<section class="step" id="s10">
+  <div class="stephead"><span class="stepno">10</span><h2>Schedule the jobs, and what to grade overall</h2></div>
+  <div class="prose">
+    <p>Set both loops on a weekly cadence, in Studio's scheduler or via the CLI.</p>
+  </div>
+  <div class="block sh">
+    <div class="blockhead"><span class="fname"><b>shell</b> · weekly jobs</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>nut coconut job create --name "Competitor Intelligence — weekly" \
+  --skill competitor-intelligence-loop --schedule weekly
+
+nut coconut job create --name "Product Improvement — weekly" \
+  --skill product-improvement-loop --schedule weekly
+
+nut coconut job list</code></pre>
+  </div>
+  <div class="prose">
+    <p class="mono" style="font-size:13px;color:var(--muted)">
+      Flag names vary by build — confirm with <code>nut coconut job create --help</code>, or
+      create both from Studio → Schedule, which is the documented path.
+    </p>
+
+    <h3>The second week is the real test</h3>
+    <p>
+      First runs are easy; every competitor gets a baseline and every signal is new. The
+      product's actual claim is that context <i>stays current</i>. Come back after run two and
+      check:
+    </p>
+    <ul>
+      <li><b>Did delta-runs stay deltas?</b> Existing competitor files should gain a dated changelog entry, not a rewritten baseline. A silently rewritten baseline destroys the history that is supposed to be the product.</li>
+      <li><b>Was "nothing changed" said plainly?</b> For a genuinely quiet competitor, the honest entry is one line. Padding here predicts padding everywhere.</li>
+      <li><b>Did the landscape file get rewritten, not appended?</b> It is specified as a rewrite every run.</li>
+      <li><b>Did run two avoid repeating run one's proposal?</b> The duplicate check is explicit. Re-proposing the same idea means the task list is not actually being read.</li>
+      <li><b>Did lineage hold?</b> Open a competitor file's version history. Can you diff two versions and see exactly what changed and when? This is the governance claim, tested.</li>
+    </ul>
+
+    <h3>Questions this exercise is designed to answer</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th style="width:250px">Claim under test</th><th>What would falsify it</th></tr></thead>
+        <tbody>
+          <tr><td>"Flags gaps rather than filling them with guesses"</td><td>Step 7 produces a confident proposal with an invented user.</td></tr>
+          <tr><td>"Up and running in days, no blank screen"</td><td>Steps 1–5 take you, an expert with prepared content, more than an afternoon.</td></tr>
+          <tr><td>"Every fact carries its source"</td><td>Competitor baselines contain unattributed claims.</td></tr>
+          <tr><td>"Superseded, not overwritten"</td><td>A delta-run rewrites a baseline, or version history cannot show what changed.</td></tr>
+          <tr><td>"Maintenance is built in"</td><td>You have to prompt the loops manually for anything useful to happen.</td></tr>
+          <tr><td>"Model-agnostic"</td><td>Nothing here tests it. Add the MCP connector to two different tools and ask both the same question.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout dang">
+      <p class="kicker">Clean up</p>
+      <p style="margin-bottom:0">
+        When you are finished, delete the three <code>SYNTHETIC</code> knowledge documents.
+        Anything the loops derived from them — proposals, tasks, landscape entries — is
+        downstream of fabricated evidence and should not survive into notes you rely on.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="prose" style="margin-top:44px">
+  <h2>What this guide deliberately does not do</h2>
+  <ul>
+    <li><b>Invent Coconut's roadmap, OKRs, metrics, or headcount.</b> None of that is public. Pack A holds only what can be verified; the Identity and State layers stay thin as a result, which is itself an honest reflection of what an outside evaluator can know.</li>
+    <li><b>Name real Coconut employees.</b> The company does not publicly name its leadership, so <code>team.md</code> describes seats.</li>
+    <li><b>Test the connectors.</b> Everything here is loaded by hand. Attaching Slack, Drive, or HubSpot and watching whether context genuinely stays current is the next evaluation, and the harder one.</li>
+    <li><b>Test permissions.</b> Single-seat setup. Multi-user scoping, the MCP permission model, and whether agents really are read-only outside their grants all need a second seat to test properly.</li>
+  </ul>
+  <p>
+    The companion <a href="index.html">analysis</a> and
+    <a href="competitors.html">competitor database</a> cover the market context this
+    instance is populated with.
+  </p>
+</div>
+
+</div>
+</main>
+
+<footer>
+  <div class="shell">
+    <p style="margin:0 0 8px">
+      <a href="index.html">← Analysis</a> ·
+      <a href="competitors.html">Competitor database</a> ·
+      <a href="https://docs.coconut.dev/guides/product/overview">Coconut's own product loop guides ↗</a>
+    </p>
+    <p style="margin:0;max-width:78ch">
+      Compiled 8 August 2026. Pack A is drawn from public sources; <b>Pack B is fabricated
+      test data and nothing in it is real</b>. Not affiliated with, commissioned by, or
+      endorsed by Coconut AI Inc. CLI flags vary by build — verify with <code>--help</code>.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var KEY = "coconut-analysis-theme";
+  var root = document.documentElement, btn = document.getElementById("themebtn");
+  var glyph = document.getElementById("themeglyph"), label = document.getElementById("themelabel");
+  var modes = ["auto", "light", "dark"];
+  var glyphs = { auto: "◐", light: "☀", dark: "☾" }, labels = { auto: "Auto", light: "Light", dark: "Dark" };
+  function applyTheme(m) {
+    if (m === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", m);
+    glyph.textContent = glyphs[m]; label.textContent = labels[m];
+  }
+  var saved = null; try { saved = localStorage.getItem(KEY); } catch (e) {}
+  var mode = modes.indexOf(saved) > -1 ? saved : "auto";
+  applyTheme(mode);
+  btn.addEventListener("click", function () {
+    mode = modes[(modes.indexOf(mode) + 1) % modes.length];
+    applyTheme(mode); try { localStorage.setItem(KEY, mode); } catch (e) {}
+  });
+
+  /* Copy buttons: each button copies the <pre> inside its own .block */
+  Array.prototype.forEach.call(document.querySelectorAll(".copybtn"), function (b) {
+    b.addEventListener("click", function () {
+      var block = b.closest(".block");
+      var pre = block && block.querySelector("pre");
+      if (!pre) return;
+      var text = pre.innerText;
+      var done = function () {
+        var old = b.textContent;
+        b.textContent = "Copied"; b.classList.add("done");
+        setTimeout(function () { b.textContent = old; b.classList.remove("done"); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+      function fallback() {
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.setAttribute("readonly", "");
+        ta.style.position = "absolute"; ta.style.left = "-9999px";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
