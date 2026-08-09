@@ -176,6 +176,7 @@
       <span><b>Seat</b> Head of Product</span>
       <span><b>Loops</b> Competitor Intelligence · Product Improvement</span>
       <span><b>Packs</b> A public-facts · B synthetic</span>
+      <span><b>Path</b> Studio UI, CLI optional</span>
       <span><b>Steps</b> 10</span>
     </div>
   </div>
@@ -216,6 +217,41 @@
     </p>
   </div>
 
+  <h2 style="margin-top:34px">Studio or CLI?</h2>
+  <p>
+    <b>You do not need the CLI for most of this, and for an evaluation you probably should not
+    use it.</b> Your buyer is a product or ops leader, not a developer — the honest test of
+    "up and running in days, no blank screen" is the path that person would actually take.
+    Every step below gives the Studio route first; CLI blocks are the alternative for anyone
+    who prefers a terminal or wants to script the setup.
+  </p>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:150px">What</th><th style="width:44%">Studio / Dashboard</th><th>CLI equivalent</th></tr></thead>
+      <tbody>
+        <tr><td><b>Create the instance</b></td><td>Dashboard → <b>Add Coconut</b>. Name, cloud provider, admin user, emoji, and a <b>Specification</b> — CPU, RAM, disk. Provisions in 30–60s.</td><td>— (Dashboard only)</td></tr>
+        <tr><td><b>Context &amp; knowledge</b></td><td>No documented Knowledge or Context page. <b>Try the Code editor</b> — <code>.nut/</code> is a git-versioned directory, so <code>context/</code> and <code>knowledge/</code> should be editable as files, then committed from Source Control.</td><td><code>nut context update</code><br><code>nut knowledge create</code></td></tr>
+        <tr><td><b>Skills</b></td><td>Studio → <b>Skills</b> → Create New. Fields: Name, Description, <b>Skill Instructions</b>, Tools (MCP servers). Paste each prompt into Skill Instructions.</td><td><code>nut skill</code></td></tr>
+        <tr><td><b>Run a loop</b></td><td>Run the skill directly from Studio, or trigger its job once from Schedule.</td><td><code>nut skill run</code></td></tr>
+        <tr><td><b>Schedule</b></td><td>Studio → <b>Schedule</b> → New Scheduled Job. Prompt, <b>Model (Claude / Gemini / Codex)</b>, cadence, start-active toggle. Run history inline.</td><td><code>nut coconut job create</code></td></tr>
+        <tr><td><b>Read the output</b></td><td>Studio → <b>Tasks</b>, and the knowledge files in the Code view.</td><td><code>nut task list</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn">
+    <p class="kicker">The one genuine gap</p>
+    <p style="margin-bottom:0">
+      Coconut's Studio documentation lists Code, Overview, Schedule, Settings, Skills, Source
+      Control, Tasks, and Terminal — <b>no Knowledge or Context page</b>. Loading Pack A through
+      the Code editor is an inference from the <code>.nut/</code> directory layout, not something
+      the docs state. Try it first; fall back to the CLI if it is not there. Either way, note
+      how long it takes you to find — a context product where adding context is the least
+      obvious action is worth asking the founder about. The docs may simply be incomplete: there
+      are no documented pages for agents or resources either, though the Studio overview says it
+      manages both.
+    </p>
+  </div>
+
   <div class="toc">
     <p class="kicker">The ten steps</p>
     <ol>
@@ -238,13 +274,16 @@
   <div class="stephead"><span class="stepno">01</span><h2>Prerequisites</h2></div>
   <div class="prose">
     <p>
-      Coconut is invite-only, so this starts with access you already have. You need an
-      instance created from the Dashboard, and the <code>nut</code> CLI authenticated
-      against it.
+      Coconut is invite-only, so this starts with access you already have. Everything you
+      strictly need is a Dashboard login. <b>The CLI is optional</b> — install it only if you
+      want to script the setup or prefer a terminal.
+    </p>
+    <p>
+      If you are going the Studio route, skip the block below entirely and go to step 2.
     </p>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · verify your setup</span><button class="copybtn" type="button">Copy</button></div>
+    <div class="blockhead"><span class="fname"><b>shell</b> · optional — only if you want the CLI</span><button class="copybtn" type="button">Copy</button></div>
     <pre><code>nut --version
 nut auth status
 nut config list</code></pre>
@@ -269,8 +308,25 @@ nut config list</code></pre>
 <section class="step" id="s2">
   <div class="stephead"><span class="stepno">02</span><h2>Initialize the instance</h2></div>
   <div class="prose">
+    <h3>Studio route</h3>
     <p>
-      Create a working directory and initialize. This writes the git-versioned
+      In the Dashboard, click <b>Add Coconut</b>. You will be asked for a <b>Name</b> (it becomes
+      the subdomain, e.g. <code>coconut-dogfood.hub.coconut.dev</code>), a <b>Cloud Provider</b>
+      (AWS by default), a <b>Configure User</b> to administer it, a <b>Specification</b> —
+      CPU, RAM, and disk — and an emoji. It provisions in 30–60 seconds.
+    </p>
+    <div class="callout">
+      <p class="kicker">Notice what you were just asked for</p>
+      <p style="margin-bottom:0">
+        CPU, RAM, and disk. You are sizing a machine, not creating a workspace. This is the
+        clearest confirmation that each Coconut is a VM, and it is worth holding onto — it
+        explains the git and terminal surfaces, and it is the reason a free tier or a
+        throwaway sandbox per prospect is expensive for them to offer.
+      </p>
+    </div>
+    <h3>CLI route (optional)</h3>
+    <p>
+      To work locally instead, create a directory and initialize. This writes the git-versioned
       <code>.nut/</code> directory that holds context, knowledge, skills, jobs, and tasks.
     </p>
   </div>
@@ -305,6 +361,15 @@ ls -a .nut</code></pre>
       These describe <b>seats, not real people</b> — Coconut does not publicly name its
       leadership, and this guide does not invent names for them.
     </p>
+    <div class="callout">
+      <p class="kicker">Studio route</p>
+      <p style="margin-bottom:0">
+        Open the <b>Code</b> view and create these four files under <code>.nut/context/</code>
+        as <code>role.md</code>, <code>team.md</code>, <code>agents.md</code>, and
+        <code>memory.md</code>, then commit from <b>Source Control</b>. If the Code view will not
+        let you create files there, use the CLI block at the end of this step.
+      </p>
+    </div>
   </div>
 
   <div class="block">
@@ -541,6 +606,16 @@ nut context get role</code></pre>
       is the editable input to the Competitor Intelligence Loop; the other four give the
       Product Improvement Loop enough to identify the product and respect its constraints.
     </p>
+    <div class="callout">
+      <p class="kicker">Studio route</p>
+      <p style="margin-bottom:0">
+        Same as the previous step: create these five as files under
+        <code>.nut/knowledge/</code> in the <b>Code</b> view and commit from
+        <b>Source Control</b>. Keep the filenames exactly as shown — both skill prompts
+        reference <code>competitors-list.md</code>, <code>product.md</code>,
+        <code>constraints.md</code>, and <code>positioning.md</code> by name.
+      </p>
+    </div>
   </div>
 
   <div class="block">
@@ -923,8 +998,21 @@ nut knowledge list</code></pre>
   <div class="prose">
     <p>
       Both loops follow Coconut's published shape: a skill defines what the agent does, a job
-      triggers it, and the output is something you can act on. Paste each prompt below into
-      the skill builder — in Studio, or by describing it to an agent with the
+      triggers it, and the output is something you can act on.
+    </p>
+    <div class="callout">
+      <p class="kicker">Studio route — this is the natural path</p>
+      <p style="margin-bottom:0">
+        Studio → <b>Skills</b> → <b>Create New</b>, then fill four fields: <b>Name</b>
+        (<code>competitor-intelligence-loop</code>), <b>Description</b> (one line),
+        <b>Skill Instructions</b> (paste the whole prompt below), and <b>Tools</b> — the MCP
+        servers the skill may call. Tools matter here: the competitor loop needs web access to
+        research anything, so a skill with no tools attached will produce a confident-sounding
+        file built entirely from model priors. That is worth testing deliberately.
+      </p>
+    </div>
+    <p>
+      Alternatively, describe the skill to an agent that has the
       <code>coconut-skills-creator</code> meta-skill installed.
     </p>
   </div>

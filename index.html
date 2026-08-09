@@ -405,13 +405,20 @@
         sessions, image/audio/video generation. Coconut is a context layer <i>and</i> an agent
         execution environment, sold as the former.
       </p>
+      <p style="margin-bottom:0">
+        <b>Confirmed independently by the provisioning flow.</b> The
+        <a href="https://docs.coconut.dev/dashboard/create">Add Coconut dialog</a> asks for a
+        name (which becomes a subdomain), a cloud provider defaulting to AWS, an administrator,
+        an emoji — and a <b>Specification: CPU, RAM, and disk capacity</b>. It provisions in
+        30–60 seconds. You are sizing a machine, not creating a workspace.
+      </p>
     </div>
   </div>
 
   <figure>
     <svg class="diagram" viewBox="0 0 1020 560" role="img" aria-labelledby="archtitle archdesc">
       <title id="archtitle">Coconut AI system architecture</title>
-      <desc id="archdesc">Source systems feed connectors into per-organization Coconut instances. Each instance is a virtual machine holding a git-versioned .nut directory, running an agent loop built on Claude Code alongside a governance layer, and exposing an access layer of REST, WebSocket, MCP and A2A endpoints. That access layer serves client surfaces and an OAuth-scoped MCP server, which in turn serves third-party AI tools.</desc>
+      <desc id="archdesc">Source systems feed connectors into per-organization Coconut instances. Each instance is a virtual machine holding a git-versioned .nut directory, running a selectable agent loop (Claude, Gemini or Codex) alongside a governance layer, and exposing an access layer of REST, WebSocket, MCP and A2A endpoints. That access layer serves client surfaces and an OAuth-scoped MCP server, which in turn serves third-party AI tools.</desc>
       <defs>
         <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
           <path d="M0,0 L0,6 L8,3 z" fill="currentColor"/>
@@ -462,8 +469,8 @@
       <g>
         <rect x="381" y="212" width="182" height="104" rx="8" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
         <text x="472" y="234" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">AGENT LOOP</text>
-        <text x="472" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">Claude Code reads</text>
-        <text x="472" y="277" text-anchor="middle" font-size="12" fill="var(--ink)">SKILL.md</text>
+        <text x="472" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">Claude · Gemini ·</text>
+        <text x="472" y="277" text-anchor="middle" font-size="12" fill="var(--ink)">Codex reads SKILL.md</text>
         <text x="472" y="300" text-anchor="middle" font-size="11.5" fill="var(--accent-2)">nut CLI · terminal</text>
       </g>
 
@@ -549,10 +556,13 @@
         makes a free tier hard to offer against a competitor whose unit is a database row.
       </li>
       <li>
-        <b>The agent loop is Claude Code.</b> Documented as "Claude Code (or any equivalent
-        agent loop)," and the AI chat endpoint defaults to Claude Sonnet 4.5 via the Vercel
-        AI SDK. "Model-agnostic" describes what Coconut <i>distributes to</i>, not what it
-        <i>runs on</i>. Those are different claims and the marketing does not distinguish them.
+        <b>The agent runtime is selectable, but the skills shelf is not.</b> The scheduler
+        offers Claude, Gemini, or Codex per job and the coding-agent picker offers Claude Code
+        or Codex, so the runtime is genuinely model-agnostic. What is not agnostic is
+        distribution: skills ship through the Claude Code plugin marketplace and are written to
+        Anthropic's <code>SKILL.md</code> spec, with a third-party tool (<code>openskills</code>,
+        unaffiliated with either company) as the route into Cursor or Codex. The dependency is
+        real, but it sits in the supply chain rather than the execution path.
       </li>
       <li>
         <b>Retrieval is undocumented.</b> Coconut says knowledge is "indexed and available for
@@ -826,27 +836,34 @@
       the three are consequences of decisions already made.
     </p>
 
-    <h4>Threat 1 — The runtime owns the layer above</h4>
-    <div class="scale" aria-label="Severity: high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+    <h4>Threat 1 — Anthropic owns the standards and the shelf</h4>
+    <div class="scale" aria-label="Severity: medium-high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
     <p>
-      Coconut instances run Claude Code. Skills ship through the Claude Code plugin
-      marketplace. The AI endpoint defaults to Claude Sonnet 4.5. MCP — the distribution
-      mechanism the entire product depends on — is an Anthropic-authored standard, as is the
-      <code>SKILL.md</code> specification.
+      Skills ship through the <b>Claude Code plugin marketplace</b>. The AI chat endpoint
+      defaults to Claude Sonnet 4.5. MCP — the distribution mechanism the entire product
+      depends on — is an Anthropic-authored standard, as is the <code>SKILL.md</code>
+      specification Coconut skills are written in.
     </p>
     <p>
-      Anthropic is simultaneously Coconut's execution runtime, its distribution channel, its
-      standards body, and the vendor of a competing product one layer up. Every capability
+      Anthropic is simultaneously Coconut's default runtime, its skill distribution channel,
+      its standards body, and the vendor of a competing product one layer up. Every capability
       Anthropic adds to Projects, Skills, or Cowork narrows the gap Coconut sells into, and
-      Coconut has no leverage over the roadmap or the pricing. The same applies to OpenAI
-      and Microsoft on the distribution side. This is not a partnership; it is a dependency
-      with a marketing page.
+      Coconut has no leverage over that roadmap or its pricing. The same applies to OpenAI and
+      Microsoft on the context-consumption side.
     </p>
-    <p class="fig-note">
-      Note the asymmetry in the "model-agnostic" claim: Coconut is agnostic about which tool
-      <i>consumes</i> context, but not about what <i>runs</i> its agent loop. Those are
-      different properties and only one of them is defended.
-    </p>
+    <div class="callout">
+      <p class="kicker">Correction — this threat is narrower than first assessed</p>
+      <p style="margin-bottom:0">
+        An earlier version of this page said Coconut's agent loop <i>is</i> Claude Code, and
+        that "model-agnostic" therefore described only what Coconut distributes to and not what
+        it runs on. That was too strong. Coconut's
+        <a href="https://docs.coconut.dev/studio/schedule">job scheduler</a> lets you pick
+        <b>Claude, Gemini, or Codex</b> per scheduled job, and the
+        <a href="https://docs.coconut.dev/studio/code">coding-agent picker</a> offers Claude
+        Code or OpenAI Codex. The runtime is genuinely selectable. Anthropic is the default and
+        the skills shelf, not a lock-in — severity revised down accordingly.
+      </p>
+    </div>
 
     <h4>Threat 2 — The free option is good, and its author funds the competition</h4>
     <div class="scale" aria-label="Severity: high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
@@ -1103,6 +1120,8 @@
         <tr><td>Mem0 stars</td><td>41K+</td><td><b>62,829</b></td><td>Live GitHub API, 8 Aug 2026.</td></tr>
         <tr><td>Coconut team size</td><td>2–10 <i>and</i> ~81 in the same document</td><td><b>2–10 (LinkedIn)</b>, unverified</td><td>The Notion brief contradicted itself. LinkedIn's 2–10 is the only sourced figure; self-reported LinkedIn ranges are unreliable and this should be confirmed directly.</td></tr>
         <tr><td>Hyper batch</td><td>YC Spring 2026</td><td><b>YC P26 = Spring 2026</b></td><td>Same batch, two labels. Not a conflict.</td></tr>
+        <tr><td>Coconut's agent runtime</td><td>This report, first version: "the agent loop is Claude Code"</td><td><b>Selectable: Claude, Gemini, or Codex</b></td><td>Corrected 8 Aug 2026 after reading the Studio scheduler and coding-agent docs. The earlier reading came from the skills docs alone and was too strong. Threat 1 severity revised down.</td></tr>
+        <tr><td>VM per instance</td><td>Inferred from skills-doc phrasing</td><td><b>Confirmed</b></td><td>The Add Coconut dialog asks for CPU, RAM, and disk capacity and provisions in 30–60 seconds.</td></tr>
         <tr><td>Dashworks → HubSpot<br>Starmind → Capacity</td><td>Stated as fact</td><td><b>Unconfirmed</b></td><td>Could not be independently verified for this report. Flagged <i>thin</i> in the database.</td></tr>
       </tbody>
     </table>
@@ -1120,7 +1139,7 @@
     <h3>Known weaknesses in this analysis</h3>
     <ol>
       <li>The YC 2026 cohort is very early and moves weekly. Traction figures are point-in-time and self-reported at launch.</li>
-      <li>The VM-per-instance reading is inferred from documentation language ("a VM with the <code>nut</code> CLI installed"), not from an architecture document. It is well-supported by the API surface but not confirmed by the company.</li>
+      <li>The VM-per-instance reading was originally inferred from the skills docs; it is now corroborated by the provisioning dialog, which asks for CPU, RAM, and disk. Still not confirmed by an architecture document from the company.</li>
       <li>Absence of a SOC 2 claim on a public site is not proof of absence of SOC 2. It is proof that it is not being marketed, which is itself informative but weaker.</li>
       <li>Funding data for Capacity, Shelf, Bloomfire, Swimm, and DevRev is inherited and thinly sourced.</li>
     </ol>
