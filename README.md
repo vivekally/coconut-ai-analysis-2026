@@ -4,14 +4,16 @@ An independent, **public-sources-only** analysis of [Coconut AI Inc.](https://ww
 (coconut.dev): what the product does, how it is actually built, who it competes with,
 and what could kill it.
 
-**Live:** https://vivekally.github.io/coconut-ai-analysis-2026/
+## Live
 
-Two pages:
+| Page | URL | What it is |
+|---|---|---|
+| Analysis | **https://vivekally.github.io/coconut-ai-analysis-2026/** | Product, architecture, workflows, competitors, existential threat, stack-map fit, method |
+| Competitor database | **https://vivekally.github.io/coconut-ai-analysis-2026/competitors.html** | 47 companies, searchable and tier-filterable, each with its relationship to Coconut |
 
-| Page | What it is |
-|---|---|
-| `index.html` | The analysis — product, architecture, workflows, competitors, existential threat, stack-map fit, method |
-| `competitors.html` | Searchable database of 47 companies, grouped by tier, each with its relationship to Coconut |
+Deep links work on both: `#threat`, `#stack`, `#method` open a tab on the analysis page;
+`competitors.html#c-gbrain`, `#c-glean`, `#c-hyper` open a specific company card (and clear
+any active filter that would otherwise hide it).
 
 ## Scope and sourcing
 
