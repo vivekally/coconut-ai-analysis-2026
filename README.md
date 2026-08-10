@@ -1,8 +1,13 @@
 # Coconut AI — Independent Product Analysis
 
-An independent, **public-sources-only** analysis of [Coconut AI Inc.](https://www.coconut.dev/)
-(coconut.dev): what the product does, how it is actually built, who it competes with,
-and what could kill it.
+An independent analysis of [Coconut AI Inc.](https://www.coconut.dev/) (coconut.dev):
+what the product does, how it is actually built, who it competes with, and what could
+kill it.
+
+**Seven of the eight tabs are public-sources-only.** The eighth — *First-hand* — comes
+from attaching the Coconut MCP connector to a live beta instance and reading the object
+model directly. It is quarantined on purpose so the public-sourced material stays
+independently checkable.
 
 ## Live
 
@@ -18,12 +23,19 @@ any active filter that would otherwise hide it); `setup.html#s7` jumps to a numb
 
 ## Scope and sourcing
 
-Everything here traces to a public source read on **8 August 2026**: coconut.dev,
-docs.coconut.dev, the GitHub API, Y Combinator company pages, or published reporting.
+**Public-sourced (seven tabs).** Product, Architecture, Workflows, Competitors,
+Existential Threat, Stack Fit, Method. Everything traces to a public source read
+**8–9 August 2026**: coconut.dev, docs.coconut.dev, the GitHub API, Y Combinator company
+pages, or published reporting.
 
-**Nothing comes from hands-on product use, private beta access, or any conversation
-with the company.** That boundary is deliberate — it keeps the page safe to share
-with the company itself and safe if a competitor finds it.
+**First-hand (one tab).** Drawn from the Coconut MCP connector against a live beta
+instance, **9–10 August 2026**. Covers the shipped tool surface, the object model, and one
+observed product behaviour.
+
+What that tab deliberately excludes: **any page contents, any seeded or customer data,
+and anything identifying an organization or user.** No writes were made to the instance.
+Structure and behaviour only. Ignore that one tab and the rest of the document stands as
+a strictly public-sourced analysis.
 
 Every company in the database carries a verification flag describing how well *this
 report* confirmed it, not how good the company is:
@@ -46,6 +58,14 @@ This report re-verified rather than inherited. The material corrections:
 - **GBrain has 28,015 stars**, not ~23.6K. Mem0 has 62,829, not 41K.
 - **Propose-then-publish review is marked "coming soon"** — the load-bearing beam of the governance pitch.
 - **No SOC 2 claim appears anywhere on the public site.**
+- **The agent runtime is selectable** (Claude / Gemini / Codex), not Claude-only — a correction to this report's own first version, logged in the conflicts table.
+
+From first-hand access:
+
+- **The published API reference describes a tool surface that no longer exists.** The shipped connector exposes `context_*` and `agent_*`; not one documented tool name appears, and there is no `knowledge_*` namespace at all.
+- **Three content layers per page** — body, frontmatter, and typed metadata — where metadata patches carry their own audit trail *without* creating a page revision. Better designed than any public page explains.
+- **Real optimistic concurrency** (`expectedVersion`), an automatic link graph with backlinks and broken-target flagging, and run records carrying model, token usage, turn count, and an opt-in reasoning transcript.
+- **Credit exhaustion degrades quality invisibly.** When agent credits run out, runs fall back to a no-retrieval path whose output is structurally indistinguishable from a researched run. The quality gates interrogate reasoning, not whether evidence was fetched — so a well-argued case from fabricated premises passes all of them.
 
 Full conflicts log is on the Method tab.
 

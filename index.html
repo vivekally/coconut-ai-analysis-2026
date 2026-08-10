@@ -186,7 +186,7 @@
 <header class="masthead">
   <div class="shell">
     <div class="mast-top">
-      <p class="eyebrow">Independent Product Analysis · Public sources only</p>
+      <p class="eyebrow">Independent Product Analysis · Public sources + first-hand beta access</p>
       <button class="themebtn" id="themebtn" type="button" aria-label="Toggle colour theme">
         <span class="glyph" id="themeglyph">◐</span><span id="themelabel">Auto</span>
       </button>
@@ -205,7 +205,7 @@
       <span><b>Status</b> Invite-only · v1.0 shipped 3 Jun 2026</span>
       <span><b>Company age</b> ~12 months</span>
       <span><b>Competitors mapped</b> 47</span>
-      <span><b>Sourcing</b> Public only</span>
+      <span><b>Sourcing</b> Public · plus 1 first-hand tab</span>
     </div>
   </div>
   <div class="band" aria-hidden="true">
@@ -225,6 +225,7 @@
     <a role="tab" href="#threat"   id="t-threat"   aria-selected="false" aria-controls="p-threat">Existential Threat</a>
     <a role="tab" href="#stack"    id="t-stack"    aria-selected="false" aria-controls="p-stack">Stack Fit</a>
     <a role="tab" href="#method"   id="t-method"   aria-selected="false" aria-controls="p-method">Method</a>
+    <a role="tab" href="#firsthand" id="t-firsthand" aria-selected="false" aria-controls="p-firsthand">First-hand</a>
     <a class="ext" href="competitors.html">Competitor Database ↗</a>
     <a class="ext" href="setup.html">Setup Guide ↗</a>
   </div>
@@ -1089,10 +1090,20 @@
     <div class="callout">
       <p class="kicker">Scope</p>
       <p>
-        <b>Public sources only.</b> Nothing on this page comes from hands-on use of the
-        product, private beta access, or any conversation with the company. Every claim
-        traces to coconut.dev, docs.coconut.dev, the GitHub API, a Y Combinator company
-        page, or published reporting, all read on 8 August 2026.
+        <b>Seven of the eight tabs are public sources only.</b> Product, Architecture,
+        Workflows, Competitors, Existential Threat, Stack Fit, and this Method tab contain
+        nothing from hands-on use or private access. Every claim in them traces to
+        coconut.dev, docs.coconut.dev, the GitHub API, a Y Combinator company page, or
+        published reporting, read 8–9 August 2026.
+      </p>
+      <p>
+        <b>The <a href="#firsthand">First-hand</a> tab is the exception</b>, and is
+        quarantined deliberately. It comes from attaching the Coconut MCP connector to a
+        live beta instance on 9–10 August 2026 and reading the object model directly. It
+        covers structure and one observed product behaviour only — <b>no page contents, no
+        seeded or customer data, nothing identifying an organization or user</b>, and no
+        writes were made. If you need a strictly public-sourced document, ignore that one
+        tab and the rest stands unchanged.
       </p>
     </div>
 
@@ -1177,6 +1188,316 @@
   </div>
 </section>
 
+
+<!-- ================= FIRST-HAND ================= -->
+<section role="tabpanel" id="p-firsthand" aria-labelledby="t-firsthand" hidden>
+  <div class="prose">
+    <p class="kicker">08 — First-hand findings</p>
+    <h2>What the connector shows that the docs do not</h2>
+    <p class="lede">
+      Everything in the other seven tabs is traceable to a public URL. This tab is not.
+      It comes from connecting the Coconut MCP connector to a live beta instance on
+      9–10 August 2026 and reading the object model directly.
+    </p>
+
+    <div class="callout">
+      <p class="kicker">Scope of this tab</p>
+      <p>
+        <b>Included:</b> the shipped tool surface, the data model, and one observed
+        product behaviour. All of it is structural — how Coconut is built, not what any
+        instance contains.
+      </p>
+      <p style="margin-bottom:0">
+        <b>Excluded:</b> the contents of any space or page, any customer or seeded data,
+        anything identifying an organization or user. No writes were made to the instance.
+        Nothing here is quoted from a page body.
+      </p>
+    </div>
+
+    <h3>Finding 1 — The shipped connector is not the documented one</h3>
+    <p>
+      The public <a href="https://docs.coconut.dev/integrations/connectors">connectors
+      documentation</a> describes an MCP server exposing 26 tools shaped around
+      <i>instance management</i>: <code>coconuts_list</code>, <code>tasks_list</code>,
+      <code>knowledge_search</code>, <code>jobs_list</code>, <code>skills_list</code>.
+      The connector that actually attaches exposes a different surface entirely, shaped
+      around the <i>context product</i>.
+    </p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:180px">Namespace</th><th>Tools</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b><code>context_*</code></b><br><span style="color:var(--muted);font-size:12px">pages &amp; spaces</span></td>
+          <td class="mono" style="font-size:12.5px">whoami · space_list · create_space · list_shared_pages · get_shared_page · create_shared_page · update_shared_page · get_shared_page_revisions · search_shared_pages · recent_shared_pages · list_personal_pages · get_personal_page · create_personal_page · update_personal_page · get_page_metadata · set_page_metadata · list_metadata_keys · query_pages_by_metadata · get_page_links</td>
+        </tr>
+        <tr>
+          <td><b><code>agent_*</code></b><br><span style="color:var(--muted);font-size:12px">space agents</span></td>
+          <td class="mono" style="font-size:12.5px">list · get_instructions · set_instructions · create_task · get_task · update_task · list_tasks · run_task · get_run · list_runs</td>
+        </tr>
+        <tr>
+          <td><b>standalone</b></td>
+          <td class="mono" style="font-size:12.5px">get_context_by_url</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+    <p>
+      Not one documented tool name appears. There is no <code>knowledge_*</code>
+      namespace at all — the knowledge/context split the CLI documentation is built
+      around does not exist in the shipped connector, where everything is a page in a
+      space. <b>The published API reference describes a different generation of the
+      product.</b>
+    </p>
+    <p class="fig-note">
+      This matters beyond tidiness. An evaluator who reads the docs, writes an
+      integration against <code>knowledge_search</code>, and then connects will find
+      nothing they planned for. It is also the second instance of the same pattern
+      documented on the <a href="#product">Product</a> tab: what ships and what is
+      described have drifted apart.
+    </p>
+
+    <h3>Finding 2 — The real object model</h3>
+    <p>
+      Three layers of content per page, not one — and this is the design detail that
+      makes the "prose carries judgment, metadata carries facts that churn" claim
+      actually work.
+    </p>
+  </div>
+
+  <figure>
+    <svg class="diagram" viewBox="0 0 1020 600" role="img" aria-labelledby="omtitle omdesc">
+      <title id="omtitle">Coconut verified object model</title>
+      <desc id="omdesc">An organization contains spaces. Each space contains pages and exactly one agent. A page has three content layers: a Markdown body from which a link graph is auto-indexed, frontmatter, integer versions with optimistic concurrency, and structured metadata patched without creating a revision. An agent has versioned instructions, task pages carrying cron schedules in frontmatter, and run records capturing model, token usage and transcript.</desc>
+      <defs>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <g fill="none" stroke="currentColor" color="var(--muted)" stroke-width="1.3" marker-end="url(#ar2)" opacity="0.7">
+        <path d="M130,280 H161"/>
+        <path d="M335,240 H355 V145 H371"/>
+        <path d="M335,320 H355 V420 H371"/>
+      </g>
+
+      <g>
+        <rect x="20" y="250" width="110" height="60" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="75" y="275" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">ORG</text>
+        <text x="75" y="294" text-anchor="middle" font-size="11.5" fill="var(--ink)">Clerk</text>
+      </g>
+
+      <g>
+        <rect x="165" y="200" width="170" height="160" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="250" y="224" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SPACE</text>
+        <text x="250" y="248" text-anchor="middle" font-size="11.5" fill="var(--ink)">slug · name</text>
+        <text x="250" y="268" text-anchor="middle" font-size="11.5" fill="var(--ink)">description</text>
+        <text x="250" y="292" text-anchor="middle" font-size="11.5" fill="var(--accent)">visibility:</text>
+        <text x="250" y="310" text-anchor="middle" font-size="11.5" fill="var(--accent)">private | org</text>
+        <text x="250" y="336" text-anchor="middle" font-size="10.5" fill="var(--muted)">1 agent each</text>
+      </g>
+
+      <rect x="371" y="30" width="619" height="232" rx="10" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+      <text x="680" y="52" text-anchor="middle" font-size="11" fill="var(--ink-2)" letter-spacing="1.3">PAGE — canonical path: space/pagePath</text>
+
+      <g>
+        <rect x="385" y="66" width="140" height="180" rx="7" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="455" y="88" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">BODY</text>
+        <text x="455" y="110" text-anchor="middle" font-size="11" fill="var(--ink)">Markdown</text>
+        <text x="455" y="140" text-anchor="middle" font-size="10.5" fill="var(--accent)">link graph</text>
+        <text x="455" y="157" text-anchor="middle" font-size="10.5" fill="var(--accent)">auto-indexed</text>
+        <text x="455" y="174" text-anchor="middle" font-size="10.5" fill="var(--accent)">on every write</text>
+        <text x="455" y="200" text-anchor="middle" font-size="10" fill="var(--muted)">backlinks +</text>
+        <text x="455" y="216" text-anchor="middle" font-size="10" fill="var(--muted)">broken flags</text>
+      </g>
+
+      <g>
+        <rect x="537" y="66" width="140" height="180" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="607" y="88" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">FRONTMATTER</text>
+        <text x="607" y="112" text-anchor="middle" font-size="11" fill="var(--ink)">title</text>
+        <text x="607" y="132" text-anchor="middle" font-size="11" fill="var(--ink)">description</text>
+        <text x="607" y="152" text-anchor="middle" font-size="11" fill="var(--ink)">schedule</text>
+        <text x="607" y="180" text-anchor="middle" font-size="10" fill="var(--muted)">parsed out of</text>
+        <text x="607" y="196" text-anchor="middle" font-size="10" fill="var(--muted)">body, stored</text>
+        <text x="607" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">separately</text>
+      </g>
+
+      <g>
+        <rect x="689" y="66" width="140" height="180" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="759" y="88" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">VERSIONS</text>
+        <text x="759" y="112" text-anchor="middle" font-size="11" fill="var(--ink)">integer, 1..n</text>
+        <text x="759" y="132" text-anchor="middle" font-size="11" fill="var(--ink)">latest | first</text>
+        <text x="759" y="160" text-anchor="middle" font-size="10.5" fill="var(--accent)">expectedVersion</text>
+        <text x="759" y="177" text-anchor="middle" font-size="10.5" fill="var(--accent)">optimistic lock</text>
+        <text x="759" y="204" text-anchor="middle" font-size="10" fill="var(--muted)">full revision</text>
+        <text x="759" y="220" text-anchor="middle" font-size="10" fill="var(--muted)">history</text>
+      </g>
+
+      <g>
+        <rect x="841" y="66" width="140" height="180" rx="7" fill="var(--wash)" stroke="var(--accent-2)" stroke-width="1.4"/>
+        <text x="911" y="88" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">METADATA</text>
+        <text x="911" y="110" text-anchor="middle" font-size="11" fill="var(--ink)">typed key-value</text>
+        <text x="911" y="130" text-anchor="middle" font-size="11" fill="var(--ink)">any JSON type</text>
+        <text x="911" y="152" text-anchor="middle" font-size="10.5" fill="var(--ink)">set · append ·</text>
+        <text x="911" y="168" text-anchor="middle" font-size="10.5" fill="var(--ink)">appendUnique</text>
+        <text x="911" y="194" text-anchor="middle" font-size="10.5" fill="var(--accent-2)">no page revision</text>
+        <text x="911" y="212" text-anchor="middle" font-size="10.5" fill="var(--accent-2)">own audit trail</text>
+        <text x="911" y="232" text-anchor="middle" font-size="10" fill="var(--muted)">queryable</text>
+      </g>
+
+      <rect x="371" y="300" width="619" height="232" rx="10" fill="none" stroke="var(--accent)" stroke-dasharray="5 4"/>
+      <text x="680" y="322" text-anchor="middle" font-size="11" fill="var(--accent)" letter-spacing="1.3">AGENT — exactly one per space, a permissioned principal</text>
+
+      <g>
+        <rect x="385" y="336" width="190" height="180" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="480" y="358" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">INSTRUCTIONS</text>
+        <text x="480" y="382" text-anchor="middle" font-size="11" fill="var(--ink)">agents/instructions</text>
+        <text x="480" y="406" text-anchor="middle" font-size="11" fill="var(--ink)">the persona</text>
+        <text x="480" y="434" text-anchor="middle" font-size="10.5" fill="var(--muted)">layered into</text>
+        <text x="480" y="450" text-anchor="middle" font-size="10.5" fill="var(--muted)">every run</text>
+        <text x="480" y="478" text-anchor="middle" font-size="10.5" fill="var(--accent)">versioned, same</text>
+        <text x="480" y="494" text-anchor="middle" font-size="10.5" fill="var(--accent)">optimistic lock</text>
+      </g>
+
+      <g>
+        <rect x="587" y="336" width="190" height="180" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="682" y="358" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">TASKS</text>
+        <text x="682" y="382" text-anchor="middle" font-size="11" fill="var(--ink)">agents/&lt;task&gt;</text>
+        <text x="682" y="406" text-anchor="middle" font-size="11" fill="var(--ink)">a page like any</text>
+        <text x="682" y="422" text-anchor="middle" font-size="11" fill="var(--ink)">other page</text>
+        <text x="682" y="450" text-anchor="middle" font-size="10.5" fill="var(--accent)">schedule: cron</text>
+        <text x="682" y="466" text-anchor="middle" font-size="10.5" fill="var(--accent)">scheduleTz</text>
+        <text x="682" y="482" text-anchor="middle" font-size="10.5" fill="var(--accent)">scheduleEnabled</text>
+        <text x="682" y="502" text-anchor="middle" font-size="10" fill="var(--muted)">in frontmatter</text>
+      </g>
+
+      <g>
+        <rect x="789" y="336" width="192" height="180" rx="7" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="885" y="358" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">RUN RECORDS</text>
+        <text x="885" y="380" text-anchor="middle" font-size="10.5" fill="var(--ink)">agents/runs/&lt;task&gt;/</text>
+        <text x="885" y="396" text-anchor="middle" font-size="10.5" fill="var(--ink)">&lt;timestamp&gt;-&lt;rand&gt;</text>
+        <text x="885" y="422" text-anchor="middle" font-size="10.5" fill="var(--ink)">status · timing</text>
+        <text x="885" y="438" text-anchor="middle" font-size="10.5" fill="var(--ink)">model · tokens</text>
+        <text x="885" y="454" text-anchor="middle" font-size="10.5" fill="var(--ink)">turn count</text>
+        <text x="885" y="478" text-anchor="middle" font-size="10.5" fill="var(--accent)">opt-in transcript:</text>
+        <text x="885" y="494" text-anchor="middle" font-size="10.5" fill="var(--accent)">reasoning + tools</text>
+      </g>
+
+      <g>
+        <rect x="20" y="544" width="970" height="52" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="505" y="561" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.1">RESERVED &amp; IMPLICIT</text>
+        <text x="505" y="577" text-anchor="middle" font-size="11" fill="var(--ink)">agents/ and templates/ are reserved · every principal gets a personal space: personal-&lt;kind&gt;-&lt;uuid&gt;</text>
+        <text x="505" y="592" text-anchor="middle" font-size="11" fill="var(--ink)">whoami returns id, kind and scopes — no organization context</text>
+      </g>
+    </svg>
+    <figcaption class="fig-note">
+      Read directly from the MCP connector's tool schemas and structural responses,
+      9–10 August 2026. No page contents were used. Compare with the
+      <a href="#arch">system architecture</a> on the Architecture tab, which answers a
+      different question: how context gets in and out.
+    </figcaption>
+  </figure>
+
+  <div class="prose">
+    <h3>Finding 3 — Several things are better built than the marketing claims</h3>
+    <p>
+      This is the part worth telling the founder plainly: the engineering is ahead of the
+      story being told about it.
+    </p>
+    <ul>
+      <li>
+        <b>Metadata patches do not create a page revision.</b> <code>set</code> upserts
+        (JSON <code>null</code> deletes), <code>append</code> extends arrays atomically, and
+        <code>appendUnique</code> is idempotent — explicitly safe for re-running agents.
+        Metadata carries <i>its own</i> audit trail, separate from page versions. That is
+        exactly the right design for "prose carries judgment, metadata carries the facts
+        that churn," and no public page explains it.
+      </li>
+      <li>
+        <b>Real optimistic concurrency.</b> Every update requires
+        <code>expectedVersion</code>. Two agents cannot silently clobber one another —
+        the second write fails rather than winning.
+      </li>
+      <li>
+        <b>The link graph is automatic.</b> Indexed from Markdown bodies on every write,
+        with backlinks and broken-target flagging. A dependency map that maintains itself,
+        never mentioned in the marketing.
+      </li>
+      <li>
+        <b>Run observability is genuinely deep.</b> Every run record carries status, timing,
+        model, token usage, turn count, output, and an opt-in structured transcript of
+        reasoning and tool calls. This is better instrumentation than most agent platforms
+        expose.
+      </li>
+      <li>
+        <b>Agents really are principals.</b> A run "executes as the space's agent principal"
+        and writes its own record. The permission story is architectural, not cosmetic.
+      </li>
+    </ul>
+
+    <h3>Finding 4 — Credit exhaustion degrades quality invisibly</h3>
+    <div class="callout dang">
+      <p class="kicker">The one behavioural finding, and the most important thing on this page</p>
+      <p>
+        When an organization exhausts its agent credits, <code>agent_run_task</code> cannot
+        execute. Work does not stop — it falls back to running inline, in whatever client the
+        user is holding, <b>with no retrieval</b>.
+      </p>
+      <p style="margin-bottom:0">
+        The output of that degraded path is structurally indistinguishable from a fully
+        researched run: same format, same confident tone, same citations-shaped prose, same
+        gate tables. In the case observed, a run that performed <b>zero web fetches</b> made
+        four specific, confident, false assertions about what pages on coconut.dev say —
+        each of which was independently checked against the live site and contradicted.
+      </p>
+    </div>
+    <p>
+      Two things make this severe rather than cosmetic:
+    </p>
+    <ol>
+      <li>
+        <b>The quality gates cannot catch it.</b> They interrogate reasoning — is the
+        frustration real, is it genuinely unmet, is the scope honest. None of them asks
+        whether evidence was actually retrieved. A well-reasoned argument from fabricated
+        premises passes every gate.
+      </li>
+      <li>
+        <b>The signal to catch it already exists and is not used.</b> Run records carry a
+        fetch count. Nothing consumes it. A run that fetched nothing is permitted to assert
+        what a live page says.
+      </li>
+    </ol>
+    <p>
+      The fix is small and sits in the product's own idiom: a run that performed zero
+      retrievals should not be allowed to write a claim sourced to an external URL, and a
+      degraded run should be marked as such on every page it touches. Provenance is the
+      thing Coconut sells; this is the one place it is not enforced on itself.
+    </p>
+    <p class="fig-note">
+      In fairness: this is a degraded path, not the designed one. A properly executed agent
+      run in the same instance — over a hundred tool calls, fetching live pages — recorded
+      the same contested facts <i>correctly</i>. The architecture works. The failure mode is
+      what happens when it cannot.
+    </p>
+
+    <h3>What this changes in the rest of the analysis</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th style="width:220px">Earlier claim</th><th>Status after first-hand access</th></tr></thead>
+        <tbody>
+          <tr><td>Retrieval is undocumented</td><td><b>Unchanged, and now sharper.</b> The connector exposes full-text search and metadata query, but ranking is still not described anywhere.</td></tr>
+          <tr><td>Governance is partly a promise</td><td><b>Softened.</b> Optimistic concurrency, revision history, separate metadata audit trails, and agents-as-principals are all shipped. Propose-then-publish review remains the visible gap.</td></tr>
+          <tr><td>A VM per instance is a heavy unit</td><td><b>Unchanged.</b> Confirmed by the provisioning dialog and unaffected by anything in the connector.</td></tr>
+          <tr><td>Page metadata as a query surface is a differentiator</td><td><b>Strengthened.</b> Typed values, atomic array appends, idempotent patches, and revision-free updates are further along than the marketing suggests.</td></tr>
+          <tr><td>Docs and product have drifted</td><td><b>Strengthened considerably.</b> The published API reference describes a tool surface that no longer exists.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 </div>
 </main>
 
@@ -1190,10 +1511,11 @@
       <a href="https://vivekally.github.io/ai-robotics-stack-2026/">05 · Robotics Stack</a>
     </div>
     <p style="margin:0;max-width:76ch">
-      Independent analysis compiled 8 August 2026 from public sources. Not affiliated with,
-      commissioned by, or endorsed by Coconut AI Inc. No confidential or beta-access
-      information is included. Figures in a fast-moving private market go stale quickly;
-      verify before relying on any of them.
+      Independent analysis compiled 8–10 August 2026. Seven tabs are public-sourced; the
+      First-hand tab is drawn from a live beta instance and covers structure and product
+      behaviour only, with no page contents, customer data, or identifying information.
+      Not affiliated with, commissioned by, or endorsed by Coconut AI Inc. Figures in a
+      fast-moving private market go stale quickly; verify before relying on any of them.
     </p>
   </div>
 </footer>
