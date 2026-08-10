@@ -1,0 +1,70 @@
+flowchart TD
+    subgraph SOURCES["Source Systems"]
+        S1["Slack"]
+        S2["Google Drive"]
+        S3["Notion"]
+        S4["HubSpot"]
+        S5["Linear / Asana"]
+        S6["Git Repos"]
+        S7["Email / Mail"]
+        S8["Box / Fireflies"]
+    end
+
+    subgraph ENGINE["Context Engine"]
+        C1["Connectors + Scheduled Sync"]
+        C2["Knowledge Index + Retrieval"]
+        C3["Context Layer<br/>Identity / Product / Process /<br/>Relationships / State"]
+        C4["Page Metadata<br/>Scores, stages, dates, owners"]
+        C5["Space Agents<br/>Standing instructions, scheduled tasks"]
+    end
+
+    subgraph GOVERN["Governance"]
+        G1["Ownership per page"]
+        G2["Tiered Propagation"]
+        G3["Freshness + Decay signals"]
+        G4["RBAC + Audit logging"]
+    end
+
+    subgraph STORE["Storage"]
+        D1["Canonical Store"]
+        D2[".nut Directory<br/>Git-versioned"]
+    end
+
+    subgraph API["Access Layer"]
+        A1["REST API v1"]
+        A2["MCP Connector"]
+        A3["WebSocket"]
+    end
+
+    subgraph CLIENTS["Surfaces"]
+        U1["Coconut Studio"]
+        U2["Control Plane"]
+        U3["VS Code / Cursor"]
+        U4["CLI: nut"]
+        U5["iOS App"]
+    end
+
+    subgraph MODELS["AI Tools"]
+        M1["Claude"]
+        M2["ChatGPT"]
+        M3["Copilot"]
+        M4["Gemini"]
+    end
+
+    subgraph WORKFLOWS["Agentic Layer"]
+        W1["Jobs: Scheduled + event"]
+        W2["Skills: Packaged behaviors"]
+        W3["Tasks: Change proposals"]
+    end
+
+    SOURCES --> C1 --> C2 --> C3
+    C3 --> C4 & C5
+    C3 --> G1 & G2 & G3 & G4
+    C3 --> D1
+    D2 <--> C3
+    D1 --> A1 & A2 & A3
+    A2 --> MODELS
+    A1 --> CLIENTS
+    C5 --> WORKFLOWS
+    WORKFLOWS --> C3
+    U3 & U4 --- D2

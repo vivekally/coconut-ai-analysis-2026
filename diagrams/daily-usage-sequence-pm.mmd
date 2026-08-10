@@ -1,0 +1,18 @@
+sequenceDiagram
+  actor PM as Product Manager
+  participant Cl as Client (Claude / editor / Control Plane)
+  participant Co as Coconut MCP Connector
+  participant Cx as Context layer
+  participant AI as Model
+
+  PM->>Cl: "Draft the Q3 spec / prep my review"
+  Cl->>Co: Request context (permission-aware)
+  Co->>Cx: Fetch relevant context (5 layers)
+  Cx-->>Co: Owner-approved, current context
+  Co-->>Cl: Inject context
+  Cl->>AI: Prompt + context
+  AI-->>PM: Draft with full picture
+  PM->>Cl: Edit / propose change
+  Cl->>Cx: Open Task / Proposal
+  Note over Cx: Owner reviews, approves, propagates
+  Cx-->>Co: Jobs enrich & re-verify on schedule

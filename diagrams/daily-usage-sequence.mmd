@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor User as Team Member
+    participant Client as AI Tool<br/>(Claude / ChatGPT)
+    participant MCP as Coconut MCP
+    participant CTX as Context Layer
+    participant Agent as Space Agent
+
+    User->>Client: "Draft Q3 board deck"
+    Client->>MCP: Request context
+    MCP->>CTX: Fetch relevant pages
+    CTX-->>MCP: Sourced, current context
+    MCP-->>Client: Inject into prompt
+    Client-->>User: Draft with sourced figures
+
+    User->>Client: Propose a change
+    Client->>CTX: Open Task
+    CTX->>CTX: Owner reviews + approves
+
+    Note over Agent,CTX: Background (scheduled)
+    Agent->>CTX: Fold new transcripts
+    Agent->>CTX: Flag stale content
+    Agent->>CTX: Refresh research

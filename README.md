@@ -69,6 +69,23 @@ From first-hand access:
 
 Full conflicts log is on the Method tab.
 
+## Diagrams
+
+Four hand-authored inline SVGs across the analysis page:
+
+| Diagram | Tab | Answers |
+|---|---|---|
+| System architecture | Architecture | Where things run — sources, the VM instance, distribution |
+| Functional architecture | Architecture | What each component does (from the June 2026 brief) |
+| Verified object model | First-hand | What a page actually is — body, frontmatter, metadata, versions |
+| Daily usage sequence | Workflows | How the drafting and change-proposal loop runs |
+
+Mermaid source for the last two lives in [`diagrams/`](diagrams/). The pages render
+hand-authored SVG rather than Mermaid because Mermaid needs a ~2.5MB runtime and these
+pages make **zero external requests**. Two claims in the imported functional diagram are
+marked rather than carried forward: layer 02 (Domain on the platform page, Product in the
+FAQ) and the canonical store (still an inference).
+
 ## Setup kit
 
 [`setup-kit/`](setup-kit/) holds the source files for the setup guide: context documents,
