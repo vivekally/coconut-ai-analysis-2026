@@ -52,7 +52,7 @@ This report re-verified rather than inherited. The material corrections:
 
 - **Context layer 02 is now "Domain," not "Product"** — and Coconut's own FAQ still says Product. The conflict is on their site, not between sources.
 - **Pricing tiers are Team / Company / Enterprise**, not Starter / Growth / Enterprise.
-- **Each "Coconut" is a VM running Claude Code**, per the skills docs. This reframes the architecture and was absent from every prior diagram.
+- **Each "Coconut" is a VM.** Confirmed by the provisioning dialog, which asks for CPU, RAM, and disk. This reframes the architecture and was absent from every prior diagram.
 - **Glean is at $300M ARR** (May 2026), not $200M. Up from ~$100M fifteen months earlier.
 - **Dust raised a $40M Series B** in May 2026 led by Abstract and Sequoia — prior research listed it only as "VC-backed."
 - **GBrain has 28,015 stars**, not ~23.6K. Mem0 has 62,829, not 41K.
@@ -122,7 +122,7 @@ carries no suite bar. It links out to
 ## Stack-map positions argued here
 
 - **AI stack L10 · Middleware & APIs** — primary. The `MCP servers / connectors` sub-layer currently has no companies named; Coconut is the cleanest candidate for the first entry.
-- **AI stack L09 · Orchestration** — stronger than previously assessed, because of the VM-runs-Claude-Code finding.
+- **AI stack L09 · Orchestration** — stronger than previously assessed: each instance is a VM running a selectable coding agent, with git worktrees, terminals, and code sessions.
 - **AI stack L11 · Application Platforms** — secondary.
 - **Robotics stack** — **no fit.** Argued explicitly rather than forced. The nearest honest adjacency is that a robotics fleet-ops team would be a *buyer*, and that the vertical slot is already occupied by Osseus.
 
