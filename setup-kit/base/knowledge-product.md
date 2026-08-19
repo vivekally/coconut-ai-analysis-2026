@@ -1,7 +1,7 @@
 # Product — What Coconut Is
 
-**Owner:** Head of Product · **Last verified:** 2026-08-08 · **Source:** coconut.dev,
-docs.coconut.dev
+**Owner:** Head of Product · **Last verified:** 2026-08-18 · **Source:** coconut.dev,
+docs.coconut.md, docs.coconut.dev, trust.coconut.dev
 
 ## One sentence
 
@@ -9,62 +9,95 @@ Coconut connects an organization's scattered documents, tools, and undocumented 
 into one living, governed source that any AI tool draws from through a permission-aware
 MCP connector.
 
+## Read this first: we document two products
+
+As of 2026-08-18 two documentation sites are live and they describe different software.
+
+| | `docs.coconut.dev` | `docs.coconut.md` |
+|---|---|---|
+| Unit | a Coconut = one provisioned VM | `org → space → page` |
+| Storage | `.nut/` directory, git-versioned | Postgres |
+| Versioning | git branches and worktrees | append-only revisions, **"no git lifecycle"** |
+| MCP tools | `coconuts_* tasks_* knowledge_* skills_*` | `context_* agent_*` |
+| Retrieval | "indexed and available" | Postgres full-text search + metadata query |
+| Deployment | provision an instance | Docker Compose, Helm, Terraform |
+
+**The second one is what ships.** A live MCP connector attached on 2026-08-09 exposed
+`context_*` and `agent_*` and nothing else. The marketing nav still links to the first.
+Treat any claim sourced only to `docs.coconut.dev` as historical.
+
 ## The problem, as we state it
 
-Organizational AI context fails three ways at once:
-
-- **Fragmented** — AI tools do not share context, so every session starts from zero.
-- **Stale** — context goes out of date the moment things change.
-- **Inconsistent** — without a shared source, output varies by tool, team, and session.
+Organizational AI context fails three ways at once: **fragmented** (tools do not share
+context), **stale** (it ages the moment things change), **inconsistent** (output varies by
+tool, team, and session).
 
 The distinction we draw against enterprise search: search helps people *find* information;
-a context layer gives AI the knowledge to *act* on it.
+a context layer gives AI the knowledge to *act* on it. As of the new documentation the
+mechanism behind that is a **query** engine, not a retrieval engine.
 
-## The five layers
+## The object model
 
-| # | Layer | Holds | Investor-firm example |
-|---|---|---|---|
-| 01 | Identity | Who you are, what you are trying to do — mission, goals, OKRs | Fund thesis, mandate, criteria |
-| 02 | Domain | What you work on and the language around it | Focus areas, markets, portfolio, live deals |
-| 03 | Process | How work gets done — templates, frameworks, checklists | Sourcing, diligence, the IC process |
-| 04 | Relationships | Stakeholder maps, who owns what, landmines | Founders, co-investors, LPs |
-| 05 | State | Current initiatives, recent decisions, open questions, metrics | Same |
-
-**Known inconsistency:** the platform page calls layer 02 "Domain"; the FAQ still calls it
-"Product". Both live as of 2026-08-08.
+- **Org → space → page.** A space groups pages around a purpose, carries its own members and
+  visibility (`private` or `org`), and has **exactly one agent**. Every user also has a
+  personal space.
+- **A page has three content layers.** Markdown **body** (narrative), **frontmatter**
+  (travels with the revision), and **metadata** (stored alongside, queryable, patchable
+  without creating a revision).
+- **Reserved prefixes.** `agents/` holds the agent's instructions, task pages and run
+  records; `templates/` holds page templates. Both hidden from listings and search.
+- **Three doors, one ACL engine.** Browser at `/pages/:space/:path`, HTTP with
+  `Accept: text/markdown`, MCP at `POST /mcp`. Identical authorization outcomes.
 
 ## What is genuinely differentiated
 
-- **Page metadata as a query surface.** Typed key-value data alongside every page — scores,
-  stages, dates, owners, sources — queryable across a space. "Every deal in diligence with
-  conviction above 0.7, ranked" is one query, not a re-keyed spreadsheet. Prose carries
-  judgment; metadata carries facts that churn.
-- **Lineage, not overwrite.** A changed decision supersedes rather than overwrites. Every
-  page versioned, any two versions diffable, rollback in one step.
-- **Space agents as principals.** Each space has an agent with standing instructions running
-  on a schedule — folding transcripts into memos, appending sources, flagging stale coverage.
-  Read-only outside explicit grants, every run recorded.
+- **Metadata as a query surface.** Any JSON value. `set` upserts, `append` extends arrays
+  atomically, `appendUnique` makes re-running agents idempotent. Per-key audit trail.
+  Operators `eq neq exists missing gt gte lt lte contains`, AND-ed, with `orderBy`.
+- **Views.** `/views` is a filter builder over the *same* engine agents use, with the whole
+  view state in the URL — a tuned query is a shareable link and a team dashboard.
+- **Agents as scoped principals.** Scheduled runs execute as the space agent principal;
+  manual runs execute with the requesting user's authority.
+- **Automatic link graph.** Backlinks, broken-target flags and a space-wide broken-link
+  report, indexed from Markdown bodies on every write.
 
-## Surfaces
+## Newer capabilities
 
-Coconut Studio, Control Plane, VS Code / Cursor extension, `nut` CLI, iOS app, REST
-`/api/v1`, WebSocket, MCP server at `app.coconut.dev/mcp` (26 tools, OAuth-scoped), and an
-A2A agent card.
+| Capability | What it is |
+|---|---|
+| Webhooks | Four page/metadata events, HMAC-SHA256 signed, retries with backoff, delivery log, SSRF guard re-checked after DNS resolution |
+| Space templates | A gallery merging built-in, org-maintained and opt-in remote catalogues; "Use this template" provisions a whole space |
+| Export / import | Whole spaces as portable JSON bundles (`coco-space-export` v1), the same format space templates are built from |
+| Deployment | Docker Compose, Helm chart, Terraform for AWS. Enterprise artifact is `api + postgres` |
+| Identity | Google Workspace OIDC first-class, Okta profile, SCIM baseline |
+| Native agents | `COCO_NATIVE_AGENTS_MODE=native` plus an "Eve" runtime container, gated by per-org entitlements |
 
-## Architecture note
+## Vertical blueprints
 
-Each "Coconut" is an instance — per the skills documentation, a VM with the `nut` CLI
-installed and a `.nut/` directory for state, where an agent loop reads `SKILL.md` and
-executes `nut` subcommands. The `.nut` directory is git-versioned and holds `context/`,
-`knowledge/`, `skills/`, `jobs/`, `tasks/`, `mcp/`, `resources/`, `chats/`, `config.json`.
+Five, each a metadata schema plus a saved view plus a connector: private-equity deal
+pipeline, B2B SaaS account research, SRE runbooks, legal contract repository, manufacturing
+supplier audit. Every one is the same three primitives dressed for a buyer.
+
+## The five layers
+
+Identity / Domain / Process / Relationships / State appear on the platform page and
+**nowhere in the shipped object model**. There is no layer field and no layer API. Treat the
+taxonomy as sales narrative, not architecture.
+
+**Known inconsistency, still live:** the platform page calls layer 02 "Domain"; the FAQ calls
+it "Product". Both live as of 2026-08-18, ten days after first being noticed.
 
 ## Deployment and security
 
-AWS. AES-256 at rest, TLS 1.2+ in transit, RBAC, MFA, least privilege, audit logging,
-regular penetration testing. Three models: multi-tenant SaaS, single-tenant hosted,
-self-hosted. Assurance artifacts under NDA.
+AES-256 at rest, TLS 1.2+ in transit, RBAC, MFA, least privilege, audit logging, regular
+penetration testing. The security page now describes two models, managed or self-hosted.
+Secrets — webhook signing keys, connector credentials, model keys — are encrypted under a
+required 32-byte `COCO_SETTINGS_ENCRYPTION_KEY`; without it webhook creation returns `503`
+rather than storing plaintext.
 
-**Gap:** no SOC 2 claim appears on the public site.
+**SOC 2 status:** a Vanta Trust Center is live at `trust.coconut.dev` with roughly 57
+continuously monitored controls, all passing. The only downloadable artifact is an
+**engagement letter** — an audit begun, not a report issued.
 
 ## Pricing
 
@@ -73,7 +106,9 @@ Three contact-sales tiers, no public figures: **Team** (first pilot), **Company*
 
 ## Shipped vs promised
 
-- **Shipped:** 1.0 (2026-06-03), versioning, lineage, rollback, ownership, RBAC, MCP with
-  OAuth scopes, connectors, space agents, skills, jobs.
-- **Marked "coming soon":** propose-then-publish review — the tiered-propagation workflow
-  where low-risk updates flow automatically and high-impact changes require confirmation.
+- **Shipped:** append-only revisions, `If-Match`/ETag concurrency, metadata with per-key
+  audit, full-text search, link graph, space agents with schedules and run records,
+  connectors, webhooks, templates, export/import, SCIM.
+- **Still missing:** **propose-then-publish review.** Marked "coming soon" on the platform
+  page and absent entirely from 27 pages of new documentation — no review endpoint, no
+  proposal object, no approval state on a page.

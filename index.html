@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <title>Coconut AI — An Independent Product Analysis</title>
-<meta name="description" content="An independent, public-source analysis of Coconut AI (coconut.dev): what the product does, how it is built, who it competes with, and what could kill it.">
+<meta name="description" content="An independent analysis of Coconut AI (coconut.dev), revised 18 August 2026 against the new docs.coconut.md documentation: what the product does, how it is actually built, who it competes with, and what could kill it.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A5%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -194,15 +194,15 @@
     <h1>Coconut is betting that context outlives the tool</h1>
     <p class="dek">
       Coconut AI sells a shared, governed context layer that every AI tool in an organization
-      draws from. The thesis is sound and unusually well validated. The problem is that
-      roughly a dozen other teams reached it in the same twelve months, one of them is free
-      and written by the president of Y Combinator, and the runtime Coconut is built on
-      belongs to a company that could ship this itself.
+      draws from. The thesis is sound and unusually well validated. Ten days after this report
+      first ran, a second documentation site appeared describing a different product on a
+      different architecture — no VMs, no git, Postgres and pages — and the marketing site still
+      links to the old one. The thesis holds. The engineering underneath it has been replaced.
     </p>
     <div class="ticker">
-      <span><b>Compiled</b> 8 Aug 2026</span>
+      <span><b>Compiled</b> 8 Aug · <b>revised</b> 18 Aug 2026</span>
       <span><b>Subject</b> Coconut AI Inc. · coconut.dev</span>
-      <span><b>Status</b> Invite-only · v1.0 shipped 3 Jun 2026</span>
+      <span><b>Live doc sites</b> 2, describing 2 architectures</span>
       <span><b>Company age</b> ~12 months</span>
       <span><b>Competitors mapped</b> 47</span>
       <span><b>Sourcing</b> Public · plus 1 first-hand tab</span>
@@ -238,141 +238,195 @@
 <section role="tabpanel" id="p-product" aria-labelledby="t-product">
   <div class="prose">
     <p class="kicker">01 — The product</p>
-    <h2>What Coconut actually does</h2>
+    <h2>One company, two products, both documented</h2>
     <p class="lede">
-      Coconut connects an organization's scattered documents, tools, and undocumented
-      know-how into one living, governed source that any AI tool draws from through a
-      permission-aware MCP connector. It is not a chatbot, not a search box, and not a wiki.
-      It is the layer underneath all three.
-    </p>
-
-    <h3>The problem, stated precisely</h3>
-    <p>
-      Coconut argues organizational AI context fails in three compounding ways, and the
-      framing is worth repeating because it is the sharpest part of the pitch:
-    </p>
-    <ul>
-      <li><b>Fragmented</b> — AI tools do not share context with each other, so every session starts from zero.</li>
-      <li><b>Stale</b> — context goes out of date the moment things change, so AI works from last month's reality.</li>
-      <li><b>Inconsistent</b> — without a shared source, output varies across every tool, team, and session.</li>
-    </ul>
-    <p>
-      The distinction Coconut draws against enterprise search is the crispest sentence on
-      the site: <i>search helps people find information; a context layer gives AI the
-      knowledge to act on it.</i> That is a real difference, and it is the argument that has
-      to survive contact with Glean.
+      The marketing site sells a <b>shared context layer</b>: connectors, five context layers, a
+      permission-aware MCP endpoint. The documentation at
+      <a href="https://docs.coconut.md/">docs.coconut.md</a> describes something else —
+      <b>Coco, "a solution platform built on pages"</b>: org, space, page, metadata, one agent per
+      space. Both were live on 18 August 2026, and the coconut.dev nav still links to the older one.
     </p>
   </div>
 
-  <h3>The five layers</h3>
-  <p class="prose">
-    Context is organized into a fixed taxonomy running from stable facts to live state.
-    This is the most opinionated thing about the product and the thing most likely to be
-    either its moat or its onboarding tax.
-  </p>
-  <div class="tw">
-    <table>
-      <thead><tr><th style="width:34px">#</th><th style="width:150px">Layer</th><th>What it holds</th><th style="width:30%">Investor-firm example</th></tr></thead>
-      <tbody>
-        <tr><td class="rank">01</td><td><b>Identity</b></td><td>Who you are and what you are trying to do — mission, goals, OKRs</td><td>Fund thesis, mandate, investment criteria</td></tr>
-        <tr><td class="rank">02</td><td><b>Domain</b></td><td>What you work on and the language around it — product, segments, competitors</td><td>Focus areas, markets, portfolio, live deals</td></tr>
-        <tr><td class="rank">03</td><td><b>Process</b></td><td>How work gets done — templates, frameworks, checklists</td><td>Sourcing, diligence, the IC process</td></tr>
-        <tr><td class="rank">04</td><td><b>Relationships</b></td><td>The human layer — stakeholder maps, who owns what, landmines</td><td>Founders, co-investors, LPs, network</td></tr>
-        <tr><td class="rank">05</td><td><b>State</b></td><td>The living layer — current initiatives, recent decisions, open questions, metrics</td><td>Same</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="callout warn prose">
-    <p class="kicker">Naming conflict on Coconut's own site</p>
-    <p>
-      The <a href="https://www.coconut.dev/product/platform">platform page</a> calls layer 02
-      <b>Domain</b>. The <a href="https://www.coconut.dev/faq">FAQ</a> still calls it
-      <b>Product</b>. Both were live on 8 August 2026. Prior research — including the
-      Notion brief — carried "Product" forward. For a company whose entire pitch is that
-      inconsistent context produces inconsistent answers, having two names for the same
-      layer on two pages of its own marketing site is the kind of detail a sharp
-      prospect will notice.
+  <div class="callout dang prose">
+    <p class="kicker">The finding this revision turns on</p>
+    <p style="margin-bottom:0">
+      The <a href="#firsthand">First-hand tab</a> attached the shipped MCP connector on 9–10 August
+      and found a surface matching <i>no published documentation</i>. <b>docs.coconut.md documents
+      exactly that connector.</b> So every claim built on the older docs — VM per instance,
+      git-versioned <code>.nut/</code>, the knowledge/context split — described a product Coconut
+      publishes docs for and does not appear to ship, and is <a href="#arch">retired rather than
+      quietly corrected</a>.
     </p>
   </div>
 
   <div class="prose">
-    <h3>What is genuinely differentiated</h3>
+    <h3>What is actually differentiated</h3>
     <p>
-      Three things hold up under scrutiny, and none of them is the five-layer taxonomy.
+      The distinction against enterprise search still holds — <i>search helps people find
+      information; a context layer gives AI the knowledge to act on it</i> — but the mechanism
+      changed. This is no longer a retrieval story. It is a <b>query</b> story: the difference
+      between "which pages mention diligence" and "which pages <i>are</i> in diligence with
+      conviction above 0.7, ranked."
     </p>
   </div>
+
   <div class="grid g3">
     <div class="card">
       <p class="kicker">Metadata as a query surface</p>
-      <p style="font-size:15px;margin:0">
-        Every page carries typed key-value metadata — scores, stages, dates, owners, sources —
-        that stays queryable across a space. "Every deal in diligence with conviction above
-        0.7, ranked" becomes one query instead of a spreadsheet someone re-keys. Prose carries
-        judgment, metadata carries the facts that churn.
+      <p style="font-size:15px;margin:0 0 10px">
+        Values are any JSON. <code>set</code> upserts, <code>append</code> extends arrays atomically,
+        <code>appendUnique</code> makes re-running agents idempotent. Per-key audit trail, and
+        changing a key never creates a page revision.
+      </p>
+      <p style="font-size:14px;margin:0;color:var(--muted)">
+        <code>eq neq exists missing gt gte lt lte contains</code>, AND-ed, with <code>orderBy</code>.
       </p>
     </div>
     <div class="card">
-      <p class="kicker">Lineage, not overwrite</p>
-      <p style="font-size:15px;margin:0">
-        When a decision changes, the previous version is <i>superseded, not overwritten</i>.
-        Every page is versioned, any two versions diff, and rollback is one step. That is a
-        real governance primitive, not a marketing word.
+      <p class="kicker">Views — the same engine, for humans</p>
+      <p style="font-size:15px;margin:0 0 10px">
+        <code>/views</code> is a filter builder over the identical engine agents use. The whole view
+        state lives in the URL, so a tuned query is a shareable link and a team dashboard.
+      </p>
+      <p style="font-size:14px;margin:0;color:var(--muted)">
+        Humans and agents on one query engine is the strongest structural idea in the product.
       </p>
     </div>
     <div class="card">
-      <p class="kicker">Space agents as principals</p>
-      <p style="font-size:15px;margin:0">
-        Each space has a dedicated agent with standing instructions that runs on a schedule —
-        folding transcripts into memos, appending sources, flagging stale coverage. It is
-        treated as a permissioned principal: read-only outside explicit grants, every run
-        recorded.
+      <p class="kicker">Agents as scoped principals</p>
+      <p style="font-size:15px;margin:0 0 10px">
+        <b>Scheduled</b> runs execute as the space agent principal — write at home, read-only across
+        org-visible spaces, nothing in other private ones. <b>Manual</b> runs carry the requesting
+        user's authority.
+      </p>
+      <p style="font-size:14px;margin:0;color:var(--muted)">
+        A real permission design, not a label.
       </p>
     </div>
   </div>
 
   <div class="prose">
-    <h3>What is claimed but not yet shipped</h3>
-    <div class="callout dang">
-      <p class="kicker">Marked "coming soon" on the platform page</p>
-      <p>
-        <b>Propose-then-publish review.</b> The review-and-approval workflow is the load-bearing
-        beam of the governance pitch — tiered propagation where low-risk updates flow
-        automatically and high-impact changes require confirmation. The FAQ describes it in the
-        present tense. The platform page labels it <b>Coming soon</b>.
-      </p>
-      <p>
-        Governance is the wedge Coconut has chosen against both the free open-source option and
-        the platform incumbents. Shipping the rest of it is the highest-leverage thing on the
-        roadmap.
+    <h3>Six capabilities that did not exist in the August read</h3>
+    <p>
+      None appear in the older documentation or on the marketing site. Together they are most of a
+      platform, and they arrived without announcement.
+    </p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:132px">Capability</th><th>What shipped</th><th style="width:31%">Why it matters here</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Webhooks</b></td>
+          <td>Four page and metadata events. HMAC-SHA256 signed, backoff retries, delivery log. SSRF guard rejects private and reserved addresses <i>again at delivery time, after DNS resolution</i>.</td>
+          <td>The most careful writing on the whole docs site — including an honest note about the residual DNS time-of-check window. Nobody writes that sentence without having thought about it.</td>
+        </tr>
+        <tr>
+          <td><b>Space templates</b></td>
+          <td>A gallery merging built-in, org-maintained and opt-in remote catalogues. "Use this template" provisions a whole space — pages, templates, agent instructions. Marketing can deep-link <code>/templates?template=&lt;id&gt;</code> straight through sign-in.</td>
+          <td>Distribution, not a feature. A gallery with a deep-linkable install path is a solutions marketplace with the label left off.</td>
+        </tr>
+        <tr>
+          <td><b>Export / import</b></td>
+          <td>Whole spaces as portable JSON (<code>coco-space-export</code> v1). <code>skip</code> or <code>overwrite</code>; ACLs enforced per page, webhooks fire, revisions record the importer.</td>
+          <td>Kills lock-in as an objection, makes dev→prod real, and is the same format space templates are built from — one mechanism, two jobs.</td>
+        </tr>
+        <tr>
+          <td><b>Deployment</b></td>
+          <td>Docker Compose, a Helm chart for Kubernetes, Terraform for AWS. Enterprise artifact is <code>api + postgres</code>; the Next.js app is optional.</td>
+          <td>Self-host is now a documented path with three shapes, not a sales promise.</td>
+        </tr>
+        <tr>
+          <td><b>Identity</b></td>
+          <td>Google Workspace OIDC first-class, Okta profile, SCIM baseline for lifecycle sync.</td>
+          <td>SCIM was previously an Enterprise-tier bullet. It is now a documented runbook.</td>
+        </tr>
+        <tr>
+          <td><b>Native agent runtime</b></td>
+          <td><code>COCO_NATIVE_AGENTS_MODE=native</code> plus an <b>"Eve" runtime container</b> beside the API, gated by per-org entitlements.</td>
+          <td>A named, separately-deployed runtime under staged entitlement is a product mid-rollout — the one place the new docs show their seams.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h3>The pitch has gone vertical</h3>
+    <p>
+      The older docs taught <i>patterns</i> — a daily research brief, a competitor loop. The new one
+      ships <b>five named industry blueprints</b>, each a specific metadata schema, view and connector.
+    </p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:150px">Vertical</th><th style="width:36%">Page &amp; metadata</th><th>The query that sells it</th></tr></thead>
+      <tbody>
+        <tr><td><b>Private equity</b><br><span class="tag">Day.ai · Drive</span></td><td><code>deals/&lt;company&gt;</code> — <code>stage</code>, <code>conviction-score</code>, <code>ebitda-multiple</code>, <code>sources</code>, <code>last-reviewed</code></td><td>The partner meeting: <code>stage = diligence AND conviction-score ≥ 0.7</code>, ranked</td></tr>
+        <tr><td><b>B2B SaaS</b><br><span class="tag">HubSpot</span></td><td><code>sales/customer-&lt;name&gt;</code> — <code>confidence-score</code>, <code>arr-band</code>, <code>renewal-date</code>, <code>verified</code></td><td>Pre-renewal triage: <code>renewal-date &lt; next-quarter AND confidence-score &lt; 0.6</code></td></tr>
+        <tr><td><b>Support / SRE</b><br><span class="tag">Linear · Sentry</span></td><td><code>ops/runbook-&lt;service&gt;</code> — <code>last-tested</code>, <code>owner</code>, <code>criticality</code>, <code>linked-incidents</code></td><td>Quarterly audit: <code>criticality = high AND last-tested &lt; 90 days ago</code></td></tr>
+        <tr><td><b>Legal</b></td><td><code>contracts/&lt;counterparty&gt;</code> — <code>renewal-date</code>, <code>auto-renews</code>, <code>risk-score</code>, <code>clauses-flagged</code></td><td>The GC's monthly sweep: <code>auto-renews = true AND renewal-date &lt; 90 days out</code></td></tr>
+        <tr><td><b>Manufacturing</b></td><td><code>supply/vendor-&lt;name&gt;</code> — <code>audit-score</code>, <code>certifications</code>, <code>single-source</code>, <code>open-capas</code></td><td>Concentration risk: <code>single-source = true AND audit-score &lt; 0.8</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fig-note prose">
+    <a href="https://docs.coconut.md/examples/overview">docs.coconut.md/examples</a>, 18 August 2026.
+    Every one is the same three primitives — a page, a metadata schema, a saved query — dressed for
+    a buyer. Admirable leverage or a thin moat; which one it turns out to be is the whole investment
+    question.
+  </p>
+
+  <div class="prose">
+    <h3>The five layers are marketing-only</h3>
+    <p>
+      Identity, Domain, Process, Relationships, State — the taxonomy the whole platform page is
+      built around — <b>appears nowhere in the new documentation</b>. No layer field, no layer API,
+      no mention in the object model. The shipped organizing principle is <code>org → space →
+      page</code>, and the closest thing to a layer is a metadata key you chose yourself. That
+      reframes the taxonomy from product architecture to sales narrative. It is a good sales
+      narrative. It is just not what the software does.
+    </p>
+    <div class="callout warn">
+      <p class="kicker">Still unresolved after ten days</p>
+      <p style="margin-bottom:0">
+        Layer 02 is <b>Domain</b> on the <a href="https://www.coconut.dev/product/platform">platform
+        page</a> and <b>Product</b> in the <a href="https://www.coconut.dev/faq">FAQ</a>. Both were
+        live on 8 August and both are still live on 18 August. For a company whose pitch is that
+        inconsistent context produces inconsistent answers, ten days is a long time to leave two
+        names on one layer.
       </p>
     </div>
 
-    <h3>Pricing and access</h3>
-    <p>
-      Three contact-sales tiers, no public figures. <b>Team</b> for a first pilot,
-      <b>Company</b> for multi-team workspaces, <b>Enterprise</b> for org-wide rollout with
-      SSO/SCIM and procurement support. Access is still invite-only and demo-gated as of
-      8 August 2026; the docs site says so on its front page.
-    </p>
-    <p class="fig-note">
-      Prior research recorded these tiers as Starter / Growth / Enterprise. They are now
-      Team / Company / Enterprise. Small, but it dates every document that still says otherwise.
-    </p>
+    <h3>Governance: the gap did not move</h3>
+    <div class="callout dang">
+      <p class="kicker">Propose-then-publish review</p>
+      <p style="margin-bottom:0">
+        Still <b>Coming soon</b> on the platform page, and <b>absent entirely</b> from the new
+        documentation — no review endpoint, no proposal object, no approval state on a page. Tiered
+        propagation is the load-bearing beam of the governance pitch and the wedge against both free
+        open source and the platform incumbents. Two doc sites, ~57 monitored controls and five
+        verticals shipped ahead of it.
+      </p>
+    </div>
 
-    <h3>Security posture</h3>
+    <h3>Pricing and security</h3>
     <p>
-      AWS, AES-256 at rest, TLS 1.2+ in transit, RBAC, MFA, least privilege, audit logging,
-      regular penetration testing. Three deployment models: multi-tenant SaaS, single-tenant
-      hosted, and self-hosted in your own environment.
+      <b>Team / Company / Enterprise</b>, contact-sales only — unchanged since 8 August, and still
+      <i>not</i> the Starter / Growth / Enterprise older research recorded. The security page now
+      describes two deployment models, managed or self-hosted, down from three.
     </p>
-    <div class="callout warn">
-      <p class="kicker">The gap an enterprise buyer will find in minute one</p>
-      <p>
-        <b>No SOC 2 claim appears anywhere on the public site.</b> Not on the security page, not
-        in the FAQ. The language is "assurance artifacts available to customers under NDA."
-        Meanwhile Dust advertises SOC 2 Type II and GDPR, and Mem0 advertises SOC 2 Type II —
-        both smaller-scoped products. For a company selling governance to regulated buyers,
-        an unstated certification status is read as an absent one.
+    <div class="callout">
+      <p class="kicker">SOC 2 — the one thing that moved in the right direction</p>
+      <p style="margin-bottom:0">
+        On 8 August no SOC 2 claim appeared anywhere on the site. There is now a Vanta-backed
+        <a href="https://trust.coconut.dev/">Trust Center</a>, linked from the main nav, with roughly
+        <b>57 continuously monitored controls</b> across five categories, all passing, last synced
+        hours before this was read. The qualifier matters: the only downloadable artifact is an
+        <b>engagement letter</b> — an audit begun, not a report issued, and Type II needs an
+        observation window that cannot have closed. <i>SOC 2 in flight and visibly instrumented</i>
+        is a far better answer to an enterprise buyer than silence, and still not a certificate.
+        Dust and Mem0 both advertise completed Type II.
       </p>
     </div>
   </div>
@@ -382,383 +436,404 @@
 <section role="tabpanel" id="p-arch" aria-labelledby="t-arch" hidden>
   <div class="prose">
     <p class="kicker">02 — Architecture</p>
-    <h2>A context layer wrapped around a coding agent</h2>
+    <h2>The VM reading was right about the docs and wrong about the product</h2>
     <p class="lede">
-      The published architecture diagrams in circulation — including the one in the Notion
-      brief — describe Coconut as connectors feeding a knowledge index feeding a context
-      layer. That is accurate but incomplete, and the omission matters. Reading the API
-      reference and the skills documentation changes the picture.
+      On 8 August this report claimed a "Coconut" is not a database row but a provisioned virtual
+      machine running an agent loop. The new documentation contradicts it in one clause — <b>pages
+      are versioned in Postgres as append-only revisions, "no git lifecycle"</b> — and the claim is
+      retired.
     </p>
-
-    <div class="callout">
-      <p class="kicker">The finding that reframes everything else</p>
-      <p>
-        Per Coconut's own <a href="https://docs.coconut.dev/integrations/skills">skills documentation</a>:
-        a Coconut skill is a <code>SKILL.md</code> file that runs on a Coconut instance —
-        <b>"a VM with the <code>nut</code> CLI installed and a <code>.nut/</code> directory for
-        state,"</b> where <b>"Claude Code (or any equivalent agent loop) on the instance reads
-        the SKILL.md and executes <code>nut</code> subcommands."</b>
-      </p>
-      <p>
-        A "Coconut" is not a database row. It is a provisioned virtual machine running an
-        agent loop. That explains the otherwise puzzling API surface — full git operations
-        including worktrees and branches, interactive terminal sessions over WebSocket, code
-        sessions, image/audio/video generation. Coconut is a context layer <i>and</i> an agent
-        execution environment, sold as the former.
-      </p>
-      <p style="margin-bottom:0">
-        <b>Confirmed independently by the provisioning flow.</b> The
-        <a href="https://docs.coconut.dev/dashboard/create">Add Coconut dialog</a> asks for a
-        name (which becomes a subdomain), a cloud provider defaulting to AWS, an administrator,
-        an emoji — and a <b>Specification: CPU, RAM, and disk capacity</b>. It provisions in
-        30–60 seconds. You are sizing a machine, not creating a workspace.
-      </p>
-    </div>
   </div>
 
   <figure>
-    <svg class="diagram" viewBox="0 0 1020 560" role="img" aria-labelledby="archtitle archdesc">
-      <title id="archtitle">Coconut AI system architecture</title>
-      <desc id="archdesc">Source systems feed connectors into per-organization Coconut instances. Each instance is a virtual machine holding a git-versioned .nut directory, running a selectable agent loop (Claude, Gemini or Codex) alongside a governance layer, and exposing an access layer of REST, WebSocket, MCP and A2A endpoints. That access layer serves client surfaces and an OAuth-scoped MCP server, which in turn serves third-party AI tools.</desc>
+    <svg class="diagram" viewBox="0 0 1020 610" role="img" aria-labelledby="splittitle splitdesc">
+      <title id="splittitle">Two products, two documentation sites, both live</title>
+      <desc id="splitdesc">A row-by-row comparison of the two architectures Coconut documents simultaneously. The site at docs.coconut.dev describes a product whose unit is a provisioned virtual machine with a git-versioned .nut directory, MCP tools named coconuts, tasks, knowledge and skills, undocumented retrieval, and dashboard provisioning. The site at docs.coconut.md describes a product whose unit is an org, space and page hierarchy stored in Postgres with append-only revisions and no git, MCP tools named context and agent, Postgres full-text search plus a metadata query engine, and deployment by Docker Compose, Helm or Terraform. The coconut.dev marketing navigation still links to the first site; the MCP connector this report attached on 9 and 10 August matched the second.</desc>
+
+      <text x="510" y="24" text-anchor="middle" font-size="11" fill="var(--muted)" letter-spacing="1.4">BOTH DOCUMENTATION SITES WERE LIVE ON 18 AUGUST 2026</text>
+
+      <g>
+        <rect x="190" y="40" width="395" height="46" rx="7" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="387" y="61" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">docs.coconut.dev</text>
+        <text x="387" y="78" text-anchor="middle" font-size="11" fill="var(--muted)">"Coconut"</text>
+      </g>
+      <g>
+        <rect x="605" y="40" width="395" height="46" rx="7" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="802" y="61" text-anchor="middle" font-size="11.5" fill="var(--ink)">docs.coconut.md</text>
+        <text x="802" y="78" text-anchor="middle" font-size="11" fill="var(--accent)">"Coco — Coconut Context"</text>
+      </g>
+
+      <g font-size="10" fill="var(--muted)" letter-spacing="1.1" text-anchor="end">
+        <text x="175" y="126">UNIT</text>
+        <text x="175" y="192">STORAGE</text>
+        <text x="175" y="258">VERSIONING</text>
+        <text x="175" y="324">MCP TOOLS</text>
+        <text x="175" y="390">RETRIEVAL</text>
+        <text x="175" y="456">DEPLOYMENT</text>
+      </g>
+
+      <g>
+        <rect x="190" y="100" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="206" y="122" font-size="11.5" fill="var(--ink-2)">a Coconut = one provisioned VM</text>
+        <text x="206" y="140" font-size="10.5" fill="var(--muted)">sized in CPU, RAM and disk · boots in 30–60s</text>
+
+        <rect x="190" y="166" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="206" y="188" font-size="11.5" fill="var(--ink-2)">.nut/ directory on the instance</text>
+        <text x="206" y="206" font-size="10.5" fill="var(--muted)">context · knowledge · skills · jobs · tasks · chats</text>
+
+        <rect x="190" y="232" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="206" y="254" font-size="11.5" fill="var(--ink-2)">git — branches, worktrees, commits</text>
+        <text x="206" y="272" font-size="10.5" fill="var(--muted)">source control is a documented product surface</text>
+
+        <rect x="190" y="298" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="206" y="320" font-size="11.5" fill="var(--ink-2)">coconuts_* tasks_* knowledge_* skills_*</text>
+        <text x="206" y="338" font-size="10.5" fill="var(--muted)">26 tools, OAuth-scoped</text>
+
+        <rect x="190" y="364" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="206" y="386" font-size="11.5" fill="var(--ink-2)">"indexed and available for retrieval"</text>
+        <text x="206" y="404" font-size="10.5" fill="var(--muted)">method never stated</text>
+
+        <rect x="190" y="430" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="206" y="452" font-size="11.5" fill="var(--ink-2)">provision from the dashboard</text>
+        <text x="206" y="470" font-size="10.5" fill="var(--muted)">pick a cloud, an admin, an emoji, a machine size</text>
+      </g>
+
+      <g>
+        <rect x="605" y="100" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="621" y="122" font-size="11.5" fill="var(--ink)">org → space → page</text>
+        <text x="621" y="140" font-size="10.5" fill="var(--muted)">one agent per space · personal space per user</text>
+
+        <rect x="605" y="166" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="621" y="188" font-size="11.5" fill="var(--ink)">Postgres</text>
+        <text x="621" y="206" font-size="10.5" fill="var(--muted)">body + frontmatter + metadata, stored separately</text>
+
+        <rect x="605" y="232" width="395" height="52" rx="6" fill="var(--wash)" stroke="var(--red)" stroke-width="1.4"/>
+        <text x="621" y="254" font-size="11.5" fill="var(--ink)">append-only revisions</text>
+        <text x="621" y="272" font-size="10.5" fill="var(--red)">"no git lifecycle" — stated outright</text>
+
+        <rect x="605" y="298" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="621" y="320" font-size="11.5" fill="var(--ink)">context_* · agent_*</text>
+        <text x="621" y="338" font-size="10.5" fill="var(--muted)">no knowledge_* namespace exists</text>
+
+        <rect x="605" y="364" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="621" y="386" font-size="11.5" fill="var(--ink)">Postgres FTS + metadata query engine</text>
+        <text x="621" y="404" font-size="10.5" fill="var(--muted)">no embeddings, no reranker, no vector store</text>
+
+        <rect x="605" y="430" width="395" height="52" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="621" y="452" font-size="11.5" fill="var(--ink)">Compose · Helm/K8s · Terraform/AWS</text>
+        <text x="621" y="470" font-size="10.5" fill="var(--muted)">enterprise artifact is api + postgres</text>
+      </g>
+
+      <g fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85">
+        <path d="M387,556 V500" color="var(--amber)" marker-end="url(#arS)"/>
+        <path d="M802,556 V500" color="var(--accent)" marker-end="url(#arS)"/>
+      </g>
       <defs>
-        <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+        <marker id="arS" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
           <path d="M0,0 L0,6 L8,3 z" fill="currentColor"/>
         </marker>
       </defs>
 
-      <g fill="none" stroke="currentColor" color="var(--muted)" stroke-width="1.3" marker-end="url(#ar)" opacity="0.7">
-        <path d="M180,190 H211"/>
-        <path d="M330,190 H352 V135 H375"/>
-        <path d="M472,196 V212"/>
-        <path d="M668,196 V212"/>
-        <path d="M472,316 V332"/>
-        <path d="M668,316 V332"/>
-        <path d="M759,360 H784 V136 H802"/>
-        <path d="M759,404 H796 V265 H802"/>
-        <path d="M903,308 V328"/>
-      </g>
-
       <g>
-        <rect x="20" y="120" width="160" height="140" rx="8" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="100" y="143" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SOURCES</text>
-        <text x="100" y="167" text-anchor="middle" font-size="12" fill="var(--ink)">Slack · Drive</text>
-        <text x="100" y="187" text-anchor="middle" font-size="12" fill="var(--ink)">Notion · HubSpot</text>
-        <text x="100" y="207" text-anchor="middle" font-size="12" fill="var(--ink)">Linear · Asana</text>
-        <text x="100" y="227" text-anchor="middle" font-size="12" fill="var(--ink)">Box · Fireflies</text>
-        <text x="100" y="247" text-anchor="middle" font-size="12" fill="var(--ink)">Git · Email</text>
+        <rect x="190" y="560" width="395" height="42" rx="6" fill="var(--wash)" stroke="var(--amber)" stroke-width="1.3"/>
+        <text x="387" y="577" text-anchor="middle" font-size="10.5" fill="var(--amber)" letter-spacing="1">WHAT THE MARKETING SITE LINKS TO</text>
+        <text x="387" y="593" text-anchor="middle" font-size="11" fill="var(--ink-2)">coconut.dev nav → "Docs ↗"</text>
       </g>
-
       <g>
-        <rect x="215" y="150" width="115" height="80" rx="8" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="272" y="173" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">INGEST</text>
-        <text x="272" y="196" text-anchor="middle" font-size="12" fill="var(--ink)">Connectors</text>
-        <text x="272" y="215" text-anchor="middle" font-size="12" fill="var(--ink)">Scheduled sync</text>
-      </g>
-
-      <rect x="365" y="58" width="410" height="404" rx="12" fill="none" stroke="var(--accent)" stroke-dasharray="5 4" opacity="0.85"/>
-      <text x="570" y="46" text-anchor="middle" font-size="11" fill="var(--accent)" letter-spacing="1.4">A &quot;COCONUT&quot; = ONE VM PER ORG / SPACE</text>
-
-      <g>
-        <rect x="381" y="74" width="378" height="122" rx="8" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="570" y="96" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">.NUT DIRECTORY — GIT-VERSIONED</text>
-        <text x="570" y="120" text-anchor="middle" font-size="12" fill="var(--ink)">context/ · knowledge/ · skills/ · jobs/</text>
-        <text x="570" y="140" text-anchor="middle" font-size="12" fill="var(--ink)">tasks/ · mcp/ · resources/ · chats/</text>
-        <text x="570" y="160" text-anchor="middle" font-size="12" fill="var(--ink)">config.json</text>
-        <text x="570" y="183" text-anchor="middle" font-size="11.5" fill="var(--accent)">Markdown-first · every page versioned</text>
-      </g>
-
-      <g>
-        <rect x="381" y="212" width="182" height="104" rx="8" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
-        <text x="472" y="234" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">AGENT LOOP</text>
-        <text x="472" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">Claude · Gemini ·</text>
-        <text x="472" y="277" text-anchor="middle" font-size="12" fill="var(--ink)">Codex reads SKILL.md</text>
-        <text x="472" y="300" text-anchor="middle" font-size="11.5" fill="var(--accent-2)">nut CLI · terminal</text>
-      </g>
-
-      <g>
-        <rect x="577" y="212" width="182" height="104" rx="8" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="668" y="234" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">GOVERNANCE</text>
-        <text x="668" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">Owners · RBAC</text>
-        <text x="668" y="277" text-anchor="middle" font-size="12" fill="var(--ink)">Lineage · rollback</text>
-        <text x="668" y="300" text-anchor="middle" font-size="11.5" fill="var(--amber)">Review: coming soon</text>
-      </g>
-
-      <g>
-        <rect x="381" y="332" width="378" height="104" rx="8" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="570" y="355" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">ACCESS LAYER</text>
-        <text x="570" y="379" text-anchor="middle" font-size="12" fill="var(--ink)">REST /api/v1 · WebSocket · MCP · A2A card</text>
-        <text x="570" y="404" text-anchor="middle" font-size="11.5" fill="var(--muted)">scopes: tasks / knowledge / context / jobs / skills</text>
-      </g>
-
-      <g>
-        <rect x="802" y="74" width="198" height="128" rx="8" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="901" y="97" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SURFACES</text>
-        <text x="901" y="121" text-anchor="middle" font-size="12" fill="var(--ink)">Studio · Control Plane</text>
-        <text x="901" y="141" text-anchor="middle" font-size="12" fill="var(--ink)">VS Code / Cursor ext</text>
-        <text x="901" y="161" text-anchor="middle" font-size="12" fill="var(--ink)">CLI: nut · iOS app</text>
-        <text x="901" y="184" text-anchor="middle" font-size="11.5" fill="var(--muted)">Clerk auth / orgs</text>
-      </g>
-
-      <g>
-        <rect x="802" y="226" width="198" height="82" rx="8" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
-        <text x="901" y="249" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">MCP SERVER</text>
-        <text x="901" y="272" text-anchor="middle" font-size="12" fill="var(--ink)">app.coconut.dev/mcp</text>
-        <text x="901" y="294" text-anchor="middle" font-size="11.5" fill="var(--accent)">26 tools · OAuth scoped</text>
-      </g>
-
-      <g>
-        <rect x="802" y="328" width="198" height="134" rx="8" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="901" y="351" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">AI TOOLS · MODEL-AGNOSTIC</text>
-        <text x="901" y="376" text-anchor="middle" font-size="12" fill="var(--ink)">Claude · ChatGPT</text>
-        <text x="901" y="397" text-anchor="middle" font-size="12" fill="var(--ink)">Copilot · Gemini</text>
-        <text x="901" y="418" text-anchor="middle" font-size="12" fill="var(--ink)">Cursor</text>
-        <text x="901" y="443" text-anchor="middle" font-size="11.5" fill="var(--muted)">any MCP client</text>
-      </g>
-
-      <g>
-        <rect x="20" y="488" width="980" height="52" rx="8" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="510" y="510" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">INFRASTRUCTURE</text>
-        <text x="510" y="530" text-anchor="middle" font-size="12" fill="var(--ink)">AWS · AES-256 at rest · TLS 1.2+ · RBAC + MFA · audit logging · managed SaaS / single-tenant hosted / self-hosted</text>
+        <rect x="605" y="560" width="395" height="42" rx="6" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="802" y="577" text-anchor="middle" font-size="10.5" fill="var(--accent)" letter-spacing="1">WHAT ACTUALLY SHIPPED</text>
+        <text x="802" y="593" text-anchor="middle" font-size="11" fill="var(--ink)">the MCP connector attached 9–10 Aug</text>
       </g>
     </svg>
     <figcaption class="fig-note">
-      Reconstructed from Coconut's public API reference, <code>.nut</code> directory
-      specification, connectors documentation, skills documentation, and security page,
-      read 8 August 2026. The VM-and-agent-loop detail comes from the skills docs and is
-      the material correction to previously circulated diagrams. Internal retrieval
-      mechanics — indexing method, ranking, the canonical store — remain undocumented and
-      are not drawn here.
+      Both sites read 18 August 2026; the connector row on the right is this report's own first-hand
+      observation from 9–10 August. The <code>docs.coconut.md</code> site is not linked from the
+      marketing navigation, from <code>docs.coconut.dev</code>, or from any page on coconut.dev this
+      report could find — its only outbound link is back to the coconut.dev blog.
     </figcaption>
   </figure>
 
+  <div class="callout warn prose">
+    <p class="kicker">What the August reading got right, and what killed it</p>
+    <p style="margin-bottom:0">
+      It was sourced correctly — skills docs defining a Coconut as "a VM with the <code>nut</code>
+      CLI installed," a dialog asking for CPU, RAM and disk, both still live and still saying that.
+      What did not exist on 8 August was any document describing the alternative. There is now, and
+      it describes a conventional two-tier web app. The conclusion is not that the earlier analysis
+      misread its sources; it is that <b>Coconut publishes documentation for a product it does not
+      ship</b> — a worse fact about the company than a wrong diagram is about this report.
+    </p>
+  </div>
+
+  <div class="prose">
+  </div>
 
   <figure>
-    <svg class="diagram" viewBox="0 0 1020 790" role="img" aria-labelledby="fntitle fndesc">
-      <title id="fntitle">Coconut functional architecture</title>
-      <desc id="fndesc">Source systems feed connectors and scheduled sync, then a knowledge index, then the five-layer context layer, which carries page metadata and space agents. The context layer feeds a governance group, a storage group and an agentic layer of jobs, skills and tasks that writes back. Storage feeds an access layer of REST, MCP and WebSocket, which serves client surfaces and third-party AI tools.</desc>
+    <svg class="diagram" viewBox="0 0 1020 664" role="img" aria-labelledby="sysatitle sysadesc">
+      <title id="sysatitle">Coco system architecture</title>
+      <desc id="sysadesc">External sources reach the platform through connectors holding encrypted credentials scoped to an org or a space. The deployment, self-hosted or managed, runs an API and Postgres with an optional Next.js app. A single ACL engine evaluates humans authenticated by OIDC and SCIM alongside agents holding API keys or OAuth tokens. Content is organized as org, then space, then page, where a page comprises a markdown body, frontmatter, and separately stored metadata. Postgres holds append-only page revisions, metadata rows with a per-key audit trail, a full-text search index, and an automatically maintained link graph. Each space has exactly one agent with instructions, scheduled task pages, and run records, optionally executing in the Eve runtime container. Three doors expose the same page: a browser, the HTTP API, and MCP. Webhooks and space export bundles push activity and content outward.</desc>
       <defs>
-        <marker id="ar3" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+        <marker id="arA" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
           <path d="M0,0 L0,6 L8,3 z" fill="currentColor"/>
         </marker>
       </defs>
 
-      <g fill="none" stroke="currentColor" color="var(--muted)" stroke-width="1.3" marker-end="url(#ar3)" opacity="0.7">
-        <path d="M510,94 V114"/>
-        <path d="M242,186 H262"/>
-        <path d="M468,186 H488"/>
-        <path d="M724,186 H744"/>
-        <path d="M607,226 V244"/>
-        <path d="M175,334 V352"/>
-        <path d="M500,334 V352"/>
-        <path d="M812,334 V352"/>
-        <path d="M858,352 V334"/>
-        <path d="M500,508 V532"/>
-        <path d="M190,602 V638"/>
-        <path d="M510,602 V620 H770 V638"/>
+      <g fill="none" stroke="currentColor" color="var(--muted)" stroke-width="1.3" marker-end="url(#arA)" opacity="0.75">
+        <path d="M152,262 H170"/>
+        <path d="M296,262 H314"/>
+        <path d="M792,150 H812"/>
+        <path d="M792,238 H812"/>
+        <path d="M792,326 H812"/>
+        <path d="M792,470 H812"/>
       </g>
 
       <g>
-        <rect x="20" y="28" width="980" height="66" rx="8" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="510" y="50" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SOURCE SYSTEMS</text>
-        <text x="510" y="76" text-anchor="middle" font-size="12" fill="var(--ink)">Slack · Google Drive · Notion · HubSpot · Linear / Asana · Git repos · Email / Mail · Box / Fireflies</text>
-      </g>
-
-      <rect x="20" y="114" width="980" height="220" rx="10" fill="none" stroke="var(--accent)" stroke-dasharray="5 4" opacity="0.85"/>
-      <text x="510" y="134" text-anchor="middle" font-size="11" fill="var(--accent)" letter-spacing="1.3">CONTEXT ENGINE</text>
-
-      <g>
-        <rect x="40" y="156" width="202" height="60" rx="7" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="141" y="182" text-anchor="middle" font-size="11.5" fill="var(--ink)">Connectors +</text>
-        <text x="141" y="200" text-anchor="middle" font-size="11.5" fill="var(--ink)">scheduled sync</text>
-      </g>
-      <g>
-        <rect x="262" y="156" width="206" height="60" rx="7" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="365" y="182" text-anchor="middle" font-size="11.5" fill="var(--ink)">Knowledge index</text>
-        <text x="365" y="200" text-anchor="middle" font-size="11.5" fill="var(--ink)">+ retrieval</text>
-        <text x="365" y="212" text-anchor="middle" font-size="9" fill="var(--amber)">method undocumented</text>
-      </g>
-      <g>
-        <rect x="488" y="148" width="236" height="78" rx="7" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.5"/>
-        <text x="606" y="170" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1">CONTEXT LAYER</text>
-        <text x="606" y="191" text-anchor="middle" font-size="11.5" fill="var(--ink)">Identity · Domain* · Process</text>
-        <text x="606" y="208" text-anchor="middle" font-size="11.5" fill="var(--ink)">Relationships · State</text>
-        <text x="606" y="221" text-anchor="middle" font-size="9" fill="var(--amber)">*FAQ still says "Product"</text>
-      </g>
-      <g>
-        <rect x="744" y="148" width="236" height="78" rx="7" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="862" y="170" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1">PAGE METADATA</text>
-        <text x="862" y="191" text-anchor="middle" font-size="11.5" fill="var(--ink)">scores · stages · dates</text>
-        <text x="862" y="209" text-anchor="middle" font-size="11.5" fill="var(--ink)">owners · sources</text>
-      </g>
-      <g>
-        <rect x="488" y="244" width="492" height="68" rx="7" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="734" y="266" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1">SPACE AGENTS</text>
-        <text x="734" y="288" text-anchor="middle" font-size="11.5" fill="var(--ink)">standing instructions · scheduled tasks · one per space</text>
-        <text x="734" y="304" text-anchor="middle" font-size="10" fill="var(--muted)">a permissioned principal, read-only outside explicit grants</text>
-      </g>
-
-      <rect x="20" y="352" width="312" height="156" rx="10" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
-      <text x="176" y="372" text-anchor="middle" font-size="10.5" fill="var(--ink-2)" letter-spacing="1.2">GOVERNANCE</text>
-      <g>
-        <rect x="34" y="384" width="140" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="104" y="406" text-anchor="middle" font-size="10.5" fill="var(--ink)">Ownership</text>
-        <text x="104" y="422" text-anchor="middle" font-size="10.5" fill="var(--ink)">per page</text>
-        <rect x="180" y="384" width="138" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="249" y="406" text-anchor="middle" font-size="10.5" fill="var(--ink)">Tiered</text>
-        <text x="249" y="422" text-anchor="middle" font-size="10.5" fill="var(--amber)">propagation*</text>
-        <rect x="34" y="444" width="140" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="104" y="466" text-anchor="middle" font-size="10.5" fill="var(--ink)">Freshness +</text>
-        <text x="104" y="482" text-anchor="middle" font-size="10.5" fill="var(--ink)">decay signals</text>
-        <rect x="180" y="444" width="138" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="249" y="466" text-anchor="middle" font-size="10.5" fill="var(--ink)">RBAC +</text>
-        <text x="249" y="482" text-anchor="middle" font-size="10.5" fill="var(--ink)">audit logging</text>
-      </g>
-
-      <rect x="352" y="352" width="296" height="156" rx="10" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
-      <text x="500" y="372" text-anchor="middle" font-size="10.5" fill="var(--ink-2)" letter-spacing="1.2">STORAGE</text>
-      <g>
-        <rect x="366" y="384" width="268" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="500" y="406" text-anchor="middle" font-size="11" fill="var(--ink)">Canonical store</text>
-        <text x="500" y="424" text-anchor="middle" font-size="9.5" fill="var(--amber)">inferred — never documented</text>
-        <rect x="366" y="444" width="268" height="52" rx="6" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="500" y="466" text-anchor="middle" font-size="11" fill="var(--ink)">.nut directory</text>
-        <text x="500" y="484" text-anchor="middle" font-size="10" fill="var(--muted)">git-versioned · read/written by CLI + IDE</text>
-      </g>
-
-      <rect x="668" y="352" width="332" height="156" rx="10" fill="none" stroke="var(--accent)" stroke-dasharray="5 4" opacity="0.85"/>
-      <text x="834" y="372" text-anchor="middle" font-size="10.5" fill="var(--accent)" letter-spacing="1.2">AGENTIC LAYER</text>
-      <g>
-        <rect x="682" y="384" width="304" height="34" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="834" y="405" text-anchor="middle" font-size="11" fill="var(--ink)">Jobs — scheduled + event-triggered</text>
-        <rect x="682" y="424" width="304" height="34" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="834" y="445" text-anchor="middle" font-size="11" fill="var(--ink)">Skills — packaged behaviours</text>
-        <rect x="682" y="464" width="304" height="34" rx="6" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="834" y="485" text-anchor="middle" font-size="11" fill="var(--ink)">Tasks — change proposals</text>
-      </g>
-      <text x="800" y="347" text-anchor="end" font-size="9.5" fill="var(--muted)">runs ⇅ writes back</text>
-
-      <g>
-        <rect x="20" y="532" width="980" height="70" rx="8" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="510" y="552" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">ACCESS LAYER</text>
-        <text x="190" y="580" text-anchor="middle" font-size="11.5" fill="var(--ink)">REST API v1</text>
-        <text x="510" y="580" text-anchor="middle" font-size="11.5" fill="var(--ink)">MCP connector</text>
-        <text x="830" y="580" text-anchor="middle" font-size="11.5" fill="var(--ink)">WebSocket</text>
+        <rect x="16" y="162" width="136" height="200" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="84" y="184" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.2">SOURCES</text>
+        <text x="84" y="208" text-anchor="middle" font-size="11" fill="var(--ink)">Slack · Linear</text>
+        <text x="84" y="228" text-anchor="middle" font-size="11" fill="var(--ink)">Drive · Notion</text>
+        <text x="84" y="248" text-anchor="middle" font-size="11" fill="var(--ink)">HubSpot · Box</text>
+        <text x="84" y="268" text-anchor="middle" font-size="11" fill="var(--ink)">Sentry · Stripe</text>
+        <text x="84" y="288" text-anchor="middle" font-size="11" fill="var(--ink)">Day.ai</text>
+        <text x="84" y="322" text-anchor="middle" font-size="10" fill="var(--muted)">+ custom MCP</text>
+        <text x="84" y="338" text-anchor="middle" font-size="10" fill="var(--muted)">or OpenAPI</text>
       </g>
 
       <g>
-        <rect x="20" y="638" width="480" height="124" rx="8" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="260" y="660" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">SURFACES</text>
-        <text x="260" y="684" text-anchor="middle" font-size="11.5" fill="var(--ink)">Coconut Studio · Control Plane</text>
-        <text x="260" y="704" text-anchor="middle" font-size="11.5" fill="var(--ink)">VS Code / Cursor · CLI: nut · iOS app</text>
-        <text x="260" y="732" text-anchor="middle" font-size="10" fill="var(--muted)">the IDE extension and CLI also read and write</text>
-        <text x="260" y="748" text-anchor="middle" font-size="10" fill="var(--muted)">the .nut directory directly</text>
+        <rect x="170" y="206" width="126" height="112" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="233" y="228" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.2">CONNECTORS</text>
+        <text x="233" y="252" text-anchor="middle" font-size="10.5" fill="var(--ink)">credentials</text>
+        <text x="233" y="268" text-anchor="middle" font-size="10.5" fill="var(--ink)">encrypted</text>
+        <text x="233" y="292" text-anchor="middle" font-size="10.5" fill="var(--accent)">org scope, or</text>
+        <text x="233" y="307" text-anchor="middle" font-size="10.5" fill="var(--accent)">per-space</text>
       </g>
+
+      <rect x="314" y="46" width="478" height="580" rx="12" fill="none" stroke="var(--accent)" stroke-dasharray="5 4" opacity="0.85"/>
+      <text x="553" y="36" text-anchor="middle" font-size="10.5" fill="var(--accent)" letter-spacing="1.3">ONE DEPLOYMENT — SELF-HOSTED OR MANAGED · api + postgres</text>
+
       <g>
-        <rect x="540" y="638" width="460" height="124" rx="8" fill="var(--wash)" stroke="var(--line)"/>
-        <text x="770" y="660" text-anchor="middle" font-size="10.5" fill="var(--muted)" letter-spacing="1.2">AI TOOLS — MODEL-AGNOSTIC</text>
-        <text x="770" y="688" text-anchor="middle" font-size="12" fill="var(--ink)">Claude · ChatGPT · Copilot · Gemini</text>
-        <text x="770" y="712" text-anchor="middle" font-size="11" fill="var(--ink)">any MCP-compatible client</text>
-        <text x="770" y="740" text-anchor="middle" font-size="10" fill="var(--muted)">reached through one permission-aware connector</text>
+        <rect x="330" y="62" width="446" height="48" rx="7" fill="var(--wash)" stroke="var(--accent-2)" stroke-width="1.4"/>
+        <text x="553" y="82" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.2">ONE ACL ENGINE</text>
+        <text x="553" y="100" text-anchor="middle" font-size="10.5" fill="var(--ink)">humans (OIDC · SCIM) and agents (API keys · OAuth) — one evaluation</text>
+      </g>
+
+      <g>
+        <rect x="330" y="126" width="132" height="66" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="396" y="147" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.1">ORG</text>
+        <text x="396" y="167" text-anchor="middle" font-size="10.5" fill="var(--ink)">the tenant</text>
+        <text x="396" y="183" text-anchor="middle" font-size="10" fill="var(--muted)">owner·admin·editor</text>
+
+        <rect x="470" y="126" width="146" height="66" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="543" y="147" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.1">SPACE</text>
+        <text x="543" y="167" text-anchor="middle" font-size="10.5" fill="var(--ink)">private | org</text>
+        <text x="543" y="183" text-anchor="middle" font-size="10" fill="var(--muted)">exactly one agent</text>
+
+        <rect x="624" y="126" width="152" height="66" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="700" y="147" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.1">PAGE</text>
+        <text x="700" y="167" text-anchor="middle" font-size="10.5" fill="var(--ink)">space/path</text>
+        <text x="700" y="183" text-anchor="middle" font-size="10" fill="var(--muted)">paths may nest</text>
+      </g>
+
+      <g>
+        <rect x="330" y="206" width="144" height="72" rx="6" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="402" y="226" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">BODY</text>
+        <text x="402" y="246" text-anchor="middle" font-size="10.5" fill="var(--ink)">markdown</text>
+        <text x="402" y="264" text-anchor="middle" font-size="10" fill="var(--muted)">links auto-indexed</text>
+
+        <rect x="482" y="206" width="144" height="72" rx="6" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="554" y="226" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">FRONTMATTER</text>
+        <text x="554" y="246" text-anchor="middle" font-size="10.5" fill="var(--ink)">travels with</text>
+        <text x="554" y="264" text-anchor="middle" font-size="10.5" fill="var(--ink)">the revision</text>
+
+        <rect x="634" y="206" width="142" height="72" rx="6" fill="var(--wash)" stroke="var(--accent-2)" stroke-width="1.4"/>
+        <text x="705" y="226" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">METADATA</text>
+        <text x="705" y="246" text-anchor="middle" font-size="10.5" fill="var(--ink)">stored alongside</text>
+        <text x="705" y="264" text-anchor="middle" font-size="10.5" fill="var(--accent-2)">no revision on write</text>
+      </g>
+
+      <g>
+        <rect x="330" y="296" width="446" height="106" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="553" y="318" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.2">POSTGRES — THE WHOLE PERSISTENCE STORY</text>
+        <text x="553" y="342" text-anchor="middle" font-size="11" fill="var(--ink)">append-only page revisions · If-Match / ETag concurrency</text>
+        <text x="553" y="362" text-anchor="middle" font-size="11" fill="var(--ink)">metadata rows + per-key audit trail</text>
+        <text x="553" y="382" text-anchor="middle" font-size="11" fill="var(--ink)">full-text index · link graph with backlinks</text>
+      </g>
+
+      <g>
+        <rect x="330" y="420" width="446" height="100" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+        <text x="553" y="442" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.2">SPACE AGENT — ONE PER SPACE</text>
+        <text x="553" y="464" text-anchor="middle" font-size="11" fill="var(--ink)">agents/instructions · agents/&lt;task&gt; · agents/runs/…</text>
+        <text x="553" y="484" text-anchor="middle" font-size="10.5" fill="var(--accent)">scheduled → agent principal   ·   manual → your authority</text>
+        <text x="553" y="505" text-anchor="middle" font-size="10.5" fill="var(--muted)">optional "Eve" runtime container · per-org entitlements</text>
+      </g>
+
+      <g>
+        <rect x="330" y="538" width="446" height="72" rx="8" fill="var(--wash)" stroke="var(--line)"/>
+        <text x="553" y="559" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1.2">RESERVED PREFIXES — HIDDEN FROM LISTINGS AND SEARCH</text>
+        <text x="553" y="581" text-anchor="middle" font-size="11" fill="var(--ink)">agents/ — instructions, tasks, run records</text>
+        <text x="553" y="600" text-anchor="middle" font-size="11" fill="var(--ink)">templates/ — page templates, exportable as a kit</text>
+      </g>
+
+      <text x="906" y="94" text-anchor="middle" font-size="10.5" fill="var(--accent)" letter-spacing="1.3">THREE DOORS</text>
+      <g>
+        <rect x="812" y="112" width="192" height="74" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="908" y="133" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">BROWSER</text>
+        <text x="908" y="153" text-anchor="middle" font-size="10.5" fill="var(--ink)">rendered HTML</text>
+        <text x="908" y="171" text-anchor="middle" font-size="10" fill="var(--muted)">/pages/:space/:path</text>
+
+        <rect x="812" y="200" width="192" height="74" rx="7" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="908" y="221" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">HTTP API</text>
+        <text x="908" y="241" text-anchor="middle" font-size="10.5" fill="var(--ink)">Accept: text/markdown</text>
+        <text x="908" y="259" text-anchor="middle" font-size="10" fill="var(--muted)">same URL, clean .md</text>
+
+        <rect x="812" y="288" width="192" height="74" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="908" y="309" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">MCP</text>
+        <text x="908" y="329" text-anchor="middle" font-size="10.5" fill="var(--ink)">POST /mcp</text>
+        <text x="908" y="347" text-anchor="middle" font-size="10" fill="var(--accent)">context_* tools</text>
+      </g>
+      <text x="908" y="386" text-anchor="middle" font-size="10" fill="var(--muted)">identical ACL outcomes</text>
+
+      <g>
+        <rect x="812" y="412" width="192" height="116" rx="7" fill="var(--wash)" stroke="var(--accent-2)" stroke-width="1.3"/>
+        <text x="908" y="433" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">PUSHED OUTWARD</text>
+        <text x="908" y="455" text-anchor="middle" font-size="10.5" fill="var(--ink)">webhooks — 4 events</text>
+        <text x="908" y="472" text-anchor="middle" font-size="10" fill="var(--muted)">HMAC-SHA256 · SSRF guard</text>
+        <text x="908" y="495" text-anchor="middle" font-size="10.5" fill="var(--ink)">space export bundles</text>
+        <text x="908" y="512" text-anchor="middle" font-size="10" fill="var(--muted)">dev→prod · template kits</text>
       </g>
     </svg>
     <figcaption class="fig-note">
-      The <b>functional</b> view — what each component does — reproduced from the June 2026
-      product brief. It answers a different question from the
-      <a href="#arch">deployment diagram above</a>, which shows where things actually run.
-      Two claims are marked rather than carried forward unchallenged: layer 02 is
-      <b>Domain</b> on the platform page and still <b>Product</b> in the FAQ, and the
-      <b>canonical store</b> was an inference in the original brief and remains undocumented.
-      Tiered propagation is marked because propose-then-publish review is still labelled
-      coming soon. Mermaid source:
-      <code>diagrams/architecture-functional.mmd</code>.
+      Drawn from <a href="https://docs.coconut.md/llms.txt">docs.coconut.md</a> in full — all 27
+      pages — read 18 August 2026. Ranking inside full-text search is the one mechanism still not
+      described. Personal spaces are omitted for clarity; they are owner-only by construction and
+      never emit webhooks.
     </figcaption>
   </figure>
 
   <div class="prose">
-    <h3>The distribution surface</h3>
+    <h3>Retrieval is documented now, and the answer is Postgres</h3>
     <p>
-      The MCP server at <code>app.coconut.dev/mcp</code> exposes 26 tools gated by
-      granular OAuth scopes — <code>coconuts:read</code>, <code>tasks:write</code>,
-      <code>knowledge:read</code>, <code>context:read</code>, <code>jobs:write</code>,
-      <code>skills:write</code> and others. Scope-level authorization is genuinely more
-      careful than most MCP servers ship, and it is the concrete thing behind the
-      "permission-aware" claim. Skill write operations are restricted to organization
-      admins, with organizations managed through Clerk.
+      August's third architectural risk was that retrieval was undocumented while Hyper published
+      query expansion, reciprocal rank fusion over embeddings and full-text, and a ZeroEntropy
+      reranker — and that an evaluator would notice which company showed its work. Coconut has now
+      shown its work: <b>Postgres full-text search over title, path, content and frontmatter,
+      ACL-filtered per hit</b>. No embeddings, no vector store, no reranker, no hybrid fusion. The
+      docs draw the line themselves — full-text answers <i>"which pages talk about X"</i>, metadata
+      answers <i>"which pages are in state X"</i>, and you compose them.
     </p>
-    <p>
-      Coconut also publishes an <b>A2A agent card</b> endpoint. That is a bet on
-      agent-to-agent interoperability beyond MCP, and neither prior research report
-      noticed it.
-    </p>
+    <div class="callout">
+      <p class="kicker">Two ways to read this, and the second is more interesting</p>
+      <p>
+        <b>The uncharitable read</b> — a company selling itself as the knowledge substrate for
+        enterprise AI ships 2005-era retrieval, and any evaluator running a semantic query against a
+        corpus that does not share its vocabulary finds out inside an hour.
+      </p>
+      <p style="margin-bottom:0">
+        <b>The charitable read, which the documentation actually supports</b> — Coco is not
+        competing on retrieval and has stopped pretending to. The bet: most enterprise questions are
+        <i>state</i> questions, not <i>semantic</i> ones; a typed, audited metadata layer answers
+        them exactly rather than probabilistically; and FTS only has to be good enough to find
+        candidates. If that is right, the RAG pipelines Coconut gets compared to are solving a
+        problem the customer did not have. A genuinely defensible position — and one nobody at
+        Coconut has written down.
+      </p>
+    </div>
 
-    <h3>Three architectural risks</h3>
-    <ol>
-      <li>
-        <b>A VM per organization is a heavy unit of deployment.</b> It buys strong isolation
-        and a credible self-hosted story. It also means per-tenant cost scales with tenants
-        rather than usage, which is an uncomfortable shape for a seat-priced product and
-        makes a free tier hard to offer against a competitor whose unit is a database row.
-      </li>
-      <li>
-        <b>The agent runtime is selectable, but the skills shelf is not.</b> The scheduler
-        offers Claude, Gemini, or Codex per job and the coding-agent picker offers Claude Code
-        or Codex, so the runtime is genuinely model-agnostic. What is not agnostic is
-        distribution: skills ship through the Claude Code plugin marketplace and are written to
-        Anthropic's <code>SKILL.md</code> spec, with a third-party tool (<code>openskills</code>,
-        unaffiliated with either company) as the route into Cursor or Codex. The dependency is
-        real, but it sits in the supply chain rather than the execution path.
-      </li>
-      <li>
-        <b>Retrieval is undocumented.</b> Coconut says knowledge is "indexed and available for
-        retrieval" and stops there. Hyper publicly describes query expansion, reciprocal rank
-        fusion over embeddings and Postgres full-text search, and a ZeroEntropy reranker. A
-        technical evaluator comparing the two will notice which one is willing to show its work.
-      </li>
-    </ol>
+    <h3>Three revised architectural risks</h3>
+    <p>
+      The August list — VM cost per tenant, runtime lock-in, undocumented retrieval — is entirely
+      superseded. What replaces it:
+    </p>
+  </div>
+  <div class="grid g3">
+    <div class="card">
+      <p class="kicker"><span class="tag hi">Risk 01</span></p>
+      <p style="font-size:15px;margin:10px 0 0">
+        <b>Two products is a tax on everything.</b> Two doc sites, two object models, two MCP
+        surfaces, two mental models for support to hold. Any prospect who finds both — and the
+        marketing nav points at the losing one — has to be told which is real. That conversation
+        never helps.
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker"><span class="tag med">Risk 02</span></p>
+      <p style="font-size:15px;margin:10px 0 0">
+        <b>One agent per space is a hard ceiling.</b> It makes permissions clean and it makes the
+        space the unit of automation. It also means a team wanting two differently-scoped automations
+        must split the space, dragging ACLs and page paths with it. Structure gets shaped by the
+        automation model rather than the work.
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker"><span class="tag med">Risk 03</span></p>
+      <p style="font-size:15px;margin:10px 0 0">
+        <b>FTS-only retrieval is undefended in public.</b> The position is defensible; the defence is
+        unwritten. Until someone publishes "why we did not build RAG," every technical evaluation
+        scores it as a missing feature rather than a deliberate choice.
+      </p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p class="fig-note" style="margin-top:30px">
+      Given how critical the rest of this report is, it is worth saying plainly: <b>the parts of Coco
+      that are written down are written down well</b> — secrets encrypted under a required key with
+      a hard <code>503</code> rather than a silent plaintext fallback, idempotent ordered migrations,
+      an SSRF guard that logs and refuses to retry. The problem is not quality. It is that the
+      company publishes two truths and points customers at the older one.
+    </p>
   </div>
 </section>
 
 <!-- ================= WORKFLOWS ================= -->
 <section role="tabpanel" id="p-flows" aria-labelledby="t-flows" hidden>
   <div class="prose">
-    <p class="kicker">03 — End-user workflows</p>
-    <h2>Four workflows, and only one of them is the demo</h2>
+    <p class="kicker">03 — Workflows</p>
+    <h2>The loop stopped being a feature and became three primitives</h2>
     <p class="lede">
-      Coconut's documentation organizes usage around what it calls <b>loops</b> — recurring,
-      scheduled agent workflows rather than one-off prompts. This is the most concrete
-      articulation of the product and it is buried in the docs rather than on the marketing site.
+      The older documentation shipped named <b>loops</b> — Daily Research Brief, Competitor
+      Intelligence Loop, POV Voice Loop — recipes you switched on. The new documentation ships no
+      loops at all: a scheduled task, a metadata query and a webhook, and you assemble the loop.
+      That trades a ready-made demo for composability, and the docs never argue the trade.
     </p>
 
-    <h3>A. Onboarding — the first two weeks</h3>
-    <ol class="steps">
-      <li><b>Request a demo</b> Access is invite-only. There is no self-serve path, so evaluation begins with a 30-minute sales call.</li>
-      <li><b>Bootstrap from templates</b> Coconut builds initial context from templates plus materials you already have. The explicit promise is "no blank screen."</li>
-      <li><b>Connect sources</b> Slack, Google Drive, Notion, HubSpot, Linear, Asana, Box, Fireflies, Git, email.</li>
-      <li><b>Assign owners</b> Each space gets an owner and role-based access. This is the step that makes the governance story real, and the step most likely to stall.</li>
-      <li><b>Install the MCP connector</b> Added as a custom connector in Claude, ChatGPT, Copilot, or Gemini, with OAuth scopes chosen at grant time.</li>
-      <li><b>Verify grounding</b> Ask a question whose answer you already know and check that every figure traces to a source.</li>
-    </ol>
-
-    <h3>B. Daily use — the drafting loop</h3>
+    <h3>Getting in — the demo gate is no longer the only door</h3>
     <p>
-      A team member asks their normal AI tool for a board deck, a memo, or call prep. The MCP
-      connector performs a permission check, fetches relevant pages across the five layers,
-      and injects them. The output arrives sourced, with each figure traceable. Coconut's own
-      illustration claims a first draft in about 12 minutes.
+      On 8 August the only path was a sales call: invite-only, demo-gated, six steps to first value.
+      The new documentation describes two paths that skip it, and the marketing site mentions neither.
     </p>
-    <p>
-      The return path matters more than the draft. When the user finds something wrong, they
-      open a <b>Task</b> — a change proposal against the context layer. An owner reviews and
-      approves, and the change propagates downstream. This is the loop that makes context
-      compound instead of decay, and it is <a href="#product">the part still marked coming soon</a>.
-    </p>
-
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <p class="kicker">Path A — a template installs the whole space</p>
+      <p style="font-size:15px;margin:0">
+        "Use this template" creates a space with pages, templates and agent instructions in place,
+        and a marketing link can deep-link one straight through sign-in. <b>A self-serve activation
+        funnel, built and documented, on a product still sold as invite-only.</b>
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker">Path B — run it yourself in fifteen minutes</p>
+      <p style="font-size:15px;margin:0">
+        <code>pnpm install</code>, <code>./scripts/compose-local.sh up</code>: Postgres, API, app,
+        migrated and seeded. <b>Written from a checkout, not a signup</b> — <code>specs/</code>,
+        <code>ROADMAP.md</code>, <code>packages/db/drizzle/</code>. Whoever these docs are for
+        already has the source.
+      </p>
+    </div>
   </div>
 
+  <div class="prose">
+    <h3>The read path</h3>
+    <p>
+      Same shape, different mechanism: the connector no longer assembles five context layers, it
+      resolves pages and runs metadata queries. What comes back is the same grounded, sourced draft.
+    </p>
+  </div>
   <figure>
     <svg class="diagram" viewBox="0 0 1020 620" role="img" aria-labelledby="sqtitle sqdesc">
       <title id="sqtitle">Coconut daily usage sequence</title>
-      <desc id="sqdesc">A team member asks an AI tool to draft something. The tool requests context from the Coconut MCP connector, which performs a permission check and fetches pages across the five layers. Owner-approved current context plus sources returns, is injected into the prompt, and a sourced draft comes back. The user then proposes a change, which opens a Task the owner reviews and propagates. Separately and on a schedule, the space agent folds transcripts into memos, flags stale coverage and refreshes research pages.</desc>
+      <desc id="sqdesc">A team member asks an AI tool to draft something. The tool calls the Coconut MCP connector, which performs the same ACL check any door would, then resolves pages and runs a metadata query against the space. Current pages plus their sources return, are injected into the prompt, and a sourced draft comes back. The user then corrects something, and the correction is written straight back as a new page revision guarded by an If-Match header — no review step exists. Separately and on a schedule, the space agent folds transcripts into pages, patches metadata, and flags coverage that has gone stale.</desc>
       <defs>
         <marker id="ar4" markerWidth="8" markerHeight="8" refX="7" refY="2.6" orient="auto">
           <path d="M0,0 L0,5.2 L7,2.6 z" fill="currentColor"/>
@@ -783,16 +858,16 @@
         <text x="300" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">Claude · ChatGPT · editor</text>
 
         <rect x="415" y="26" width="170" height="52" rx="7" fill="var(--wash)" stroke="var(--accent)" stroke-width="1.4"/>
-        <text x="500" y="48" text-anchor="middle" font-size="10.5" fill="var(--ink)">Coconut MCP</text>
-        <text x="500" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">permission-aware</text>
+        <text x="500" y="48" text-anchor="middle" font-size="10.5" fill="var(--ink)">MCP door</text>
+        <text x="500" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">POST /mcp · context_*</text>
 
         <rect x="615" y="26" width="170" height="52" rx="7" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="700" y="48" text-anchor="middle" font-size="10.5" fill="var(--ink)">Context layer</text>
-        <text x="700" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">five layers</text>
+        <text x="700" y="48" text-anchor="middle" font-size="10.5" fill="var(--ink)">Space — pages</text>
+        <text x="700" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">Postgres · one ACL engine</text>
 
         <rect x="825" y="26" width="170" height="52" rx="7" fill="var(--surface)" stroke="var(--line)"/>
         <text x="910" y="48" text-anchor="middle" font-size="10.5" fill="var(--ink)">Space agent</text>
-        <text x="910" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">scheduled</text>
+        <text x="910" y="65" text-anchor="middle" font-size="9.5" fill="var(--muted)">one per space · scheduled</text>
       </g>
 
       <g stroke="currentColor" color="var(--ink-2)" stroke-width="1.3" marker-end="url(#ar4)" fill="none">
@@ -807,9 +882,9 @@
       </g>
       <g font-size="9.5" fill="var(--ink-2)" text-anchor="middle">
         <text x="197" y="112">"Draft the Q3 board deck"</text>
-        <text x="400" y="148">Request context · permission check</text>
-        <text x="600" y="184">Fetch pages across the 5 layers</text>
-        <text x="600" y="220">Owner-approved, current + sources</text>
+        <text x="400" y="148">context_get_shared_page · same ACL check</text>
+        <text x="600" y="184">resolve pages · query_pages_by_metadata</text>
+        <text x="600" y="220">current revision + metadata + sources</text>
         <text x="400" y="256">Inject into the prompt</text>
         <text x="197" y="292">Draft — every figure sourced</text>
       </g>
@@ -826,11 +901,11 @@
         <path d="M700,424 H742 V448 H704"/>
       </g>
       <g font-size="9.5" fill="var(--ink-2)" text-anchor="middle">
-        <text x="197" y="354">Propose a change</text>
-        <text x="498" y="390">Open a Task — a change proposal</text>
+        <text x="197" y="354">Correct something</text>
+        <text x="498" y="390">PUT with If-Match — a new revision</text>
       </g>
-      <text x="752" y="440" font-size="9.5" fill="var(--amber)">Owner reviews, approves, propagates</text>
-      <text x="752" y="454" font-size="9" fill="var(--muted)">review workflow marked "coming soon"</text>
+      <text x="752" y="440" font-size="9.5" fill="var(--red)">No review step — the write lands</text>
+      <text x="752" y="454" font-size="9" fill="var(--muted)">revision log + webhook are the only gate</text>
 
       <g>
         <line x1="20" y1="486" x2="1000" y2="486" stroke="var(--line)" stroke-width="1"/>
@@ -844,82 +919,115 @@
         <line x1="915" y1="586" x2="704" y2="586"/>
       </g>
       <g font-size="9.5" fill="var(--ink-2)" text-anchor="middle">
-        <text x="810" y="516">Fold new transcripts into memos</text>
-        <text x="810" y="548">Flag coverage that has gone stale</text>
-        <text x="810" y="580">Refresh research pages</text>
+        <text x="810" y="516">Fold new sources into the page body</text>
+        <text x="810" y="548">PATCH metadata — appendUnique, idempotent</text>
+        <text x="810" y="580">Write a run record · fire a webhook</text>
       </g>
     </svg>
     <figcaption class="fig-note">
-      The daily loop, merged from the two sequence diagrams in the June 2026 product brief —
-      one framed for a team member, one for a PM — which described the same flow. This keeps
-      the union: the permission check and owner-approval annotations from the PM version, the
-      background space-agent lane from the other. The return path is annotated because
-      propose-then-publish review is still marked coming soon, so in practice a change today
-      lands without the tiered review the diagram implies. Mermaid source:
-      <code>diagrams/daily-usage-sequence.mmd</code>.
+      Redrawn 18 August 2026 against <a href="https://docs.coconut.md/api-reference/overview">the
+      shipped API and MCP surface</a>. The structure is the June 2026 product brief's; the labels are
+      not. Two changes carry the whole revision: the connector resolves <b>pages and metadata
+      queries</b> rather than assembling five context layers, and the correction path has <b>no
+      review step</b> — the write lands and the revision log is what you have afterwards. Mermaid
+      source: <code>diagrams/daily-usage-sequence.mmd</code>.
     </figcaption>
   </figure>
-
   <div class="prose">
-    <h3>C. Background — space agents on a schedule</h3>
-    <p>
-      Each space's agent runs unattended: folding new call transcripts into the right memo,
-      appending the sources it used, refreshing research pages, flagging coverage that has
-      gone stale. Documented recurring loops include:
-    </p>
-    <div class="grid g2">
-      <div class="card">
-        <p class="kicker">Research loops</p>
-        <ul style="margin:0;font-size:15px">
-          <li><b>Daily Research Brief</b> — a fresh read on one topic each morning</li>
-          <li><b>Track a Company</b> — one maintained document per company, product, or person</li>
-          <li><b>Rolling Calendar</b> — what is coming, refreshed every run</li>
-        </ul>
-      </div>
-      <div class="card">
-        <p class="kicker">Product &amp; marketing loops</p>
-        <ul style="margin:0;font-size:15px">
-          <li><b>Competitor Intelligence Loop</b> — a weekly read on named competitors</li>
-          <li><b>Product Improvement Loop</b> — one validated proposal per run, or an honest report that nothing cleared the bar</li>
-          <li><b>POV Voice Loop</b> — what your team's distinctive voices actually said, mined weekly</li>
-        </ul>
-      </div>
-    </div>
-    <p class="fig-note">
-      "One validated proposal per run, or an honest report of why nothing cleared the bar" is
-      a notably disciplined default. Most agent products in this category are tuned to always
-      produce output.
-    </p>
-
-    <h3>D. The developer workflow — the hidden second product</h3>
-    <p>
-      <code>nut init</code> creates a git-versioned <code>.nut</code> directory. From there:
-      <code>nut context</code> sets role and memory, <code>nut skill</code> installs packaged
-      behaviors, <code>nut code</code> runs AI-assisted implementation, <code>nut task</code>
-      opens change proposals, and full git operations run through the API — branches,
-      worktrees, commits, diffs, push.
-    </p>
-    <div class="callout">
-      <p class="kicker">Read this way</p>
+    <h3>The write-back path has no gate on it</h3>
+    <div class="callout dang">
+      <p class="kicker">The correction loop, as actually shipped</p>
       <p>
-        This is not a thin CLI wrapper on a knowledge product. Interactive terminal sessions
-        over WebSocket, git worktree management, code sessions that dispatch to a selected AI
-        agent, and task plan-steps add up to a coding-agent platform sitting inside a context
-        product. The go-to-market points entirely at Product, Ops, VC/PE, and GTM leaders.
-        Either the developer surface is a strategic second act or it is scope that a two-to-ten
-        person team is paying to maintain without a buyer attached to it.
+        In August, a user who spotted an error opened a <b>Task</b> — a change proposal an owner
+        reviewed before it propagated. In the new object model <b>there is no proposal object</b>:
+        no review endpoint, no approval state, no pending-change list. A correction is a
+        <code>PUT</code> with an <code>If-Match</code> header, and if your ETag is current it lands.
+      </p>
+      <p style="margin-bottom:0">
+        Instead there is complete reconstruction after the fact: append-only revisions, a per-key
+        metadata audit trail, <code>make-latest</code>, and a webhook the moment anything changes.
+        <i>Catch it in review, or catch it in the log</i> — and for most teams the log is how wikis
+        honestly work anyway. It is not the tiered propagation the platform page sells, and that
+        distance is where an enterprise governance deal is won or lost.
       </p>
     </div>
 
+    <h3>Automation: a task is a page, a schedule is frontmatter</h3>
+    <p>
+      No separate job system: the agent's entire configuration is pages under a reserved
+      <code>agents/</code> prefix, so instructions and schedules are versioned, ACL'd, diffable and
+      exportable like everything else. An elegant collapse.
+    </p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:34%">Page</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;space&gt;/agents/instructions</code></td><td>The persona, layered into every run</td></tr>
+        <tr><td><code>&lt;space&gt;/agents/&lt;task&gt;</code></td><td>A task. <code>schedule</code>, <code>scheduleTz</code>, <code>scheduleEnabled</code> live in its frontmatter — cron as a document property</td></tr>
+        <tr><td><code>&lt;space&gt;/agents/runs/&lt;task&gt;/&lt;run-id&gt;</code></td><td>A run record — status, output, usage. Written by the run itself</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout prose">
+    <p class="kicker">The detail worth stealing</p>
+    <p style="margin-bottom:0">
+      <b>Scheduled runs execute as the space agent principal; manual runs execute with the
+      requesting user's authority.</b> The same task has different reach depending on who started
+      it — an unattended 3am run cannot touch anything the agent was not granted. Most agent
+      platforms have one identity and hope. This is the correct design, and it is one line in the docs.
+    </p>
+  </div>
+
+  <div class="prose">
+    <h3>The integration surface replaced the CLI</h3>
+    <p>
+      August flagged a "hidden second product": <code>nut init</code>, git worktrees, WebSocket
+      terminals, code sessions, image and video generation — a coding-agent platform inside a
+      knowledge product, with no buyer named for it. <b>None of it survives.</b> What replaced it is
+      narrower and far easier to sell: four signed webhook events, a markdown-native HTTP API, and
+      portable space bundles. If cutting the scope that had no buyer attached was deliberate, it is
+      the best decision visible in this revision.
+    </p>
+  </div>
+  <div class="grid g3">
+    <div class="card">
+      <p class="kicker">Push</p>
+      <p style="font-size:15px;margin:0">
+        <code>page.created</code>, <code>page.updated</code>, <code>page.deleted</code>,
+        <code>page.metadata.updated</code> — the last carrying <code>changedKeys</code>. Signed
+        <code>sha256=…</code>, three retries, full delivery log. Personal spaces never emit.
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker">Pull</p>
+      <p style="font-size:15px;margin:0">
+        Same URL serves a human and a machine — <code>Accept: text/markdown</code> or a
+        <code>.md</code> suffix. <code>?version=n</code> reads history. No separate content API to
+        drift out of sync.
+      </p>
+    </div>
+    <div class="card">
+      <p class="kicker">Move</p>
+      <p style="font-size:15px;margin:0">
+        <code>GET /spaces/:slug/export</code> yields every page you can read. Paths are
+        space-relative, so a bundle from <code>deals</code> imports into <code>pipeline</code>.
+        Revision history stays home.
+      </p>
+    </div>
+  </div>
+
+  <div class="prose">
     <h3>Who this is sold to</h3>
     <div class="tw">
       <table>
         <thead><tr><th style="width:170px">Segment</th><th>The job Coconut does</th></tr></thead>
         <tbody>
-          <tr><td><b>Leadership</b></td><td>One grounded source for board prep, synthesis, and in-the-moment questions.</td></tr>
-          <tr><td><b>Investors (VC/PE)</b></td><td>One page per target: the body is a living investment memo, metadata carries stage, conviction score, sources, review dates. The Monday partner list becomes a query instead of a re-keyed spreadsheet. <b>This is the sharpest-fit segment on the site.</b></td></tr>
-          <tr><td><b>Operating functions</b></td><td>Marketing, sales, CS, product, ops, people — campaign briefs, call prep, renewals, specs grounded in current context.</td></tr>
-          <tr><td><b>Developers</b></td><td>CLI, IDE extension, git-versioned context, skills. Real surface area, no named buyer.</td></tr>
+          <tr><td><b>Investors (VC/PE)</b></td><td>One page per target: body is a living memo, metadata carries stage, conviction, sources, review dates. The Monday partner list becomes a query rather than a re-keyed spreadsheet. <b>Still the sharpest fit</b>, and now the lead example in the docs.</td></tr>
+          <tr><td><b>Compliance-shaped work</b></td><td>Legal, supplier audit, SRE runbooks — new. Every one is the same shape: a date field, a score, and a sweep that finds what has gone stale. Metadata queries answer these exactly; retrieval never could.</td></tr>
+          <tr><td><b>Leadership</b></td><td>One grounded source for board prep and in-the-moment questions.</td></tr>
+          <tr><td><b>Operating functions</b></td><td>Marketing, sales, CS, product, ops, people — briefs, call prep, renewals, specs grounded in current context.</td></tr>
+          <tr><td><b>Developers</b></td><td><s>CLI, IDE, git-versioned context, skills.</s> Gone. What remains is an HTTP API for systems, not a developer product.</td></tr>
         </tbody>
       </table>
     </div>
@@ -932,20 +1040,18 @@
     <p class="kicker">04 — Competitive landscape</p>
     <h2>The category got named, and then it got crowded</h2>
     <p class="lede">
-      In its Summer 2026 Request for Startups, Y Combinator formally named this category the
-      <b>Company Brain</b>: a system that pulls knowledge out of fragmented sources, structures
-      it, keeps it current, and turns it into an executable skills file for AI. That is
-      Coconut's pitch, published as an open invitation to build it. At least six funded teams
-      accepted.
+      Y Combinator's Summer 2026 Request for Startups named this category the <b>Company Brain</b>:
+      a system that pulls knowledge out of fragmented sources, structures it, keeps it current, and
+      turns it into something AI can execute. That is Coconut's pitch, published as an open
+      invitation to build it. At least six funded teams accepted.
     </p>
   </div>
 
   <h3>Top 10 most-funded close competitors</h3>
   <p class="prose">
-    Ranked by capital raised among companies genuinely contesting "where does organizational
-    knowledge live for AI." Acquired companies are included and marked — being owned by
-    ServiceNow or Workday makes a competitor more dangerous, not less, because it arrives
-    with platform distribution attached.
+    By capital raised, among companies genuinely contesting "where does organizational knowledge
+    live for AI." Acquired companies are marked and included — platform ownership makes a competitor
+    <i>more</i> dangerous, because distribution arrives with it.
   </p>
   <div class="tw">
     <table>
@@ -956,19 +1062,19 @@
         <tr>
           <td class="rank">01</td><td><b>Glean</b></td>
           <td class="num">$765M raised<br><span style="color:var(--muted)">$7.2B val · $300M ARR</span></td>
-          <td>The comparison every enterprise buyer makes. ARR went ~$100M → $208M (end-2025) → $300M (May 2026), an 89% year-over-year jump on 1,648 employees. Not a slow incumbent — it is compounding faster than most startups in the category, and Glean Agents is closing the "search vs. act" gap Coconut relies on.</td>
+          <td>The comparison every enterprise buyer makes. ARR ~$100M → $208M (end-2025) → $300M (May 2026): 89% year-over-year on 1,648 employees. Not a slow incumbent — compounding faster than most startups in the category, and Glean Agents is closing the "search vs. act" gap Coconut's whole pitch relies on.</td>
           <td><span class="tag hi">High</span></td>
         </tr>
         <tr>
           <td class="rank">02</td><td><b>Moveworks</b><br><span class="tag info">ServiceNow</span></td>
           <td class="num">$2.85B exit</td>
-          <td>Closed 15 Dec 2025 after a DOJ second request — the largest acquisition in ServiceNow's history. Read as proof the category exits into platform vendors, and as a credible endgame for Coconut itself.</td>
+          <td>Closed 15 Dec 2025 after a DOJ second request — ServiceNow's largest ever. Proof the category exits into platform vendors, and a credible endgame for Coconut itself.</td>
           <td><span class="tag med">Medium</span></td>
         </tr>
         <tr>
           <td class="rank">03</td><td><b>Stack Internal</b><br><span class="tag info">Prosus</span></td>
           <td class="num">$1.8B (2022 acq.)</td>
-          <td>Stack Overflow's private Q&amp;A rebranded as an enterprise knowledge intelligence layer, with an MCP server over <i>verified</i> knowledge for Copilot, ChatGPT, Cursor, and M365. Closest incumbent on Coconut's exact combination of MCP plus governance.</td>
+          <td>Stack Overflow's private Q&amp;A rebuilt as an enterprise knowledge layer, with an MCP server over <i>verified</i> knowledge for Copilot, ChatGPT, Cursor and M365. Closest incumbent on Coconut's exact combination of MCP plus governance.</td>
           <td><span class="tag med">Medium</span></td>
         </tr>
         <tr>
@@ -998,7 +1104,7 @@
         <tr>
           <td class="rank">08</td><td><b>Dust</b></td>
           <td class="num">$60M+ raised<br><span style="color:var(--muted)">$40M Series B, May 2026</span></td>
-          <td><b>The most underrated name on this list.</b> Series B led by Abstract and Sequoia with Snowflake Ventures and Datadog. 3,000+ organizations at 70%+ weekly active, 100+ data sources, built-in memory and governance. Dust also made "multiplayer AI" a category term in May 2026 — Coconut's blog adopted the same framing on 31 July 2026.</td>
+          <td><b>The most underrated name on this list.</b> Series B led by Abstract and Sequoia, with Snowflake Ventures and Datadog. 3,000+ organizations at 70%+ weekly active, 100+ data sources, built-in memory and governance — and it made "multiplayer AI" a category term in May 2026, framing Coconut's blog adopted on 31 July.</td>
           <td><span class="tag hi">High</span></td>
         </tr>
         <tr>
@@ -1025,9 +1131,9 @@
   <div class="prose">
     <h3>The six that are actually the same product</h3>
     <p>
-      Funding rank understates the real threat. These teams are building Coconut's architecture,
-      with Coconut's vocabulary, on Coconut's timeline — and most of them launched publicly
-      while Coconut stayed invite-only.
+      Funding rank understates the threat. These teams are building Coconut's architecture, in
+      Coconut's vocabulary, on Coconut's timeline — and most launched publicly while Coconut stayed
+      invite-only.
     </p>
   </div>
   <div class="tw">
@@ -1035,7 +1141,7 @@
       <thead><tr><th style="width:130px">Company</th><th style="width:110px">Batch</th><th>Why it is the same product</th></tr></thead>
       <tbody>
         <tr><td><b>GBrain</b></td><td>Open source<br><span style="color:var(--muted)">Garry Tan</span></td><td>Markdown-first, git-versioned, MCP-served, nightly consolidation, multi-user company-brain mode. Free. <b>28,015 stars and 4,102 forks, from a repo created 5 April 2026.</b> Authored by the president of the accelerator funding four of the rows below.</td></tr>
-        <tr><td><b>Hyper</b></td><td>YC P26</td><td>Provenance, staleness tracking, per-user access control, MCP injection on every prompt turn. Reported $1K MRR in 12 days, 50+ teams, paid pilots scoped with Razorpay and Snorkel AI. Publishes its retrieval architecture.</td></tr>
+        <tr><td><b>Hyper</b></td><td>YC P26</td><td>Provenance, staleness tracking, per-user access control, MCP injection on every prompt turn. Reported $1K MRR in 12 days, 50+ teams, paid pilots scoped with Razorpay and Snorkel AI. <b>Both companies now publish their retrieval architecture</b> — Hyper's is query expansion, reciprocal rank fusion over embeddings and full-text, and a ZeroEntropy reranker; Coconut's is Postgres full-text search. On a head-to-head technical evaluation that is the slide Hyper wants.</td></tr>
         <tr><td><b>Cerenovus</b></td><td>YC S26</td><td>Single Markdown knowledge graph from files, PDFs, email, Slack, spreadsheets. Maps the company as a system and <i>infers</i> structure rather than imposing a fixed taxonomy.</td></tr>
         <tr><td><b>Savant</b></td><td>YC Spring 26</td><td>Captures <i>undocumented procedures</i> and serves them at decision time — the harder, more defensible half of tribal knowledge.</td></tr>
         <tr><td><b>Memory Store</b></td><td>YC P26</td><td>Self-updating "Briefs" are functionally Coconut's living pages. Founders previously shipped Julep, an open-source agent orchestrator with 7K+ stars.</td></tr>
@@ -1047,29 +1153,52 @@
   <div class="prose">
     <div class="callout dang">
       <p class="kicker">The uncomfortable arithmetic</p>
-      <p>
-        GBrain went from repository creation to <b>28,015 stars in four months</b>. Coconut's
-        public GitHub organization, created 28 August 2025, has three repositories and a
-        combined <b>two stars</b>. Those measure different things — one is an open-source
-        project, the other a commercial company's incidental public code — but they measure
-        the same thing to a developer deciding what to try on a Saturday, and that developer
-        is often the person who recommends the tool on Monday.
+      <p style="margin-bottom:0">
+        GBrain: repository creation to <b>28,015 stars in four months</b>. Coconut's public GitHub
+        organization, created 28 August 2025: three repositories, <b>two stars</b> combined. They
+        measure different things — one an open-source project, the other a company's incidental
+        public code — but not to the developer deciding what to try on a Saturday, who is often the
+        person who recommends the tool on Monday.
       </p>
     </div>
+  </div>
 
+  <div class="prose">
+    <h3>What the new documentation changes here</h3>
+    <p>Three of the comparisons above move, and only one moves in Coconut's favour.</p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:132px">Dimension</th><th style="width:29%">Coconut, as of 18 Aug</th><th>Effect on the field</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Retrieval</b></td>
+          <td>Postgres FTS + metadata query. No embeddings, no reranker, no vector store.</td>
+          <td><span class="tag hi">Worse</span> &nbsp;Hyper publishes a full hybrid pipeline; Glean sells a permissions-aware knowledge graph; Mem0 owns "AI memory" among developers. Coconut now has a documented answer that reads as the least sophisticated in the set — unless the state-over-semantics bet is argued out loud, which nowhere in the docs it is.</td>
+        </tr>
+        <tr>
+          <td><b>Self-hosting</b></td>
+          <td>Compose, Helm and Terraform, all documented, with <code>api + postgres</code> named as the enterprise artifact.</td>
+          <td><span class="tag ok">Better</span> &nbsp;This is the answer to GBrain and to every "we could build it" objection, and it is a stronger answer than Glean's. It is also the answer that teaches a capable buyer how to price the build.</td>
+        </tr>
+        <tr>
+          <td><b>Distribution</b></td>
+          <td>A space-template gallery — built-in, org-maintained and opt-in remote catalogues — plus portable export bundles.</td>
+          <td><span class="tag ok">Better</span> &nbsp;None of the six same-product teams has a solutions catalogue. If partner-authored kits land, this is the one durable moat visible anywhere in the new documentation.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
     <h3>Names to drop from any competitive deck</h3>
     <p>
-      Prior research included several companies that use "brain," "memory," or "context"
-      language while doing unrelated work: SuperHawk (revenue ops), Ego.ist (consumer
-      identity), HeyClicky (screen tutor), Iris (personal calendar), Stamp (email client).
-      None is an org-wide governed context layer. Including them in a competitive analysis
-      dilutes its credibility.
-    </p>
-    <p>
-      One correction worth making in the other direction: <b>Quivr</b> has 39,393 GitHub stars
-      and has not been pushed since 9 July 2025. It is the best available evidence that stars
-      are not traction and that build-your-own second-brain projects decay — which is
-      ammunition for Coconut's managed pitch, not against it.
+      Prior research counted companies using "brain," "memory" or "context" language while doing
+      unrelated work — SuperHawk (revenue ops), Ego.ist (consumer identity), HeyClicky (screen
+      tutor), Iris (calendar), Stamp (email). None is an org-wide governed context layer. In the
+      other direction, <b>Quivr</b> has 39,393 stars and no push since 9 July 2025 — the best
+      evidence available that stars are not traction and that build-your-own second brains decay,
+      which is ammunition <i>for</i> the managed pitch.
     </p>
     <p style="margin-top:26px">
       <a href="competitors.html"><b>→ Search the full 47-company database</b></a>, filterable
@@ -1084,124 +1213,145 @@
     <p class="kicker">05 — Existential threat</p>
     <h2>What actually kills this company</h2>
     <p class="lede">
-      Not Glean. Not the YC cohort. The threats that end Coconut are structural, and two of
-      the three are consequences of decisions already made.
+      Not Glean. Not the YC cohort. Two of the five threats below moved materially in ten days —
+      one down, because Coconut cut the surface that caused it, and one up, because the company is
+      now maintaining two products at once.
     </p>
 
-    <h4>Threat 1 — Anthropic owns the standards and the shelf</h4>
-    <div class="scale" aria-label="Severity: medium-high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
-    <p>
-      Skills ship through the <b>Claude Code plugin marketplace</b>. The AI chat endpoint
-      defaults to Claude Sonnet 4.5. MCP — the distribution mechanism the entire product
-      depends on — is an Anthropic-authored standard, as is the <code>SKILL.md</code>
-      specification Coconut skills are written in.
+    <h4>Threat 1 — The Anthropic dependency shrank</h4>
+    <div class="scale" aria-label="Severity: medium"><i class="on m"></i><i class="on m"></i><i class="on m"></i><i></i><i></i><i></i></div>
+    <p style="margin-bottom:0">
+      August's version rested on distribution: skills shipped through the <b>Claude Code plugin
+      marketplace</b>, written to Anthropic's <code>SKILL.md</code> spec, with an unaffiliated
+      third-party tool as the only route into Cursor or Codex. <b>The new product has no skills, no
+      marketplace and no <code>SKILL.md</code></b> — that supply-chain dependency is gone. What
+      remains is real but ordinary: MCP is an Anthropic-authored standard, and Anthropic sells a
+      product one layer up whose every improvement narrows the gap Coconut sells into. The same
+      exposure every MCP-native company carries. Severity down from medium-high.
     </p>
-    <p>
-      Anthropic is simultaneously Coconut's default runtime, its skill distribution channel,
-      its standards body, and the vendor of a competing product one layer up. Every capability
-      Anthropic adds to Projects, Skills, or Cowork narrows the gap Coconut sells into, and
-      Coconut has no leverage over that roadmap or its pricing. The same applies to OpenAI and
-      Microsoft on the context-consumption side.
-    </p>
-    <div class="callout">
-      <p class="kicker">Correction — this threat is narrower than first assessed</p>
-      <p style="margin-bottom:0">
-        An earlier version of this page said Coconut's agent loop <i>is</i> Claude Code, and
-        that "model-agnostic" therefore described only what Coconut distributes to and not what
-        it runs on. That was too strong. Coconut's
-        <a href="https://docs.coconut.dev/studio/schedule">job scheduler</a> lets you pick
-        <b>Claude, Gemini, or Codex</b> per scheduled job, and the
-        <a href="https://docs.coconut.dev/studio/code">coding-agent picker</a> offers Claude
-        Code or OpenAI Codex. The runtime is genuinely selectable. Anthropic is the default and
-        the skills shelf, not a lock-in — severity revised down accordingly.
-      </p>
-    </div>
 
     <h4>Threat 2 — The free option is good, and its author funds the competition</h4>
     <div class="scale" aria-label="Severity: high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
     <p>
       GBrain is MIT-licensed, Markdown-first, git-versioned, ships as an MCP server, has a
-      multi-user company-brain mode, and reportedly runs a 25-person brain for under $100 a
-      month. It has 28,015 stars four months after creation. It is written by Garry Tan, who
-      is also president and CEO of the accelerator that funded Hyper, Cerenovus, Savant,
-      Memory Store, and Glen.
+      multi-user company-brain mode, reportedly runs a 25-person brain for under $100 a month, and
+      has 28,015 stars four months after creation. Written by Garry Tan — president and CEO of the
+      accelerator that funded Hyper, Cerenovus, Savant, Memory Store and Glen.
     </p>
     <p>
-      A free, credible, well-distributed baseline does not have to win to hurt. It has to
-      make every paid product justify its delta at the start of every sales conversation.
-      Coconut's honest delta is managed connectors, permission enforcement done for you,
-      deployment options, and someone to call at 2am. That is a real answer — it is the same
-      answer GitLab gives against self-hosted git — but it prices Coconut against the
-      engineering cost of a self-hosted alternative rather than against the value of the
-      context itself. That is a much lower ceiling.
+      A free, credible baseline does not have to win to hurt — it makes every paid product justify
+      its delta at the start of every sales call. Coconut's honest delta is managed connectors,
+      permissions enforced for you, deployment options, someone to call at 2am: the answer GitLab
+      gives against self-hosted git. It prices Coconut against the engineering cost of the
+      alternative rather than the value of the context. Much lower ceiling.
     </p>
+    <div class="callout warn">
+      <p class="kicker">And the new documentation makes this harder, not easier</p>
+      <p style="margin-bottom:0">
+        Docs written from a checkout — <code>pnpm install</code>, <code>specs/</code>,
+        <code>ROADMAP.md</code>, Helm, Terraform — invite exactly the comparison Coconut least wants.
+        A buyer who can read a Compose file and a Postgres schema can price building it. The
+        self-host story wins security reviews and loses pricing power, and Coconut now leads with it.
+      </p>
+    </div>
 
-    <h4>Threat 3 — Governance is the wedge, and the wedge is not finished</h4>
+    <h4>Threat 3 — Governance is the wedge, and the wedge is still not finished</h4>
     <div class="scale" aria-label="Severity: medium-high"><i class="on m"></i><i class="on m"></i><i class="on m"></i><i class="on m"></i><i></i><i></i></div>
     <p>
-      Against platform-native memory, against free open source, and against capture-first
-      tools like Screenpipe, governance is the one defensible position Coconut has chosen.
-      It is the right choice. But propose-then-publish review is marked <b>coming soon</b>,
-      and there is no SOC 2 claim on the public site.
+      Governance is the one defensible position Coconut has chosen against platform-native memory,
+      free open source and capture-first tools, and it is the right choice. Ten days on,
+      <b>propose-then-publish review is still absent</b> — not merely "coming soon" on the platform
+      page, but missing from a freshly written 27-page object model that found room for webhooks, a
+      template gallery and SCIM.
     </p>
-    <p>
-      Meanwhile the deepest-pocketed competitors are moving onto the same ground: Glean sells
-      a permissions-aware knowledge graph as the governed context layer, Stack Internal ships
-      an MCP server over verified knowledge, and Guru has shipped verification workflows for
-      years. Coconut is defending a hill that better-funded companies are already climbing,
-      with part of its own fortification unbuilt.
+    <p style="margin-bottom:0">
+      The compliance half improved: ~57 monitored controls is a real answer where there was silence.
+      But better-funded competitors are on the same hill — Glean's permissions-aware knowledge
+      graph, Stack Internal's MCP over verified knowledge, Guru's years of verification workflows —
+      and the fortification Coconut built last is the one its own marketing leads with.
     </p>
 
-    <h4>Threat 4 — Surface area versus headcount</h4>
+    <h4>Threat 4 — Two products, one team</h4>
+    <div class="scale" aria-label="Severity: high"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+    <p>
+      In August this was breadth: a 2–10 person company shipping a Studio, control plane, iOS app,
+      editor extension, CLI, REST API, MCP server, A2A endpoint, agent runtime, skills marketplace,
+      mail, media generation, terminals and git worktrees. <b>The new product deletes almost all of
+      it</b> — which should have retired this threat, and instead made it worse. Deleting a surface
+      from documentation does not delete it from production, from support, or from customers already
+      on it.
+    </p>
+    <div class="callout dang">
+      <p class="kicker">The three readings, and none of them is comfortable</p>
+      <p style="margin-bottom:0">
+        <b>A migration mid-flight</b> — most likely, and it means every existing customer sits on an
+        architecture the company has moved off, with a migration nobody has described publicly.
+        <b>A deliberate two-product strategy</b> — a 2–10 person team maintaining two object models,
+        two MCP surfaces, two doc sites. <b>An abandoned line left standing</b> — cheapest to
+        execute, most corrosive, because the abandoned docs are the ones the marketing site links
+        to. This report cannot distinguish between them on public evidence. Neither can a prospect.
+      </p>
+    </div>
+
+    <h4>Threat 5 — The name, and now the domains</h4>
     <div class="scale" aria-label="Severity: medium"><i class="on m"></i><i class="on m"></i><i class="on m"></i><i></i><i></i><i></i></div>
     <p>
-      LinkedIn reports 2–10 employees. The shipped surface is: web Studio, Control Plane,
-      iOS app, VS Code/Cursor extension, CLI, REST API, MCP server, A2A endpoint, connectors
-      for ten-plus systems, an agent runtime, a skills marketplace, a mail system, image,
-      audio and video generation, an interactive terminal, and full git operations including
-      worktrees.
+      "Coconut" already collided with Coconut Software (banking), Coconut tax software, coconut.co
+      (video encoding) and a Meta research paper; Crunchbase and PitchBook return the wrong
+      companies. That was a search tax. The new footprint adds a comprehension tax — six hostnames
+      across two top-level domains, where <b>the TLD, not the subdomain, tells you which product you
+      are reading about</b>:
     </p>
-    <p>
-      Every one of those needs maintenance, security review, and documentation. Some of it —
-      the media generation, the mail system, the terminal — has no obvious connection to the
-      buyer Coconut names on its own solutions pages. In a category where six funded teams
-      are attacking the same wedge, breadth is the expensive way to lose.
-    </p>
-
-    <h4>Threat 5 — The name</h4>
-    <div class="scale" aria-label="Severity: low-medium"><i class="on m"></i><i class="on m"></i><i></i><i></i><i></i><i></i></div>
-    <p>
-      "Coconut" collides with Coconut Software (banking), Coconut tax software, coconut.co
-      (video encoding), and a Meta research paper. The company sits at coconut.dev while the
-      Studio runs at app.coconut.md and the Control Plane at app.coconut.dev. Crunchbase and
-      PitchBook return the wrong companies. For a company that will be researched by
-      procurement teams and journalists, this is a persistent tax on every search.
+    <div class="tw">
+      <table>
+        <thead><tr><th style="width:210px">Host</th><th>What is there</th><th style="width:110px">Which product</th></tr></thead>
+        <tbody>
+          <tr><td><code>www.coconut.dev</code></td><td>Marketing — the context layer, five layers, Team/Company/Enterprise</td><td><span class="tag">neither, exactly</span></td></tr>
+          <tr><td><code>docs.coconut.dev</code></td><td>Documentation for the VM product · <b>linked from the nav</b></td><td><span class="tag med">old</span></td></tr>
+          <tr><td><code>app.coconut.dev</code></td><td>Control plane</td><td><span class="tag med">old</span></td></tr>
+          <tr><td><code>docs.coconut.md</code></td><td>Documentation for Coco · linked from nowhere</td><td><span class="tag ok">new</span></td></tr>
+          <tr><td><code>app.coconut.md</code></td><td>Studio</td><td><span class="tag ok">new</span></td></tr>
+          <tr><td><code>trust.coconut.dev</code></td><td>Vanta Trust Center — new since 8 August</td><td><span class="tag">both</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fig-note">
+      The <code>.md</code> choice is a good pun — Coco is a markdown product — and a bad address.
+      A domain that reads as a file extension, on the Moldova ccTLD, is one an enterprise security
+      questionnaire will ask about.
     </p>
 
     <div class="verdict">
-      <p class="kicker">Verdict</p>
+      <p class="kicker">Verdict — revised 18 August 2026</p>
       <p>
-        Coconut is building in a genuinely validated market gap. Your own stack report ranks
-        "Enterprise Context &amp; Data Governance Layer for AI" as a HIGH-rated, venture-scale
-        opportunity with a $5–10B TAM — the #2 opportunity across all tiers — and Coconut's
-        positioning maps onto it almost exactly. The product is real: a shipped 1.0, a
-        complete API, careful OAuth scoping, three deployment models, and a named reference
-        at Kohl's.
+        The thesis is unchanged and still validated: "Enterprise Context &amp; Data Governance Layer
+        for AI" ranks HIGH in the companion stack report — $5–10B TAM, #2 opportunity across all
+        tiers. What changed is that the product underneath it has been replaced, and the replacement
+        is <b>better</b>: narrower, cleaner, self-hostable, with an honest query engine where there
+        was a vague retrieval claim and none of the scope that had no buyer attached.
       </p>
       <p>
-        The concern is not the thesis. It is that being right about a category is worth
-        very little once the category has been named by Y Combinator, seeded with at least
-        six funded teams, given a free reference implementation by YC's president, and
-        entered by a $7.2B incumbent growing 89% year over year. Coconut's remaining edge is
-        governance depth and enterprise readiness — and both are unfinished in exactly the
-        places a buyer checks first.
+        <b>The engineering judgement is good.</b> Cutting the CLI, terminals, media generation and
+        git surface was right; collapsing agent configuration into versioned pages is elegant; the
+        webhook security posture beats most Series B products.
       </p>
       <p style="margin-bottom:0">
-        <b>The three questions worth putting to the founder:</b> what is the plan for the day
-        Anthropic ships governed org context in Cowork; what happens to unit economics when
-        every customer is a VM; and when does propose-then-publish review, plus a SOC 2 report,
-        actually land.
+        The failure is entirely in the telling. A company whose product is <i>one consistent,
+        governed source of truth</i> is currently publishing two contradictory documentation sites,
+        pointing customers at the wrong one, and describing on its marketing site a five-layer
+        architecture its software does not implement. That is not a positioning nitpick. It is the
+        product's own thesis, failing in public, on its own website.
       </p>
+    </div>
+
+    <div class="callout">
+      <p class="kicker">The four questions worth putting to the founder</p>
+      <ol style="margin-bottom:0">
+        <li>Which product is real, what happens to customers on the other one, and when does the marketing nav point at the right docs?</li>
+        <li>What is the plan for the day Anthropic ships governed org context in Cowork?</li>
+        <li>Why no vector retrieval — is that a deliberate bet on state-over-semantics, and if so why has nobody written it down?</li>
+        <li>When do propose-then-publish review and an actual SOC 2 report land? The engagement letter is up; the report is the thing buyers ask for.</li>
+      </ol>
     </div>
   </div>
 </section>
@@ -1238,14 +1388,15 @@
           </td>
         </tr>
         <tr>
-          <td><b>L09 · Orchestration &amp; Dev Tooling</b><br><span style="color:var(--muted);font-size:12px">Stronger than previously assessed</span></td>
-          <td><span class="tag hi">Direct</span></td>
+          <td><b>L09 · Orchestration &amp; Dev Tooling</b><br><span style="color:var(--muted);font-size:12px">Revised down 18 Aug 2026</span></td>
+          <td><span class="tag ok">Weak</span></td>
           <td>
-            Prior analysis rated this "medium" on the grounds that <code>.nut</code> parallels
-            <code>.cursorrules</code> and <code>CLAUDE.md</code>. The VM-runs-Claude-Code
-            finding makes it stronger than that. Coconut ships skills, jobs, tasks with plan
-            steps, code sessions, interactive terminals, and full git worktree management —
-            the same territory as Claude Code and Cursor in this layer, not merely adjacent to it.
+            The August version of this report rated this <b>Direct</b>, on the strength of skills,
+            code sessions, interactive terminals and full git worktree management — the same
+            territory as Claude Code and Cursor. <b>None of it exists in the shipped product.</b>
+            What remains is a scheduler running one agent per space against that space's own pages.
+            That is workflow automation inside a content platform, not developer orchestration.
+            The single largest correction on this tab.
           </td>
         </tr>
         <tr>
@@ -1259,12 +1410,15 @@
           </td>
         </tr>
         <tr>
-          <td><b>L05 · Data Infrastructure</b></td>
-          <td><span class="tag ok">Weak</span></td>
+          <td><b>L05 · Data Infrastructure</b><br><span style="color:var(--muted);font-size:12px">Revised up</span></td>
+          <td><span class="tag med">Partial</span></td>
           <td>
-            Not a warehouse and not a vector database. It plays the "data foundation for AI"
-            role one level up, over prose and process rather than rows. The stack map's
-            <b>Enterprise Context Platforms</b> sub-layer is the conceptual home.
+            Still not a warehouse and — now confirmed rather than assumed — <b>explicitly not a
+            vector database</b>. But the metadata layer is a real typed, audited, indexed query
+            surface with its own operator set, and the documentation treats it as the primary way
+            to ask a question. Coconut is closer to a document store with a query engine alongside
+            it than to a retrieval system. The map's <b>Enterprise Context Platforms</b> sub-layer
+            remains the conceptual home.
           </td>
         </tr>
         <tr>
@@ -1279,55 +1433,34 @@
   <div class="prose">
     <div class="callout">
       <p class="kicker">The strategic point</p>
-      <p>
-        The stack report identifies "Enterprise Context &amp; Data Governance Layer for AI"
-        as a <b>HIGH</b>-rated, venture-scale opportunity with a <b>$5–10B TAM within five
-        years</b>, and ranks it <b>#2 across all tiers</b>. The business case in the report
-        reads: "15–30 engineers build 'Okta for AI context' … $50–200/user/month … 5-year:
-        $500M+ ARR." Coconut is that company, arriving at that thesis independently.
-      </p>
       <p style="margin-bottom:0">
-        Which is validation and warning in the same sentence. A HIGH rating on a
-        widely-read map means the opportunity is legible to everyone — and the evidence
-        from the competitor database is that roughly a dozen teams read it the same way in
-        the same twelve months.
+        The stack report rates "Enterprise Context &amp; Data Governance Layer for AI" <b>HIGH</b>
+        — <b>$5–10B TAM</b>, <b>#2 opportunity across all tiers</b>, business case "15–30 engineers
+        build 'Okta for AI context' … $500M+ ARR by year five." Coconut is that company, arriving
+        independently. Which is validation and warning in one sentence: a HIGH rating on a
+        widely-read map means the opportunity is legible to everyone, and roughly a dozen teams
+        read it the same way in the same twelve months.
       </p>
     </div>
 
     <h3>The robotics stack — the honest answer is no</h3>
+    <div class="callout">
+      <p style="margin-bottom:0">
+        Every software layer in that 14-layer map is defined by physical embodiment — motion
+        planning, real-time safety runtimes, world models, certification — and Coconut has neither an
+        embodied component nor a robotics data model. Two adjacencies, stated rather than stretched:
+        a fleet-ops team has exactly Coconut's governance problem, which makes Coconut a
+        <b>buyer-side tool for that team, not a component of the stack</b>; and the robotics-native
+        version already exists in Osseus (YC S26), connecting CAD, schematics, BOMs and firmware in
+        permissioned version-aware memory. Entering would need BOM-aware connectors, not Slack and Drive.
+      </p>
+    </div>
     <p>
-      Coconut does not fit the 14-layer robotics stack, and forcing it in would be the wrong
-      call. That map runs raw material to service — magnets, actuators, lidar, end effectors,
-      batteries, onboard silicon, ROS 2, simulators, teleoperation rigs, VLAs, fleet ops,
-      OEMs, integrators, robot-delivered services. Every software layer in it is defined by
-      physical embodiment: motion planning, real-time safety runtimes, world models,
-      certification. Coconut has no embodied component and no robotics-specific data model.
-    </p>
-    <p>
-      Two honest adjacencies are worth stating rather than stretching:
-    </p>
-    <ul>
-      <li>
-        <b>L11 · Fleet Ops, Safety &amp; Certification</b> — a robotics company operating a
-        fleet has exactly the knowledge-governance problem Coconut solves: certification
-        evidence, incident reviews, standards documentation, remote-operations runbooks,
-        all of which must be current and traceable. Coconut would be a <b>buyer-side tool
-        for that team</b>, not a component of the stack. The distinction matters.
-      </li>
-      <li>
-        <b>The vertical slot already has an occupant.</b> Osseus (YC S26) is building a
-        "secure research brain for R&amp;D teams" — permissioned, version-aware memory
-        connecting CAD, schematics, BOMs, firmware, simulations, tests, and supplier
-        feedback for robotics and hardware R&amp;D. That is precisely the shape a
-        robotics-native Coconut would take, and someone is already building it. Entering
-        would require CAD, BOM, and firmware-aware connectors, not Slack and Drive.
-      </li>
-    </ul>
-    <p>
-      <b>Recommendation:</b> place Coconut on the AI stack map at L10 with cross-references
-      to L09 and L11, and leave the robotics map alone. A context layer that claims to be
-      everywhere is indistinguishable from one that is nowhere, and precision is the more
-      credible position.
+      <b>Recommendation, revised:</b> place Coconut at <b>L10</b>, cross-referenced to <b>L11</b>
+      only, and leave the robotics map alone. Drop the L09 cross-reference — the surface that
+      justified it is gone from the product. Ten days made Coconut's stack position <i>narrower and
+      more accurate</i>, which is the better outcome: a context layer that claims to be everywhere
+      is indistinguishable from one that is nowhere.
     </p>
   </div>
 </section>
@@ -1344,27 +1477,32 @@
         <b>Seven of the eight tabs are public sources only.</b> Product, Architecture,
         Workflows, Competitors, Existential Threat, Stack Fit, and this Method tab contain
         nothing from hands-on use or private access. Every claim in them traces to
-        coconut.dev, docs.coconut.dev, the GitHub API, a Y Combinator company page, or
-        published reporting, read 8–9 August 2026.
+        coconut.dev, docs.coconut.dev, <b>docs.coconut.md</b>, trust.coconut.dev, the GitHub API,
+        a Y Combinator company page, or published reporting.
       </p>
       <p>
-        <b>The <a href="#firsthand">First-hand</a> tab is the exception</b>, and is
-        quarantined deliberately. It comes from attaching the Coconut MCP connector to a
-        live beta instance on 9–10 August 2026 and reading the object model directly. It
-        covers structure and one observed product behaviour only — <b>no page contents, no
-        seeded or customer data, nothing identifying an organization or user</b>, and no
-        writes were made. If you need a strictly public-sourced document, ignore that one
-        tab and the rest stands unchanged.
+        <b>The <a href="#firsthand">First-hand</a> tab is the exception</b>, quarantined
+        deliberately: the Coconut MCP connector attached to a live beta instance on 9–10 August
+        2026, structure and one observed behaviour only — <b>no page contents, no customer data,
+        nothing identifying an organization or user</b>, no writes. Ignore that tab and the rest
+        stands as a strictly public-sourced document.
+      </p>
+      <p style="margin-bottom:0">
+        <b>Revision, 18 August 2026.</b> All 27 pages of
+        <a href="https://docs.coconut.md/llms.txt">docs.coconut.md</a> read in full, every prior
+        claim re-checked, and the older site, marketing site and pricing page re-fetched the same
+        day. Where the two doc sites conflict <b>this report follows the newer one</b>, because the
+        first-hand connector reading matches it and not the older one — the load-bearing judgement
+        of this revision, stated rather than buried.
       </p>
     </div>
 
     <h3>Verification tiers</h3>
-    <p>Every company in the <a href="competitors.html">database</a> carries one of three flags:</p>
-    <ul>
-      <li><b>verified</b> — confirmed 8 Aug 2026 against a primary source: the GitHub API, the company's own site, a YC company page, or a funding announcement.</li>
-      <li><b>reported</b> — consistent secondary sourcing (Tracxn, Sacra, trade press) without primary confirmation.</li>
-      <li><b>thin</b> — single-source or inherited from prior research and not re-confirmed. Treat as a lead, not a fact.</li>
-    </ul>
+    <p>Every company in the <a href="competitors.html">database</a> carries one flag:
+      <b>verified</b> — confirmed 8 Aug 2026 against a primary source (GitHub API, the company's own
+      site, a YC page, a funding announcement); <b>reported</b> — consistent secondary sourcing
+      (Tracxn, Sacra, trade press) without primary confirmation; <b>thin</b> — single-source or
+      inherited and not re-confirmed. A lead, not a fact.</p>
 
     <h3>Conflicts log</h3>
     <p>Where sources disagreed, the disagreement is published rather than smoothed.</p>
@@ -1373,7 +1511,7 @@
     <table>
       <thead><tr><th style="width:180px">Claim</th><th style="width:180px">Prior research said</th><th style="width:180px">This report says</th><th>Basis</th></tr></thead>
       <tbody>
-        <tr><td>Context layer 02</td><td>Product</td><td><b>Domain</b> (with Product still live in the FAQ)</td><td>Platform page is more detailed and carries operator/investor variants. Both were live 8 Aug 2026; the conflict is Coconut's, not the sources'.</td></tr>
+        <tr><td>Context layer 02</td><td>Product</td><td><b>Domain</b> (with Product still live in the FAQ)</td><td>Both were live 8 Aug and <b>both were still live 18 Aug</b>. The conflict is Coconut's, not the sources'. Moot in the product either way — the layer taxonomy does not appear in the new object model at all.</td></tr>
         <tr><td>Pricing tiers</td><td>Starter / Growth / Enterprise</td><td><b>Team / Company / Enterprise</b></td><td>Live pricing page, 8 Aug 2026.</td></tr>
         <tr><td>Glean ARR</td><td>$200M / $100M</td><td><b>$300M (May 2026)</b></td><td>Multiple sources concur; $100M → $208M → $300M trajectory.</td></tr>
         <tr><td>Glean raised</td><td>$765M / $615M / $768M</td><td><b>$765M</b></td><td>Three figures circulate. Tracxn's $765M over 6 rounds is used; the stack map's own $615M is older.</td></tr>
@@ -1383,7 +1521,12 @@
         <tr><td>Coconut team size</td><td>2–10 <i>and</i> ~81 in the same document</td><td><b>2–10 (LinkedIn)</b>, unverified</td><td>The Notion brief contradicted itself. LinkedIn's 2–10 is the only sourced figure; self-reported LinkedIn ranges are unreliable and this should be confirmed directly.</td></tr>
         <tr><td>Hyper batch</td><td>YC Spring 2026</td><td><b>YC P26 = Spring 2026</b></td><td>Same batch, two labels. Not a conflict.</td></tr>
         <tr><td>Coconut's agent runtime</td><td>This report, first version: "the agent loop is Claude Code"</td><td><b>Selectable: Claude, Gemini, or Codex</b></td><td>Corrected 8 Aug 2026 after reading the Studio scheduler and coding-agent docs. The earlier reading came from the skills docs alone and was too strong. Threat 1 severity revised down.</td></tr>
-        <tr><td>VM per instance</td><td>Inferred from skills-doc phrasing</td><td><b>Confirmed</b></td><td>The Add Coconut dialog asks for CPU, RAM, and disk capacity and provisions in 30–60 seconds.</td></tr>
+        <tr><td><b>VM per instance</b></td><td>This report, 8 Aug: "Confirmed" by the provisioning dialog</td><td><b>Retired</b></td><td>Still accurate about <code>docs.coconut.dev</code>, which still says it; not true of the product Coconut ships. <a href="https://docs.coconut.md/">docs.coconut.md</a>: pages versioned in Postgres as append-only revisions, <b>"no git lifecycle."</b> The August reading sourced the wrong doc site, because the other one was not public yet.</td></tr>
+        <tr><td><b>Which product Coconut ships</b></td><td>One product: a context layer on VM instances</td><td><b>Two documented, one shipped</b></td><td>Both doc sites live 18 Aug 2026. The MCP connector attached 9–10 Aug exposes <code>context_*</code>/<code>agent_*</code>, which only <code>docs.coconut.md</code> describes. The relationship between the two — migration, dual strategy, or abandoned line — <b>cannot be determined from public sources</b> and is flagged as unresolved.</td></tr>
+        <tr><td>Retrieval method</td><td>Undocumented</td><td><b>Postgres full-text search</b>, ACL-filtered, over title, path, content and frontmatter</td><td><a href="https://docs.coconut.md/concepts/search">docs.coconut.md/concepts/search</a>. No embeddings, reranker or vector store appears anywhere in 27 pages. Ranking within FTS is still not described.</td></tr>
+        <tr><td>Optimistic concurrency</td><td>This report, first-hand, 9–10 Aug: <code>expectedVersion</code></td><td><b><code>If-Match</code> / ETag; <code>412</code> on mismatch</b></td><td>Connector field name versus documented HTTP mechanism. Same guarantee, two surfaces — most likely the MCP schema wrapping the HTTP contract, but logged rather than smoothed.</td></tr>
+        <tr><td>SOC 2</td><td>No claim anywhere on the public site (8 Aug)</td><td><b>Audit visibly in flight</b></td><td><a href="https://trust.coconut.dev/">trust.coconut.dev</a>, a Vanta Trust Center linked from the main nav, ~57 monitored controls all passing. The only downloadable artifact is an <b>engagement letter</b> — an audit begun, not a report issued.</td></tr>
+        <tr><td>Docs describe a tool surface that does not exist</td><td>This report, first-hand, 9–10 Aug</td><td><b>Resolved on the new site; still true of the old</b></td><td><code>docs.coconut.md</code> now documents the <code>context_*</code> surface that actually shipped. <code>docs.coconut.dev</code> still documents <code>knowledge_*</code> and <code>skills_*</code> — and is still where the marketing nav sends you.</td></tr>
         <tr><td>Dashworks → HubSpot<br>Starmind → Capacity</td><td>Stated as fact</td><td><b>Unconfirmed</b></td><td>Could not be independently verified for this report. Flagged <i>thin</i> in the database.</td></tr>
       </tbody>
     </table>
@@ -1391,19 +1534,21 @@
 
   <div class="prose">
     <h3>What this report does not cover</h3>
-    <ul>
-      <li><b>Product quality.</b> No hands-on evaluation. Retrieval accuracy, latency, connector reliability, and whether the five-layer model survives real use are all untested here.</li>
-      <li><b>Funding and team.</b> No disclosed rounds exist for Coconut AI Inc. Crunchbase and PitchBook return same-name companies. Leadership is not publicly named.</li>
-      <li><b>Customers.</b> One public reference: Ari Franklin, Group PM at Kohl's. No case studies, no scale metrics, no logo wall.</li>
-      <li><b>Pricing.</b> No public figures at any tier.</li>
-    </ul>
+    <p>
+      <b>Product quality</b> — no hands-on evaluation; retrieval accuracy, latency and connector
+      reliability are untested here. <b>Funding and team</b> — no disclosed rounds, no publicly named
+      leadership, and Crunchbase and PitchBook return same-name companies. <b>Customers</b> — one
+      public reference, Ari Franklin, Group PM at Kohl's. <b>Pricing</b> — no public figures at any tier.
+    </p>
 
     <h3>Known weaknesses in this analysis</h3>
     <ol>
-      <li>The YC 2026 cohort is very early and moves weekly. Traction figures are point-in-time and self-reported at launch.</li>
-      <li>The VM-per-instance reading was originally inferred from the skills docs; it is now corroborated by the provisioning dialog, which asks for CPU, RAM, and disk. Still not confirmed by an architecture document from the company.</li>
-      <li>Absence of a SOC 2 claim on a public site is not proof of absence of SOC 2. It is proof that it is not being marketed, which is itself informative but weaker.</li>
-      <li>Funding data for Capacity, Shelf, Bloomfire, Swimm, and DevRev is inherited and thinly sourced.</li>
+      <li>The YC 2026 cohort is very early and moves weekly; traction figures are point-in-time and self-reported at launch.</li>
+      <li><b>The central judgement of this revision is an inference.</b> Nothing published by Coconut says which of the two documented products is current. This report treats <code>docs.coconut.md</code> as the successor because the connector it read first-hand matches that model and not the other. That is strong evidence, not a statement from the company, and if it is wrong most of the Architecture tab is wrong with it.</li>
+      <li>What happens to instances on the older architecture — migration, parallel operation, or deprecation — is entirely unknown. No migration guide, deprecation notice, or changelog was found on either site.</li>
+      <li>An engagement letter on a Trust Center indicates an audit under way; it does not indicate scope, type, or timing. Neither a completed SOC 2 nor its absence can be inferred from it.</li>
+      <li>The new documentation describes a repository — <code>specs/</code>, <code>ROADMAP.md</code>, <code>packages/db/drizzle/</code> — that this report has no access to. Everything about the codebase here is inferred from documentation that references it.</li>
+      <li>Funding data for Capacity, Shelf, Bloomfire, Swimm and DevRev is inherited and thinly sourced.</li>
     </ol>
 
     <h3>Primary sources</h3>
@@ -1414,8 +1559,23 @@
       <li><a href="https://www.coconut.dev/product/security">Coconut — Security</a></li>
       <li><a href="https://www.coconut.dev/faq">Coconut — FAQ</a></li>
       <li><a href="https://www.coconut.dev/blog">Coconut — Blog</a></li>
-      <li><a href="https://docs.coconut.dev/">Coconut Docs</a></li>
-      <li><a href="https://docs.coconut.dev/llms.txt">Coconut Docs — llms.txt</a></li>
+      <li><a href="https://docs.coconut.md/">Coco Docs — Introduction (new)</a></li>
+      <li><a href="https://docs.coconut.md/llms.txt">Coco Docs — llms.txt (full index, 27 pages)</a></li>
+      <li><a href="https://docs.coconut.md/quickstart">Coco Docs — Quickstart</a></li>
+      <li><a href="https://docs.coconut.md/concepts/spaces-and-pages">Coco Docs — Spaces &amp; pages</a></li>
+      <li><a href="https://docs.coconut.md/concepts/page-metadata">Coco Docs — Page metadata</a></li>
+      <li><a href="https://docs.coconut.md/concepts/agents">Coco Docs — Agents</a></li>
+      <li><a href="https://docs.coconut.md/concepts/webhooks">Coco Docs — Webhooks</a></li>
+      <li><a href="https://docs.coconut.md/concepts/templates">Coco Docs — Templates</a></li>
+      <li><a href="https://docs.coconut.md/concepts/export-import">Coco Docs — Export &amp; import</a></li>
+      <li><a href="https://docs.coconut.md/concepts/search">Coco Docs — Search</a></li>
+      <li><a href="https://docs.coconut.md/api-reference/overview">Coco Docs — HTTP API overview</a></li>
+      <li><a href="https://docs.coconut.md/operations/deployment">Coco Docs — Deployment</a></li>
+      <li><a href="https://docs.coconut.md/operations/agents-runtime">Coco Docs — Agents runtime</a></li>
+      <li><a href="https://docs.coconut.md/examples/overview">Coco Docs — Solution patterns</a></li>
+      <li><a href="https://trust.coconut.dev/">Coconut — Trust Center (Vanta)</a></li>
+      <li><a href="https://docs.coconut.dev/">Coconut Docs — older site, still live</a></li>
+      <li><a href="https://docs.coconut.dev/llms.txt">Coconut Docs — llms.txt (older site)</a></li>
       <li><a href="https://docs.coconut.dev/nut/overview">Coconut Docs — .nut directory</a></li>
       <li><a href="https://docs.coconut.dev/integrations/connectors">Coconut Docs — Connectors &amp; MCP</a></li>
       <li><a href="https://docs.coconut.dev/integrations/skills">Coconut Docs — Skills</a></li>
@@ -1444,31 +1604,38 @@
 <section role="tabpanel" id="p-firsthand" aria-labelledby="t-firsthand" hidden>
   <div class="prose">
     <p class="kicker">08 — First-hand findings</p>
-    <h2>What the connector shows that the docs do not</h2>
+    <h2>Read on 9 August. Documented on 18 August.</h2>
     <p class="lede">
-      Everything in the other seven tabs is traceable to a public URL. This tab is not.
-      It comes from connecting the Coconut MCP connector to a live beta instance on
-      9–10 August 2026 and reading the object model directly.
+      Everything in the other seven tabs is traceable to a public URL. This tab is not. It comes
+      from connecting the Coconut MCP connector to a live beta instance on 9–10 August 2026 and
+      reading the object model directly — nine days before Coconut published documentation
+      describing that same model.
     </p>
+    <div class="callout">
+      <p class="kicker">Status of this tab after the 18 August revision</p>
+      <p style="margin-bottom:0">
+        Four of the five findings below are now <b>confirmed by Coconut's own documentation</b>, in
+        places word for word. One detail changed underneath — the concurrency mechanism — and is
+        corrected in place. The fifth, the behavioural one, is <b>unaddressed anywhere in 27
+        pages</b>. The tab stays quarantined because what it was on 10 August, an undocumented
+        reading of a live system, is what makes the rest of this revision defensible.
+      </p>
+    </div>
 
     <div class="callout">
       <p class="kicker">Scope of this tab</p>
-      <p>
-        <b>Included:</b> the shipped tool surface, the data model, and one observed
-        product behaviour. All of it is structural — how Coconut is built, not what any
-        instance contains.
-      </p>
       <p style="margin-bottom:0">
-        <b>Excluded:</b> the contents of any space or page, any customer or seeded data,
-        anything identifying an organization or user. No writes were made to the instance.
-        Nothing here is quoted from a page body.
+        <b>Included:</b> the shipped tool surface, the data model, one observed behaviour — all
+        structural. <b>Excluded:</b> the contents of any space or page, any customer or seeded data,
+        anything identifying an organization or user. No writes were made; nothing here is quoted
+        from a page body.
       </p>
     </div>
 
     <h3>Finding 1 — The shipped connector is not the documented one</h3>
     <p>
-      The public <a href="https://docs.coconut.dev/integrations/connectors">connectors
-      documentation</a> describes an MCP server exposing 26 tools shaped around
+      On 9 August the only public <a href="https://docs.coconut.dev/integrations/connectors">connectors
+      documentation</a> described an MCP server exposing 26 tools shaped around
       <i>instance management</i>: <code>coconuts_list</code>, <code>tasks_list</code>,
       <code>knowledge_search</code>, <code>jobs_list</code>, <code>skills_list</code>.
       The connector that actually attaches exposes a different surface entirely, shaped
@@ -1496,25 +1663,26 @@
   </div>
   <div class="prose">
     <p>
-      Not one documented tool name appears. There is no <code>knowledge_*</code>
-      namespace at all — the knowledge/context split the CLI documentation is built
-      around does not exist in the shipped connector, where everything is a page in a
-      space. <b>The published API reference describes a different generation of the
-      product.</b>
+      Not one documented tool name appeared. There was no <code>knowledge_*</code> namespace at
+      all — the knowledge/context split the CLI documentation is built around does not exist in the
+      shipped connector, where everything is a page in a space.
     </p>
-    <p class="fig-note">
-      This matters beyond tidiness. An evaluator who reads the docs, writes an
-      integration against <code>knowledge_search</code>, and then connects will find
-      nothing they planned for. It is also the second instance of the same pattern
-      documented on the <a href="#product">Product</a> tab: what ships and what is
-      described have drifted apart.
-    </p>
+    <div class="callout">
+      <p class="kicker">Resolved 18 August — and the resolution is the story</p>
+      <p style="margin-bottom:0">
+        <a href="https://docs.coconut.md/api-reference/overview">docs.coconut.md</a> now documents
+        this exact surface. The conclusion drawn on 10 August — that the published reference
+        described "a different generation of the product" — was right in substance and wrong in
+        direction: the connector was not behind the documentation, <b>the documentation was behind
+        the connector</b>, and the site that caught up is a different site. The older one still
+        describes <code>knowledge_*</code>, and is still where the marketing nav sends you.
+      </p>
+    </div>
 
     <h3>Finding 2 — The real object model</h3>
     <p>
-      Three layers of content per page, not one — and this is the design detail that
-      makes the "prose carries judgment, metadata carries facts that churn" claim
-      actually work.
+      Three layers of content per page, not one — the detail that makes "prose carries judgment,
+      metadata carries the facts that churn" actually work.
     </p>
   </div>
 
@@ -1580,8 +1748,8 @@
         <text x="759" y="88" text-anchor="middle" font-size="10" fill="var(--muted)" letter-spacing="1">VERSIONS</text>
         <text x="759" y="112" text-anchor="middle" font-size="11" fill="var(--ink)">integer, 1..n</text>
         <text x="759" y="132" text-anchor="middle" font-size="11" fill="var(--ink)">latest | first</text>
-        <text x="759" y="160" text-anchor="middle" font-size="10.5" fill="var(--accent)">expectedVersion</text>
-        <text x="759" y="177" text-anchor="middle" font-size="10.5" fill="var(--accent)">optimistic lock</text>
+        <text x="759" y="160" text-anchor="middle" font-size="10.5" fill="var(--accent)">If-Match / ETag</text>
+        <text x="759" y="177" text-anchor="middle" font-size="10.5" fill="var(--accent)">412 on mismatch</text>
         <text x="759" y="204" text-anchor="middle" font-size="10" fill="var(--muted)">full revision</text>
         <text x="759" y="220" text-anchor="middle" font-size="10" fill="var(--muted)">history</text>
       </g>
@@ -1654,39 +1822,22 @@
   <div class="prose">
     <h3>Finding 3 — Several things are better built than the marketing claims</h3>
     <p>
-      This is the part worth telling the founder plainly: the engineering is ahead of the
-      story being told about it.
+      Worth telling the founder plainly: the engineering is ahead of the story being told about it.
     </p>
-    <ul>
-      <li>
-        <b>Metadata patches do not create a page revision.</b> <code>set</code> upserts
-        (JSON <code>null</code> deletes), <code>append</code> extends arrays atomically, and
-        <code>appendUnique</code> is idempotent — explicitly safe for re-running agents.
-        Metadata carries <i>its own</i> audit trail, separate from page versions. That is
-        exactly the right design for "prose carries judgment, metadata carries the facts
-        that churn," and no public page explains it.
-      </li>
-      <li>
-        <b>Real optimistic concurrency.</b> Every update requires
-        <code>expectedVersion</code>. Two agents cannot silently clobber one another —
-        the second write fails rather than winning.
-      </li>
-      <li>
-        <b>The link graph is automatic.</b> Indexed from Markdown bodies on every write,
-        with backlinks and broken-target flagging. A dependency map that maintains itself,
-        never mentioned in the marketing.
-      </li>
-      <li>
-        <b>Run observability is genuinely deep.</b> Every run record carries status, timing,
-        model, token usage, turn count, output, and an opt-in structured transcript of
-        reasoning and tool calls. This is better instrumentation than most agent platforms
-        expose.
-      </li>
-      <li>
-        <b>Agents really are principals.</b> A run "executes as the space's agent principal"
-        and writes its own record. The permission story is architectural, not cosmetic.
-      </li>
-    </ul>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th style="width:31%">What the connector showed</th><th>The detail no marketing page explains</th></tr></thead>
+      <tbody>
+        <tr><td><b>Metadata patches create no page revision</b></td><td><code>set</code> upserts (JSON <code>null</code> deletes), <code>append</code> extends arrays atomically, <code>appendUnique</code> is idempotent — explicitly safe for re-running agents. Metadata carries <i>its own</i> audit trail, separate from page versions. Exactly the right design for "prose carries judgment, metadata carries the facts that churn."</td></tr>
+        <tr><td><b>Real optimistic concurrency</b></td><td>Every update asserts a version; the second concurrent write fails rather than winning. <span style="color:var(--muted)">Corrected 18 Aug — the connector field was <code>expectedVersion</code>, the documented HTTP mechanism is <code>If-Match</code>/ETag with <code>412</code> on mismatch. Same guarantee, two surfaces; logged in the <a href="#method">conflicts table</a>.</span></td></tr>
+        <tr><td><b>The link graph is automatic</b></td><td>Indexed from Markdown bodies on every write, with backlinks and broken-target flagging. A dependency map that maintains itself, never mentioned in the marketing.</td></tr>
+        <tr><td><b>Run observability is deep</b></td><td>Status, timing, model, token usage, turn count, output, and an opt-in structured transcript of reasoning and tool calls. Better instrumentation than most agent platforms expose.</td></tr>
+        <tr><td><b>Agents really are principals</b></td><td>A run executes as the space's agent principal and writes its own record. The permission story is architectural, not cosmetic.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
 
     <h3>Finding 4 — Credit exhaustion degrades quality invisibly</h3>
     <div class="callout dang">
@@ -1697,52 +1848,47 @@
         user is holding, <b>with no retrieval</b>.
       </p>
       <p style="margin-bottom:0">
-        The output of that degraded path is structurally indistinguishable from a fully
-        researched run: same format, same confident tone, same citations-shaped prose, same
-        gate tables. In the case observed, a run that performed <b>zero web fetches</b> made
-        four specific, confident, false assertions about what pages on coconut.dev say —
-        each of which was independently checked against the live site and contradicted.
+        Its output is structurally indistinguishable from a fully researched run — same format, same
+        confident tone, same citations-shaped prose, same gate tables. In the case observed, a run
+        that performed <b>zero web fetches</b> made four specific, confident, false assertions about
+        what pages on coconut.dev say, each independently checked and contradicted.
       </p>
     </div>
-    <p>
-      Two things make this severe rather than cosmetic:
-    </p>
+    <p>Two things make this severe rather than cosmetic:</p>
     <ol>
       <li>
-        <b>The quality gates cannot catch it.</b> They interrogate reasoning — is the
-        frustration real, is it genuinely unmet, is the scope honest. None of them asks
-        whether evidence was actually retrieved. A well-reasoned argument from fabricated
-        premises passes every gate.
+        <b>The quality gates cannot catch it.</b> They interrogate reasoning — is the frustration
+        real, is it genuinely unmet, is the scope honest. None asks whether evidence was actually
+        retrieved, so a well-reasoned argument from fabricated premises passes every one.
       </li>
       <li>
-        <b>The signal to catch it already exists and is not used.</b> Run records carry a
-        fetch count. Nothing consumes it. A run that fetched nothing is permitted to assert
-        what a live page says.
+        <b>The signal to catch it exists and is unused.</b> Run records carry a fetch count. Nothing
+        consumes it. A run that fetched nothing may assert what a live page says.
       </li>
     </ol>
     <p>
-      The fix is small and sits in the product's own idiom: a run that performed zero
-      retrievals should not be allowed to write a claim sourced to an external URL, and a
-      degraded run should be marked as such on every page it touches. Provenance is the
-      thing Coconut sells; this is the one place it is not enforced on itself.
+      The fix is small and in the product's own idiom: a run with zero retrievals should not be able
+      to write a claim sourced to an external URL, and a degraded run should be marked on every page
+      it touches. Provenance is what Coconut sells; this is the one place it is not enforced on itself.
     </p>
     <p class="fig-note">
-      In fairness: this is a degraded path, not the designed one. A properly executed agent
-      run in the same instance — over a hundred tool calls, fetching live pages — recorded
-      the same contested facts <i>correctly</i>. The architecture works. The failure mode is
-      what happens when it cannot.
+      In fairness, this is the degraded path, not the designed one. A properly executed run in the
+      same instance — a hundred-plus tool calls, fetching live pages — recorded the same contested
+      facts <i>correctly</i>. The architecture works; the failure mode is what happens when it cannot.
     </p>
 
     <h3>What this changes in the rest of the analysis</h3>
     <div class="tw">
       <table>
-        <thead><tr><th style="width:220px">Earlier claim</th><th>Status after first-hand access</th></tr></thead>
+        <thead><tr><th style="width:32%">Claim made here on 10 August</th><th style="width:104px">18 Aug</th><th>Against Coconut's own documentation</th></tr></thead>
         <tbody>
-          <tr><td>Retrieval is undocumented</td><td><b>Unchanged, and now sharper.</b> The connector exposes full-text search and metadata query, but ranking is still not described anywhere.</td></tr>
-          <tr><td>Governance is partly a promise</td><td><b>Softened.</b> Optimistic concurrency, revision history, separate metadata audit trails, and agents-as-principals are all shipped. Propose-then-publish review remains the visible gap.</td></tr>
-          <tr><td>A VM per instance is a heavy unit</td><td><b>Unchanged.</b> Confirmed by the provisioning dialog and unaffected by anything in the connector.</td></tr>
-          <tr><td>Page metadata as a query surface is a differentiator</td><td><b>Strengthened.</b> Typed values, atomic array appends, idempotent patches, and revision-free updates are further along than the marketing suggests.</td></tr>
-          <tr><td>Docs and product have drifted</td><td><b>Strengthened considerably.</b> The published API reference describes a tool surface that no longer exists.</td></tr>
+          <tr><td>Three content layers per page — body, frontmatter, typed metadata — with metadata patches carrying their own audit trail and creating no page revision</td><td><span class="tag ok">Confirmed</span></td><td>Documented almost verbatim: "changing a key never creates a page revision — it updates one row and writes one audit event." <code>set</code>, <code>append</code>, <code>appendUnique</code> appear with the same semantics, <code>appendUnique</code> justified in the same words — idempotency for re-running agents.</td></tr>
+          <tr><td>The link graph is automatic — indexed from Markdown bodies on every write, with backlinks and broken-target flagging</td><td><span class="tag ok">Confirmed</span></td><td>Confirmed and extended: a space-wide broken-link report, ACL-filtered backlinks, and an org-admin <code>POST /links/rebuild</code> for pre-existing corpora.</td></tr>
+          <tr><td>Agents really are principals — a run executes as the space's agent principal</td><td><span class="tag ok">Confirmed</span></td><td>Confirmed and sharpened. The documentation adds the half the connector could not show: <b>scheduled</b> runs use the agent principal, <b>manual</b> runs use the requesting user's authority.</td></tr>
+          <tr><td>Everything is a page in a space; no <code>knowledge_*</code> namespace exists</td><td><span class="tag ok">Confirmed</span></td><td>The entire new object model is <code>org → space → page</code>. No knowledge document type exists.</td></tr>
+          <tr><td>Optimistic concurrency via <code>expectedVersion</code></td><td><span class="tag med">Corrected</span></td><td>The guarantee holds; the mechanism is documented as <code>If-Match</code> / ETag / <code>412</code>.</td></tr>
+          <tr><td>A VM per instance is a heavy unit — unaffected by anything in the connector</td><td><span class="tag hi">Retired</span></td><td>Not a first-hand finding but a public-tab claim this table carried forward. Postgres, append-only revisions, "no git lifecycle." See <a href="#arch">Architecture</a>.</td></tr>
+          <tr><td><b>Credit exhaustion degrades quality invisibly</b> — a run that fetched nothing may assert what a live page says, and no quality gate checks</td><td><span class="tag hi">Unaddressed</span></td><td><b>Nothing in 27 pages touches it.</b> Run records exist; no documented gate consumes a fetch count, and no degraded-run marking appears on any page or in any webhook payload. Still the most important thing on this page.</td></tr>
         </tbody>
       </table>
     </div>
@@ -1762,11 +1908,11 @@
       <a href="https://vivekally.github.io/ai-robotics-stack-2026/">05 · Robotics Stack</a>
     </div>
     <p style="margin:0;max-width:76ch">
-      Independent analysis compiled 8–10 August 2026. Seven tabs are public-sourced; the
-      First-hand tab is drawn from a live beta instance and covers structure and product
-      behaviour only, with no page contents, customer data, or identifying information.
-      Not affiliated with, commissioned by, or endorsed by Coconut AI Inc. Figures in a
-      fast-moving private market go stale quickly; verify before relying on any of them.
+      Compiled 8–10 August 2026, revised 18 August against the documentation at docs.coconut.md.
+      Seven tabs are public-sourced; the First-hand tab covers structure and behaviour only, with no
+      page contents, customer data or identifying information. Not affiliated with, commissioned by,
+      or endorsed by Coconut AI Inc. This document changed substantially in ten days — verify before
+      relying on any of it.
     </p>
   </div>
 </footer>

@@ -1,12 +1,12 @@
-# Skill builder prompt — `competitor-intelligence-loop`
+# Agent task prompt — `agents/competitor-intelligence-loop`
 
-Paste this into the skill builder. It follows the shape of Coconut's published
-Competitor Intelligence Loop guide, adapted to this instance's file names, escalation
+Paste this into the space agent's task page. It follows the shape of Coconut's published
+Competitor Intelligence Loop guide, adapted to this space's page names, escalation
 triggers, and the disambiguation hazards specific to our competitive set.
 
 ---
 
-I want a skill called `competitor-intelligence-loop` that tracks a named list of
+I want an agent task called `competitor-intelligence-loop` that tracks a named list of
 competitors on a recurring cadence and synthesizes product, pricing, positioning, funding,
 hiring, and sentiment signals into per-competitor knowledge files plus a single landscape
 overview. Each run must decide, per competitor, whether it is a first-run (full baseline)
@@ -90,4 +90,11 @@ interpretations you considered and why you rejected them, and the exact next act
 **Run summary.** End with a concise summary: signals found, evidence used, interpretations
 rejected and why.
 
-Once we agree on the skill, install it and set up a recurring weekly job.
+Once we agree on the task, save it as a page under `agents/` and set `schedule`,
+`scheduleTz` and `scheduleEnabled` in its frontmatter for a weekly cadence.
+
+On every competitor page, patch metadata rather than rewriting the body when only state has
+changed: `set` `last-reviewed` and `threat-level`, and `appendUnique` every URL you actually
+read into `sources`. Also `set` `sources-fetched` to the number of pages you genuinely
+retrieved this run — if it is zero, you may not assert what any live page says, and the run
+must be filed as a context gap instead.

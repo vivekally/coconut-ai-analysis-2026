@@ -43,11 +43,11 @@ requires a human to diff two versions and infer.
 ## Notable one-offs (fabricated)
 
 - **2026-07-19** — A customer asked whether space agents can run against a read-replica so a
-  long research job doesn't touch the live instance. No, currently.
+  long research job doesn't touch the live space. No, currently.
 - **2026-07-24** — A customer wanted a weekly digest of what their space agent changed. There
   is no digest; they are reading the activity feed manually.
 - **2026-07-31** — A prospect asked for a "what would this look like for us" sandbox before
-  signing. Declined, because standing up an instance is a VM.
+  signing. Declined, because no one offered the template-provisioned space that would cover it.
 
 ## What support says internally (fabricated)
 

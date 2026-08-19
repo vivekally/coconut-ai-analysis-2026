@@ -10,8 +10,9 @@
 > treat any name here as a real person or company. Delete it when the test is done.
 >
 > The *frictions* described are extrapolated from publicly observable gaps
-> (no public SOC 2 claim, review workflow marked coming soon, undocumented retrieval,
-> a VM-per-instance architecture, a heavily collided brand name). The *evidence* is not
+> (SOC 2 an engagement letter rather than a report, review workflow still unshipped,
+> retrieval that is plain Postgres full-text search, two contradictory documentation sites,
+> a heavily collided brand name). The *evidence* is not
 > real — it is a plausible dramatization written to give the loop something to bite on.
 
 **Owner:** Head of Product · **Type:** SYNTHETIC · **Created:** 2026-08-08
@@ -40,7 +41,8 @@
 
 **2026-06-30 — Director of Operations**
 > "Setup took our team about three weeks, not the days we were promised, and almost all of
-> it was arguing about which of the five layers a thing belonged in. Is a runbook Process or
+> it was arguing about which space a thing belonged in, and whether a fact was frontmatter or
+> metadata. Is a runbook Process or
 > Domain? We had the same argument four times. In the end one person just decided and nobody
 > else agrees with the result."
 
@@ -57,7 +59,8 @@
 > engineering, it's that the form has a field and we can't leave it empty."
 
 **2026-07-11 — Platform architect**
-> "I asked how retrieval ranks and got 'indexed and available for retrieval.' I evaluated
+> "I asked how retrieval ranks and got 'Postgres full-text search.' No reranker, no
+> embeddings, and no explanation of why not. I evaluated
 > another vendor the same week who walked me through their reranker. I'm not saying yours is
 > worse — I'm saying I can't tell, and I have to write a recommendation."
 
@@ -78,8 +81,10 @@
    obligation and no notification. Two pilots hit the same silent-conflict problem.
 2. **Decay flags have no moment.** Freshness detection works; there is no ritual that
    consumes it, so the backlog grows until it is ignored.
-3. **Taxonomy is the onboarding tax.** The five layers are the thing teams argue about, and
+3. **Structure is the onboarding tax.** Space boundaries and the frontmatter/metadata split
+   are what teams argue about, and
    the argument is unresolved rather than settled.
-4. **Two mechanical enterprise blockers:** no SOC 2 artifact, and unexplained retrieval.
+4. **Two mechanical enterprise blockers:** no SOC 2 *report* (an engagement letter is not one),
+   and retrieval that is never defended.
 5. **Score opacity.** Metadata scores are trusted less than they should be because the
    evidence behind a number is not visible at the point the number is read.

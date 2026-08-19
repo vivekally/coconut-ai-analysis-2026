@@ -9,9 +9,9 @@ with real names and handles when you run this for a real org.
 | Seat | Owns | Consulted on |
 |---|---|---|
 | Head of Product | Roadmap, positioning, this instance's Domain and State layers | Everything |
-| Founding Engineer — Platform | Instance provisioning, agent runtime, `.nut` spec, CLI | Scope estimates, unit economics |
-| Founding Engineer — Integrations | Connectors, MCP server, OAuth scopes, A2A | Anything touching a source system |
-| Design | Studio, Control Plane, onboarding | Time-to-first-value proposals |
+| Founding Engineer — Platform | Postgres schema and migrations, revisions, the metadata query engine, deployment paths (Compose/Helm/Terraform) | Scope estimates, unit economics |
+| Founding Engineer — Integrations | Connectors, MCP server, OAuth scopes, webhooks, SCIM | Anything touching a source system |
+| Design | App, views, templates gallery, onboarding | Time-to-first-value proposals |
 | GTM / Founder-led sales | Demos, pilots, pricing conversations | Buyer objections, procurement blockers |
 
 ## Ownership convention
@@ -24,7 +24,9 @@ rots, and we should feel that pain ourselves before customers do.
 
 - **Routine update** — the owning seat publishes directly.
 - **High-impact change** (pricing, positioning, security posture, anything customer-facing)
-  — file a task, do not edit the page directly. The owning seat reviews.
+  — do not edit the page directly. Propose the change on its own page and notify the owning
+  seat. **Note the gap:** the product has no propose-then-publish review, so this convention
+  is enforced socially, not by software. We are feeling the thing our customers will feel.
 - **Strategic signal** (a competitor's real shift, not a routine release) — file a
   high-priority task naming the signal, the evidence, and the recommended action.
 

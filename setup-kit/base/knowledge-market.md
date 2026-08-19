@@ -44,17 +44,21 @@ like ours has a credible exit.
 
 ## The structural threats
 
-1. **The runtime owns the layer above.** Our instances run Claude Code, our skills ship
-   through the Claude Code plugin marketplace, our AI endpoint defaults to Claude Sonnet 4.5,
-   and MCP and the `SKILL.md` spec are Anthropic-authored. Anthropic is our runtime, our
-   distribution channel, our standards body, and a competitor one layer up.
+1. **The protocol owner competes one layer up.** This is narrower than it was: we no longer
+   ship skills through the Claude Code plugin marketplace or write to the `SKILL.md` spec, and
+   that supply-chain dependency is gone. What remains is ordinary and unavoidable — MCP is
+   Anthropic-authored, and Anthropic sells a product one layer up whose every improvement
+   narrows the gap we sell into.
 2. **The free option is credible.** GBrain is MIT-licensed, Markdown-first, git-versioned,
    MCP-served, with a multi-user company-brain mode — 28,015 stars four months after the repo
    was created. It is written by the president of the accelerator funding four of our closest
    rivals. It does not need to win to force us to justify our delta in every first call.
-3. **Governance is our wedge and it is unfinished.** Propose-then-publish review is marked
-   coming soon; no SOC 2 claim is public. Meanwhile Glean, Stack Internal, and Guru are all
-   moving onto governance ground.
+3. **Governance is our wedge and it is unfinished.** Propose-then-publish review is still not
+   shipped and is absent from the new documentation entirely; SOC 2 is an engagement letter,
+   not a report. Meanwhile Glean, Stack Internal, and Guru are all moving onto governance ground.
+4. **We document two products.** Two live doc sites, two object models, and the marketing nav
+   points at the stale one. Every prospect who finds both must be told which is real, and that
+   conversation never helps.
 
 ## What buyers actually ask
 
@@ -62,6 +66,8 @@ like ours has a credible exit.
 - "What does this do that Glean does not?"
 - "Can we self-host GBrain and get 80% of this for free?"
 - "Do you have SOC 2?"
+- "How does retrieval rank results?"
+- "Which documentation site is current?"
 - "How long until we see value?"
 
 Every one of those has to have a crisp answer that survives a follow-up question.

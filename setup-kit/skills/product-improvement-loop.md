@@ -1,15 +1,15 @@
-# Skill builder prompt — `product-improvement-loop`
+# Agent task prompt — `agents/product-improvement-loop`
 
-Paste this into the skill builder. It follows the shape of Coconut's published Product
-Improvement Loop guide, adapted to this instance's knowledge files and hard constraints.
+Paste this into the space agent's task page. It follows the shape of Coconut's published
+Product Improvement Loop guide, adapted to this space's pages and hard constraints.
 
-**Note the intended behaviour:** with only the base pack loaded, this skill should file
+**Note the intended behaviour:** with only the base pack loaded, this task should file
 *"No signal this run — context gap."* That is the correct result, not a failure. It only
 produces a proposal once real signal exists in the knowledge base.
 
 ---
 
-I want a skill called `product-improvement-loop` that produces one highly-validated unmet
+I want an agent task called `product-improvement-loop` that produces one highly-validated unmet
 need or incremental enhancement for Coconut. Run it weekly. Each run commits to one
 validated idea, or honestly reports why nothing cleared the bar.
 
@@ -61,7 +61,9 @@ proposal:
 
 - Weakens ownership, lineage, versioning, or auditability in exchange for convenience.
 - Assumes self-serve signup while we are invite-only.
-- Multiplies instances without acknowledging that each instance is a VM and per-tenant cost
+- Revives a surface the product deliberately removed — CLI, terminals, git operations, code
+  sessions, media generation, the skills marketplace — without saying so explicitly and
+  arguing why. Or multiplies spaces without acknowledging the per-space agent ceiling and cost
   scales with tenants rather than usage.
 - Adds a new product surface without arguing why it beats deepening an existing one.
 - Could be self-hosted by a competent engineer in a weekend without an explicit "why pay"
@@ -106,4 +108,11 @@ defeats the gate.
 All scores ≥4: file the proposal as a task, titled after the user and the change, tagged
 `product-improvement`, medium priority. Body is the full proposal in Markdown.
 
-Once we agree on the skill, install it and set up a recurring weekly job.
+Once we agree on the task, save it as a page under `agents/` and set `schedule`,
+`scheduleTz` and `scheduleEnabled` in its frontmatter for a weekly cadence.
+
+Record the verdict in page metadata, not only in prose, so a view can rank runs without
+opening them: `set` `gate-status` (`passed` or `context-gap`), `confidence` (0–1),
+`signal-source` (the page the signal came from), and `sources-fetched` (the number of external
+pages you actually retrieved). **If `sources-fetched` is 0, `gate-status` must be
+`context-gap`** — a run that fetched nothing is not permitted to assert what a live page says.

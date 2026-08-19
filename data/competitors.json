@@ -9,7 +9,9 @@
       "2": "Enterprise knowledge & Work AI — funded incumbents moving onto governed context",
       "3": "Legacy knowledge bases & wikis — the install base being displaced",
       "4": "Memory & agent infrastructure — a layer below Coconut, and a substitute for the DIY buyer"
-    }
+    },
+    "revised": "2026-08-18",
+    "revision_note": "Revised 2026-08-18 against the documentation published at docs.coconut.md, which describes a different product from docs.coconut.dev: org/space/page over Postgres rather than a per-org VM with a git-versioned .nut directory. Both doc sites were live on 2026-08-18. Where a company's relationship to Coconut depended on the older architecture — the Claude Code runtime, the SKILL.md skills marketplace, the five-layer taxonomy, undocumented retrieval — that entry has been rewritten. Competitor funding and traction figures are unchanged and still carry their 2026-08-08 verification date."
   },
   "companies": [
     {
@@ -34,15 +36,15 @@
       "url": "https://claude.com",
       "tier": 0,
       "category": "Platform-native memory",
-      "what": "Project-scoped knowledge, Skills, and MCP connectors inside Claude and Cowork. Anthropic authors the SKILL.md spec and the MCP standard that Coconut builds on.",
+      "what": "Project-scoped knowledge, Skills, and MCP connectors inside Claude and Cowork. Anthropic authors the MCP standard Coconut's distribution depends on.",
       "funding_display": "Anthropic: ~$72B raised",
       "funding_usd_m": 72000,
       "status": "Shipping",
       "owner": "Anthropic",
       "confidence": "verified",
       "threat": "existential",
-      "relationship": "The most uncomfortable one. Coconut runs Claude Code inside its own instances, ships skills through the Claude Code plugin marketplace, and its API defaults to Claude Sonnet 4.5. Anthropic is simultaneously Coconut's runtime, its distribution channel, its standards body, and a competitor at the layer directly above.",
-      "coconut_answer": "Coconut is the governed org layer Claude Projects is not: owners, versioning, lineage, cross-tool reach. But it is building on rented land."
+      "relationship": "Still the most uncomfortable entry, but narrower than on 2026-08-08. The August reading rested on a supply-chain dependency: Coconut ran Claude Code inside its own instances and shipped skills through the Claude Code plugin marketplace against Anthropic's SKILL.md spec. None of that exists in the product documented at docs.coconut.md — no skills, no marketplace, no SKILL.md, no coding agent. What remains is the ordinary exposure every MCP-native company carries: Anthropic owns the protocol and sells a product one layer up whose every improvement narrows the gap Coconut sells into.",
+      "coconut_answer": "Coconut is the governed org layer Claude Projects is not — owners, ACLs, append-only revisions, a metadata query engine, and reach across every tool. The land is less rented than it was in August, but the protocol is still Anthropic's."
     },
     {
       "id": "ms-copilot",
@@ -90,8 +92,8 @@
       "founders": "Shalin Shah, Kanyes Thaker — San Francisco",
       "confidence": "verified",
       "threat": "high",
-      "relationship": "The closest functional twin and the primary benchmark. Provenance, staleness, per-user access, MCP injection — that is Coconut's governance pitch, shipped by a team with public traction. Retrieval is query expansion plus reciprocal rank fusion over embeddings and Postgres full-text search with a ZeroEntropy reranker, which is more architectural detail than Coconut discloses.",
-      "coconut_answer": "Coconut is broader — five-layer taxonomy, VM instances, its own agent runtime, enterprise deployment options. Hyper is sharper and moving faster on the narrow job.",
+      "relationship": "The closest functional twin and the primary benchmark. Provenance, staleness, per-user access and MCP injection are Coconut's governance pitch, shipped by a team with public traction. As of 2026-08-18 both companies publish their retrieval architecture, and the contrast is stark: Hyper runs query expansion plus reciprocal rank fusion over embeddings and Postgres full-text search with a ZeroEntropy reranker; Coconut runs Postgres full-text search, with no embeddings, no vector store and no reranker anywhere in 27 pages of documentation.",
+      "coconut_answer": "Not breadth any more — the VM instances, coding agent and skills shelf are gone. What is left is a different bet: that enterprise questions are state questions rather than semantic ones, and that a typed, audited, queryable metadata layer answers them exactly where retrieval answers them probabilistically. Defensible, and nowhere argued in public. Coconut also has documented self-hosting and a space-template gallery; Hyper has neither.",
       "traction": "$1K MRR in 12 days, 50+ teams, paid design pilots scoped with Razorpay and Snorkel AI (self-reported at launch)"
     },
     {
@@ -108,7 +110,7 @@
       "confidence": "verified",
       "threat": "high",
       "relationship": "The price floor, and the reason Coconut cannot win on architecture alone. Same Markdown-first, git-versioned, MCP-served design, free, and authored by the person who runs the accelerator funding Coconut's closest rivals. 28,015 stars and 4,102 forks as of 2026-08-08, created only 2026-04-05 — that is four months to a number Coconut's own repos will not reach.",
-      "coconut_answer": "Managed connectors, permission enforcement done for you, deployment options, and someone to call. Coconut must price below the engineering cost of self-hosting GBrain for a 25–50 person team.",
+      "coconut_answer": "Managed connectors, permissions enforced for you, and someone to call at 2am — now backed by documented Docker Compose, Helm and Terraform deployment paths, which is a stronger self-host story than most commercial rivals offer. The same documentation teaches a capable buyer how to price building it. Coconut must still price below the engineering cost of self-hosting GBrain for a 25-50 person team.",
       "note": "Prior research put this at ~23.6K stars. Live GitHub API on 2026-08-08 returns 28,015 — the gap is growth, not error, and it is worth re-checking before any external use."
     },
     {
@@ -241,7 +243,7 @@
       "confidence": "verified",
       "threat": "high",
       "relationship": "The comparison every enterprise buyer will make, and the gap is wider than prior research suggested. ARR went from ~$100M to $208M at end-2025 to $300M by May 2026 — an 89% year-over-year jump. Glean is not a slow incumbent to be out-executed; it is compounding faster than most startups in the category.",
-      "coconut_answer": "Glean helps people find information; Coconut gives agents knowledge to act on. Genuinely different jobs, but Glean Agents is closing that distance and Glean already has the connector library, the ACL enforcement, and the procurement relationships."
+      "coconut_answer": "Glean helps people find information; Coconut lets agents query state. Genuinely different jobs — but Glean Agents is closing that distance, and Glean already has the connector library, the ACL enforcement and the procurement relationships. Coconut's newer answers are self-hosting and a solutions-template gallery, neither of which Glean sells."
     },
     {
       "id": "moveworks",
@@ -288,7 +290,7 @@
       "owner": "Prosus",
       "confidence": "reported",
       "threat": "medium",
-      "relationship": "The closest incumbent on Coconut's exact combination of MCP distribution plus verified, governed knowledge. Human verification of answers is a governance primitive Coconut does not have.",
+      "relationship": "The closest incumbent on Coconut's exact combination of MCP distribution plus verified, governed knowledge. Human verification of answers remains a governance primitive Coconut does not have: propose-then-publish review is absent from both of Coconut's documentation sites as of 2026-08-18.",
       "coconut_answer": "Coconut covers all org knowledge, not developer Q&A."
     },
     {
@@ -577,7 +579,7 @@
       "confidence": "verified",
       "threat": "medium",
       "relationship": "Named in the AI stack map at Layer 10 as the memory player — the slot Coconut is arguing it belongs in. 62,829 stars means Mem0 owns developer mindshare for 'AI memory' outright, and a technical buyer starts there.",
-      "coconut_answer": "Mem0 is a library for builders with no governance layer. Coconut is a governed org system. Different buyer, same words."
+      "coconut_answer": "Mem0 is a library for builders with no governance layer; Coconut is a governed org system with an ACL engine, append-only revisions and audited metadata. Different buyer, same words — and note that Coconut is now explicitly not a vector store, so the two no longer even compete on mechanism."
     },
     {
       "id": "cognee",

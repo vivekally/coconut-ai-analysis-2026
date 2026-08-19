@@ -4,6 +4,12 @@ An independent analysis of [Coconut AI Inc.](https://www.coconut.dev/) (coconut.
 what the product does, how it is actually built, who it competes with, and what could
 kill it.
 
+**Revised 18 August 2026.** Ten days after this report first ran, a second documentation
+site appeared at [docs.coconut.md](https://docs.coconut.md/) describing a different product
+on a different architecture. Both sites are live; the marketing navigation still links to the
+older one. The report now treats the newer site as current and retires the claims built on
+the older one.
+
 **Seven of the eight tabs are public-sources-only.** The eighth — *First-hand* — comes
 from attaching the Coconut MCP connector to a live beta instance and reading the object
 model directly. It is quarantined on purpose so the public-sourced material stays
@@ -15,18 +21,40 @@ independently checkable.
 |---|---|---|
 | Analysis | **https://vivekally.github.io/coconut-ai-analysis-2026/** | Product, architecture, workflows, competitors, existential threat, stack-map fit, method |
 | Competitor database | **https://vivekally.github.io/coconut-ai-analysis-2026/competitors.html** | 47 companies, searchable and tier-filterable, each with its relationship to Coconut |
-| Dogfood setup guide | **https://vivekally.github.io/coconut-ai-analysis-2026/setup.html** | 10 steps to stand up a Coconut instance modelling Coconut, and run both product loops against it |
+| Dogfood setup guide | **https://vivekally.github.io/coconut-ai-analysis-2026/setup.html** | 10 steps to stand up a Coconut space modelling Coconut, and run both product loops against it |
 
 Deep links: `#threat`, `#stack`, `#method` open a tab on the analysis page;
 `competitors.html#c-gbrain`, `#c-glean`, `#c-hyper` open a specific company card (and clear
 any active filter that would otherwise hide it); `setup.html#s7` jumps to a numbered step.
 
+## The finding this revision turns on
+
+Two documentation sites were live on 18 August 2026, describing incompatible object models:
+
+| | `docs.coconut.dev` — linked from the marketing nav | `docs.coconut.md` — linked from nowhere |
+|---|---|---|
+| Unit | a "Coconut" = one provisioned **VM** (CPU/RAM/disk) | `org → space → page` |
+| Storage | `.nut/` directory, **git-versioned** | **Postgres**, append-only revisions, *"no git lifecycle"* |
+| MCP tools | `coconuts_* tasks_* knowledge_* skills_*` | `context_*`, `agent_*` |
+| Retrieval | undocumented | **Postgres FTS** — no embeddings, no reranker, no vector store |
+| Deployment | provision an instance | Docker Compose · Helm · Terraform |
+
+**The newer one is what ships.** The MCP connector this report attached on 9–10 August
+exposed `context_*` and `agent_*` and nothing else — the surface only `docs.coconut.md`
+documents. That inference is the load-bearing judgement of the revision and is stated on the
+Method tab rather than buried.
+
+What this cannot determine from public sources: whether the split is a migration mid-flight,
+a deliberate two-product strategy, or an abandoned line left standing. No migration guide,
+deprecation notice, or changelog exists on either site.
+
 ## Scope and sourcing
 
-**Public-sourced (seven tabs).** Product, Architecture, Workflows, Competitors,
-Existential Threat, Stack Fit, Method. Everything traces to a public source read
-**8–9 August 2026**: coconut.dev, docs.coconut.dev, the GitHub API, Y Combinator company
-pages, or published reporting.
+**Public-sourced (seven tabs).** Product, Architecture, Workflows, Competitors, Existential
+Threat, Stack Fit, Method. Everything traces to a public source: coconut.dev,
+docs.coconut.dev, docs.coconut.md, trust.coconut.dev, the GitHub API, Y Combinator company
+pages, or published reporting. First read **8–9 August 2026**; all 27 pages of the new
+documentation read in full and every prior claim re-checked on **18 August 2026**.
 
 **First-hand (one tab).** Drawn from the Coconut MCP connector against a live beta
 instance, **9–10 August 2026**. Covers the shipped tool surface, the object model, and one
@@ -46,26 +74,53 @@ report* confirmed it, not how good the company is:
 
 Current split: 23 verified, 15 reported, 9 thin.
 
-## Findings that corrected prior research
+## What changed on 18 August
 
-This report re-verified rather than inherited. The material corrections:
+**Retired.**
 
-- **Context layer 02 is now "Domain," not "Product"** — and Coconut's own FAQ still says Product. The conflict is on their site, not between sources.
-- **Pricing tiers are Team / Company / Enterprise**, not Starter / Growth / Enterprise.
-- **Each "Coconut" is a VM.** Confirmed by the provisioning dialog, which asks for CPU, RAM, and disk. This reframes the architecture and was absent from every prior diagram.
-- **Glean is at $300M ARR** (May 2026), not $200M. Up from ~$100M fifteen months earlier.
-- **Dust raised a $40M Series B** in May 2026 led by Abstract and Sequoia — prior research listed it only as "VC-backed."
-- **GBrain has 28,015 stars**, not ~23.6K. Mem0 has 62,829, not 41K.
-- **Propose-then-publish review is marked "coming soon"** — the load-bearing beam of the governance pitch.
-- **No SOC 2 claim appears anywhere on the public site.**
-- **The agent runtime is selectable** (Claude / Gemini / Codex), not Claude-only — a correction to this report's own first version, logged in the conflicts table.
+- **"Each Coconut is a VM."** Sourced correctly in August from the skills docs and the
+  provisioning dialog — both still live — but contradicted by the shipped product.
+- **The five-layer taxonomy** (Identity / Domain / Process / Relationships / State) appears
+  nowhere in the new object model. No layer field, no layer API. Marketing narrative, not
+  architecture.
+- **The "hidden second product."** The `nut` CLI, git worktrees, WebSocket terminals, code
+  sessions and media generation are all gone. So is the `SKILL.md` / Claude Code plugin
+  marketplace dependency, which narrows the Anthropic threat considerably.
+- **L09 · Orchestration** stack-map fit, revised from Direct back down to Weak — the surface
+  that justified it no longer exists.
 
-From first-hand access:
+**Newly documented, and absent from the August report entirely.**
 
-- **The published API reference describes a tool surface that no longer exists.** The shipped connector exposes `context_*` and `agent_*`; not one documented tool name appears, and there is no `knowledge_*` namespace at all.
-- **Three content layers per page** — body, frontmatter, and typed metadata — where metadata patches carry their own audit trail *without* creating a page revision. Better designed than any public page explains.
-- **Real optimistic concurrency** (`expectedVersion`), an automatic link graph with backlinks and broken-target flagging, and run records carrying model, token usage, turn count, and an opt-in reasoning transcript.
-- **Credit exhaustion degrades quality invisibly.** When agent credits run out, runs fall back to a no-retrieval path whose output is structurally indistinguishable from a researched run. The quality gates interrogate reasoning, not whether evidence was fetched — so a well-argued case from fabricated premises passes all of them.
+- **Webhooks** — four events, HMAC-SHA256 signed, delivery log, SSRF guard re-checked at
+  delivery time after DNS resolution
+- **Space templates** — a gallery merging built-in, org-maintained and opt-in remote
+  catalogues, with a deep-linkable install path that survives sign-in
+- **Export / import** — whole spaces as portable `coco-space-export` bundles
+- **Views** — a filter builder over the same query engine agents use, with the view state in
+  the URL
+- **Deployment** — Docker Compose, Helm, Terraform; `api + postgres` as the enterprise artifact
+- **Identity** — Google Workspace OIDC, Okta, SCIM
+- **Native agents** — `COCO_NATIVE_AGENTS_MODE=native` and an "Eve" runtime container
+
+**Sharpened.**
+
+- **Retrieval is documented now, and it is Postgres full-text search.** The August criticism
+  was that Coconut would not show its work. It has, and the answer is simpler than every
+  rival's. That is defensible — state questions belong to the metadata engine, not to
+  retrieval — but nobody at Coconut has written the defence down.
+- **SOC 2 moved.** A Vanta Trust Center is live with ~57 continuously monitored controls, all
+  passing. The only downloadable artifact is an **engagement letter**: an audit begun, not a
+  report issued.
+- **Layer 02 is still "Domain" on the platform page and "Product" in the FAQ**, ten days on.
+- **Propose-then-publish review still has not shipped** — and is absent from a freshly
+  written 27-page object model that found room for webhooks, templates and SCIM.
+
+**Vindicated.** Four of the five First-hand findings are now confirmed by Coconut's own
+documentation, in places word for word: the three content layers, the `set`/`append`/
+`appendUnique` metadata semantics with a per-key audit trail and no page revision, the
+automatic backlink graph, and agents as scoped principals. One detail changed underneath —
+concurrency is documented as `If-Match`/ETag/`412`, not `expectedVersion`. The fifth finding,
+**credit exhaustion degrading quality invisibly**, is unaddressed anywhere in the new docs.
 
 Full conflicts log is on the Method tab.
 
@@ -75,21 +130,24 @@ Four hand-authored inline SVGs across the analysis page:
 
 | Diagram | Tab | Answers |
 |---|---|---|
-| System architecture | Architecture | Where things run — sources, the VM instance, distribution |
-| Functional architecture | Architecture | What each component does (from the June 2026 brief) |
+| Two products, two documentation sites | Architecture | Which architecture is which, and who points at each |
+| Coco system architecture | Architecture | `org → space → page`, three doors, one ACL engine, Postgres, the agent, what is pushed outward |
 | Verified object model | First-hand | What a page actually is — body, frontmatter, metadata, versions |
-| Daily usage sequence | Workflows | How the drafting and change-proposal loop runs |
+| Daily usage sequence | Workflows | How the drafting and correction loop runs, and where the review step is not |
 
-Mermaid source for the last two lives in [`diagrams/`](diagrams/). The pages render
-hand-authored SVG rather than Mermaid because Mermaid needs a ~2.5MB runtime and these
-pages make **zero external requests**. Two claims in the imported functional diagram are
-marked rather than carried forward: layer 02 (Domain on the platform page, Product in the
-FAQ) and the canonical store (still an inference).
+Mermaid source for the sequence diagram lives in [`diagrams/`](diagrams/). The pages render
+hand-authored SVG rather than Mermaid because Mermaid needs a ~2.5MB runtime and these pages
+make **zero external requests**. The imported functional-architecture diagram from the June
+2026 brief is retired — it described the older architecture — and its Mermaid source is kept
+in `diagrams/` as a record only.
 
 ## Setup kit
 
 [`setup-kit/`](setup-kit/) holds the source files for the setup guide: context documents,
-knowledge base, and the two skill-builder prompts, in two packs.
+knowledge base, and the two agent-task prompts, in two packs. **Rebuilt 18 August 2026**
+against `org → space → page`: pages instead of a `.nut` directory, agent task pages instead
+of Skills, `schedule` frontmatter instead of jobs, plus metadata, a view and a webhook that
+the previous version could not demonstrate at all.
 
 **Pack A** (`setup-kit/base/`) is public facts only. **Pack B** (`setup-kit/signals/`) is
 **fabricated** customer feedback, support tickets, and churn notes — invented so the Product
@@ -139,15 +197,18 @@ carries no suite bar. It links out to
 ## Stack-map positions argued here
 
 - **AI stack L10 · Middleware & APIs** — primary. The `MCP servers / connectors` sub-layer currently has no companies named; Coconut is the cleanest candidate for the first entry.
-- **AI stack L09 · Orchestration** — stronger than previously assessed: each instance is a VM running a selectable coding agent, with git worktrees, terminals, and code sessions.
 - **AI stack L11 · Application Platforms** — secondary.
+- **AI stack L05 · Data Infrastructure** — partial, revised up. Explicitly not a vector database, but the metadata layer is a real typed, audited, indexed query surface.
+- **AI stack L09 · Orchestration** — **revised down to weak.** The August report rated this Direct on the strength of skills, code sessions, terminals and git worktrees. None of it exists in the shipped product.
 - **Robotics stack** — **no fit.** Argued explicitly rather than forced. The nearest honest adjacency is that a robotics fleet-ops team would be a *buyer*, and that the vertical slot is already occupied by Osseus.
 
 ## Caveats
 
+- **The central judgement of this revision is an inference.** Nothing published by Coconut says which of the two documented products is current. This report follows `docs.coconut.md` because the connector it read first-hand matches that model and not the other. Strong evidence, not a statement from the company — and if it is wrong, most of the Architecture tab is wrong with it.
+- What happens to anything running on the older architecture is entirely unknown.
+- An engagement letter on a Trust Center indicates an audit under way. It says nothing about scope, type, or timing, and neither a completed SOC 2 nor its absence can be inferred from it.
+- The new documentation describes a repository this report has no access to. Everything about the codebase is inferred from documentation that references it.
 - The YC 2026 cohort is very early and moves weekly. Traction figures are point-in-time and self-reported at launch.
-- The VM-per-instance reading is inferred from documentation language, not confirmed by the company.
-- Absence of a SOC 2 claim on a public site is not proof of absence of SOC 2.
 - No funding, leadership, or customer data is publicly available for Coconut AI Inc. beyond one named reference.
 
 ---

@@ -50,9 +50,16 @@ first value, this claim is doing damage rather than work.
 *"AWS, AES-256, TLS 1.2+, RBAC, MFA, audit logging, penetration testing, self-hosted option."*
 
 **Follow-up:** "Do you have SOC 2?"
-**Honest answer:** No public claim exists. Competitors with narrower scope advertise SOC 2
-Type II. For a governance product, an unstated certification status reads as an absent one.
-This is the single most mechanical gap in the enterprise motion.
+**Honest answer:** An audit is under way and visible — `trust.coconut.dev` publishes ~57
+continuously monitored controls, all passing — but the only downloadable artifact is an
+engagement letter, not a report. Competitors with narrower scope advertise completed Type II.
+Say the true thing: in flight, instrumented, not yet certified. It is a far better answer than
+silence and still the most mechanical gap in the enterprise motion.
+
+**Second follow-up:** "How does retrieval rank?"
+**Honest answer:** Postgres full-text search, ACL-filtered, with no embeddings or reranker —
+because ranking prose is not where we compete. State questions go to the metadata engine and
+are answered exactly. Say that plainly rather than letting the evaluator discover it.
 
 ## The one-liner against each threat
 
@@ -71,5 +78,8 @@ This is the single most mechanical gap in the enterprise motion.
    a query. This is the segment where our metadata design is obviously better than a wiki.
 2. **Leadership** — board prep, synthesis, in-the-moment questions.
 3. **Operating functions** — marketing, sales, CS, product, ops, people.
-4. **Developers** — real surface area (CLI, IDE, git-versioned context, skills), no named
-   buyer. Either a strategic second act or unfunded scope.
+4. **Compliance-shaped work** — legal, supplier audit, SRE runbooks. New, and structurally
+   the best fit after investors: every one is a date field, a score, and a sweep for what has
+   gone stale, which is exactly what metadata queries answer and retrieval never could.
+5. **Developers** — no longer a segment. The CLI, IDE extension and git surface are gone from
+   the shipped product; what remains is an HTTP API for systems, not a developer product.

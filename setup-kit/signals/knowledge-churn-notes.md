@@ -14,16 +14,16 @@
 
 | Account (fictional) | Stage lost | Stated reason | Underlying pattern |
 |---|---|---|---|
-| Ardent Health Partners | Security review | No SOC 2 report to attach to the questionnaire | Mechanical compliance blocker, not a product objection |
-| Meridian Freight | Technical evaluation | "Couldn't assess retrieval quality" | Undocumented retrieval loses to a vendor who publishes theirs |
+| Ardent Health Partners | Security review | Trust Center showed controls but no SOC 2 report to attach to the questionnaire | Mechanical compliance blocker, not a product objection |
+| Meridian Freight | Technical evaluation | "Full-text search only, and no one could tell me why" | An undefended retrieval choice loses to a vendor who publishes a pipeline |
 | Talbot & Rowe | First call | "We'll run the open-source one" | No crisp answer to the free-baseline question |
-| Halcyon Systems | Procurement | Timeline — wanted a sandbox before committing | Cannot cheaply stand up an evaluation instance |
+| Halcyon Systems | Procurement | Timeline — wanted a sandbox before committing | Self-serve paths exist in the docs but are not offered in the sales motion |
 
 ## Churned after pilot
 
 ### Kestrel Logistics — did not renew pilot (fabricated)
 Three weeks to configure, mostly spent on taxonomy debates. By the time the context was
-usable, the team had reverted to their old habits and the instance was maintained by one
+usable, the team had reverted to their old habits and the space was maintained by one
 person. **Stated reason:** "It became one more thing to keep current."
 
 **Read:** we sell "maintenance is built in," and the pilot experienced maintenance as a chore
@@ -47,11 +47,11 @@ security review goes badly.
 
 | Reason | Count | Fixable by product? |
 |---|---|---|
-| No SOC 2 | 2 | No — this is a compliance program, not a feature |
-| Retrieval opacity | 1 | Yes — documentation, arguably a page |
+| No SOC 2 report | 2 | No — this is a compliance program, not a feature |
+| Retrieval never defended | 1 | Yes — documentation, arguably a single page |
 | Free alternative | 1 | Partly — needs positioning plus a real delta |
 | Time to value / taxonomy friction | 2 | Yes |
-| No cheap evaluation environment | 1 | Yes, but the VM architecture makes it expensive |
+| No cheap evaluation environment | 1 | Yes — a template-provisioned space or a Compose stack would cover it |
 | Champion dependency | 1 | Yes |
 
 **The pattern worth noticing:** the two categories that recur across both lost deals and

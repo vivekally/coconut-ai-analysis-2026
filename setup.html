@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <title>Coconut AI — Dogfood Setup Guide</title>
-<meta name="description" content="A step-by-step guide to setting up a Coconut instance for Coconut.dev itself, with copy-paste context, knowledge, and the two product loops.">
+<meta name="description" content="A step-by-step guide to standing up a Coconut space modelling Coconut.dev itself, rebuilt 18 August 2026 against docs.coconut.md, with copy-paste context, knowledge, and the two product loops.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A5%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -166,7 +166,7 @@
     </div>
     <h1>Set up Coconut for Coconut</h1>
     <p class="dek">
-      A step-by-step guide to standing up a Coconut instance where the company being
+      A step-by-step guide to standing up a Coconut space where the company being
       modelled <i>is Coconut</i>, then running both published product loops against it.
       Everything below is copy-paste. The point is not just to configure the tool — it is
       to watch what it does when the honest answer is "I don't have enough to go on."
@@ -176,7 +176,7 @@
       <span><b>Seat</b> Head of Product</span>
       <span><b>Loops</b> Competitor Intelligence · Product Improvement</span>
       <span><b>Packs</b> A public-facts · B synthetic</span>
-      <span><b>Path</b> Studio UI, CLI optional</span>
+      <span><b>Path</b> App UI · HTTP API</span>
       <span><b>Steps</b> 10</span>
     </div>
   </div>
@@ -217,38 +217,53 @@
     </p>
   </div>
 
-  <h2 style="margin-top:34px">Studio or CLI?</h2>
+  <div class="callout warn">
+    <p class="kicker">Rewritten 18 August 2026 — read this if you used the earlier version</p>
+    <p>
+      This guide previously walked through the product documented at <code>docs.coconut.dev</code>:
+      provisioning a VM, a git-versioned <code>.nut/</code> directory, a <code>nut</code> CLI, and
+      Skills. <b>That is not what ships.</b> The documentation at
+      <a href="https://docs.coconut.md/">docs.coconut.md</a> describes <code>org → space → page</code>
+      over Postgres, with <code>context_*</code> MCP tools — and a live connector attached on
+      9 August matched it exactly.
+    </p>
+    <p style="margin-bottom:0">
+      Every step below has been rebuilt against the shipped model. Both documentation sites were
+      live when this was written, and the marketing nav still links to the older one. See the
+      <a href="index.html#arch">Architecture tab</a> for the full comparison.
+    </p>
+  </div>
+
+  <h2 style="margin-top:34px">App or API?</h2>
   <p>
-    <b>You do not need the CLI for most of this, and for an evaluation you probably should not
-    use it.</b> Your buyer is a product or ops leader, not a developer — the honest test of
-    "up and running in days, no blank screen" is the path that person would actually take.
-    Every step below gives the Studio route first; CLI blocks are the alternative for anyone
-    who prefers a terminal or wants to script the setup.
+    <b>Your buyer is a product or ops leader, not a developer</b> — the honest test of "up and
+    running in days, no blank screen" is the path that person would actually take. Every step
+    gives the app route first. The API blocks are the alternative if you prefer a terminal or
+    want to script the setup, and they are exactly what an agent would call.
   </p>
   <div class="tw">
     <table>
-      <thead><tr><th style="width:150px">What</th><th style="width:44%">Studio / Dashboard</th><th>CLI equivalent</th></tr></thead>
+      <thead><tr><th style="width:140px">What</th><th style="width:42%">In the app</th><th>HTTP equivalent</th></tr></thead>
       <tbody>
-        <tr><td><b>Create the instance</b></td><td>Dashboard → <b>Add Coconut</b>. Name, cloud provider, admin user, emoji, and a <b>Specification</b> — CPU, RAM, disk. Provisions in 30–60s.</td><td>— (Dashboard only)</td></tr>
-        <tr><td><b>Context &amp; knowledge</b></td><td>No documented Knowledge or Context page. <b>Try the Code editor</b> — <code>.nut/</code> is a git-versioned directory, so <code>context/</code> and <code>knowledge/</code> should be editable as files, then committed from Source Control.</td><td><code>nut context update</code><br><code>nut knowledge create</code></td></tr>
-        <tr><td><b>Skills</b></td><td>Studio → <b>Skills</b> → Create New. Fields: Name, Description, <b>Skill Instructions</b>, Tools (MCP servers). Paste each prompt into Skill Instructions.</td><td><code>nut skill</code></td></tr>
-        <tr><td><b>Run a loop</b></td><td>Run the skill directly from Studio, or trigger its job once from Schedule.</td><td><code>nut skill run</code></td></tr>
-        <tr><td><b>Schedule</b></td><td>Studio → <b>Schedule</b> → New Scheduled Job. Prompt, <b>Model (Claude / Gemini / Codex)</b>, cadence, start-active toggle. Run history inline.</td><td><code>nut coconut job create</code></td></tr>
-        <tr><td><b>Read the output</b></td><td>Studio → <b>Tasks</b>, and the knowledge files in the Code view.</td><td><code>nut task list</code></td></tr>
+        <tr><td><b>Create the space</b></td><td><b>New space</b> — slug, name, visibility <code>private</code> or <code>org</code>. Or start from the <code>/templates</code> gallery and get pages, templates and agent instructions in one action.</td><td><code>POST /space-templates/:source/:id/spaces</code></td></tr>
+        <tr><td><b>Add pages</b></td><td><b>New page</b>, with a "Start from" template picker. Paths nest: <code>context/role</code>.</td><td><code>PUT /pages/:space/:path</code></td></tr>
+        <tr><td><b>Attach metadata</b></td><td>The metadata panel on the page.</td><td><code>PATCH /pages/:space/:path/metadata</code></td></tr>
+        <tr><td><b>Query across pages</b></td><td><b>Views</b> (<code>/views</code>) — filter, scope, order. The whole view is in the URL.</td><td><code>GET /search/metadata?filters=…</code></td></tr>
+        <tr><td><b>Define the agent</b></td><td>Edit <code>agents/instructions</code> and add a task page per loop.</td><td><code>PUT /pages/:space/agents/&lt;task&gt;</code></td></tr>
+        <tr><td><b>Schedule</b></td><td>The <b>Schedule</b> card on the task page.</td><td><code>schedule</code>, <code>scheduleTz</code>, <code>scheduleEnabled</code> in the task's frontmatter</td></tr>
+        <tr><td><b>Read the output</b></td><td>Run records under <code>agents/runs/&lt;task&gt;/</code>.</td><td><code>GET /pages/:space/agents/runs/…</code></td></tr>
       </tbody>
     </table>
   </div>
-  <div class="callout warn">
-    <p class="kicker">The one genuine gap</p>
+  <div class="callout">
+    <p class="kicker">What changed for the better</p>
     <p style="margin-bottom:0">
-      Coconut's Studio documentation lists Code, Overview, Schedule, Settings, Skills, Source
-      Control, Tasks, and Terminal — <b>no Knowledge or Context page</b>. Loading Pack A through
-      the Code editor is an inference from the <code>.nut/</code> directory layout, not something
-      the docs state. Try it first; fall back to the CLI if it is not there. Either way, note
-      how long it takes you to find — a context product where adding context is the least
-      obvious action is worth asking the founder about. The docs may simply be incomplete: there
-      are no documented pages for agents or resources either, though the Studio overview says it
-      manages both.
+      The old guide had to warn you that <b>there was no obvious place to put context</b> — a
+      context product where adding context was the least discoverable action. That is fixed:
+      context is a page, pages are the whole product, and the "Start from" picker means you are
+      not staring at an empty editor. The awkward step is now different, and covered in step 3:
+      deciding what belongs in the <i>body</i>, what belongs in <i>frontmatter</i>, and what
+      belongs in <i>metadata</i>.
     </p>
   </div>
 
@@ -256,15 +271,15 @@
     <p class="kicker">The ten steps</p>
     <ol>
       <li><a href="#s1">Prerequisites</a></li>
-      <li><a href="#s2">Initialize the instance</a></li>
+      <li><a href="#s2">Create the space</a></li>
       <li><a href="#s3">Pack A — context documents</a></li>
       <li><a href="#s4">Pack A — knowledge base</a></li>
-      <li><a href="#s5">Install the two skills</a></li>
+      <li><a href="#s5">Define the space agent</a></li>
       <li><a href="#s6">First run — Competitor Intelligence</a></li>
       <li><a href="#s7">First run — Product Improvement (expect a gap)</a></li>
       <li><a href="#s8">Pack B — load synthetic signals</a></li>
       <li><a href="#s9">Second run — Product Improvement</a></li>
-      <li><a href="#s10">Schedule the jobs, and what to grade</a></li>
+      <li><a href="#s10">Schedule, query, and what to grade</a></li>
     </ol>
   </div>
 </div>
@@ -274,27 +289,32 @@
   <div class="stephead"><span class="stepno">01</span><h2>Prerequisites</h2></div>
   <div class="prose">
     <p>
-      Coconut is invite-only, so this starts with access you already have. Everything you
-      strictly need is a Dashboard login. <b>The CLI is optional</b> — install it only if you
-      want to script the setup or prefer a terminal.
-    </p>
-    <p>
-      If you are going the Studio route, skip the block below entirely and go to step 2.
+      Sales is invite-only, so the fastest path is an org you already have access to. If you do
+      not have one, the documented quickstart stands up the whole stack locally — and running it
+      yourself is itself a useful data point on the self-host claim.
     </p>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · optional — only if you want the CLI</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut --version
-nut auth status
-nut config list</code></pre>
+    <div class="blockhead"><span class="fname"><b>shell</b> · optional — the local stack</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>pnpm install
+./scripts/compose-local.sh up     # Postgres + API (8787) + app (3000), migrated and seeded
+# then open http://localhost:3000 — seeded identity is demo@local in the demo space</code></pre>
   </div>
   <div class="prose">
     <p>
-      If <code>nut auth status</code> is not authenticated, run <code>nut auth login</code>
-      and complete the OAuth flow. When prompted for scopes, grant read and write on
-      <code>knowledge</code>, <code>context</code>, <code>tasks</code>, <code>jobs</code>,
-      and <code>skills</code> — the loops need all five.
+      For an org you have been given, you need a session in the browser and an agent key for the
+      API blocks below. Every route in this guide is ACL-checked, so the key's reach is whatever
+      space membership it has been granted — an agent gets read-only at org scope and needs an
+      explicit membership to write anywhere.
     </p>
+    <div class="callout">
+      <p class="kicker">Time this</p>
+      <p style="margin-bottom:0">
+        "Up and running in days, no blank screen" is a core claim. Note how long you spend
+        between here and the end of step 4 — you are an expert with prepared content, so treat
+        your own elapsed time as the optimistic bound on a real team's.
+      </p>
+    </div>
     <div class="callout warn">
       <p style="margin:0">
         <b>Use a throwaway or clearly-labelled instance.</b> Step 8 loads fabricated data. You
@@ -306,44 +326,42 @@ nut config list</code></pre>
 
 <!-- ============ STEP 2 ============ -->
 <section class="step" id="s2">
-  <div class="stephead"><span class="stepno">02</span><h2>Initialize the instance</h2></div>
+  <div class="stephead"><span class="stepno">02</span><h2>Create the space</h2></div>
   <div class="prose">
-    <h3>Studio route</h3>
     <p>
-      In the Dashboard, click <b>Add Coconut</b>. You will be asked for a <b>Name</b> (it becomes
-      the subdomain, e.g. <code>coconut-dogfood.hub.coconut.dev</code>), a <b>Cloud Provider</b>
-      (AWS by default), a <b>Configure User</b> to administer it, a <b>Specification</b> —
-      CPU, RAM, and disk — and an emoji. It provisions in 30–60 seconds.
+      Create one space, slug <code>coconut</code>, visibility <code>private</code>. Everything in
+      this guide lives inside it. A space carries its own members, its own visibility, and
+      <b>exactly one agent</b> — that last constraint shapes the rest of the setup, so notice it
+      now rather than at step 5.
     </p>
     <div class="callout">
-      <p class="kicker">Notice what you were just asked for</p>
+      <p class="kicker">Two reserved prefixes exist the moment the space does</p>
       <p style="margin-bottom:0">
-        CPU, RAM, and disk. You are sizing a machine, not creating a workspace. This is the
-        clearest confirmation that each Coconut is a VM, and it is worth holding onto — it
-        explains the git and terminal surfaces, and it is the reason a free tier or a
-        throwaway sandbox per prospect is expensive for them to offer.
+        <code>agents/</code> holds the agent's instructions, task pages and run records;
+        <code>templates/</code> holds page templates. Both are hidden from listings and search —
+        you address them directly. So the agent's entire configuration is versioned, ACL'd,
+        diffable and exportable like any other page. That is the most elegant thing in the
+        product and it appears nowhere in the marketing.
       </p>
     </div>
-    <h3>CLI route (optional)</h3>
-    <p>
-      To work locally instead, create a directory and initialize. This writes the git-versioned
-      <code>.nut/</code> directory that holds context, knowledge, skills, jobs, and tasks.
-    </p>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · initialize</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>mkdir -p ~/coconut-dogfood && cd ~/coconut-dogfood
-nut init
-ls -a .nut</code></pre>
+    <div class="blockhead"><span class="fname"><b>http</b> · confirm the space and your reach</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>export COCO=http://localhost:8787          # or your org's API host
+export KEY=dev-agent-key-change-me         # your agent key
+
+curl -s "$COCO/spaces" -H "Authorization: Bearer $KEY"
+curl -s "$COCO/spaces/coconut/pages" -H "Authorization: Bearer $KEY"</code></pre>
   </div>
   <div class="prose">
-    <p>You should see <code>context/</code>, <code>knowledge/</code>, <code>skills/</code>,
-    <code>jobs/</code>, <code>tasks/</code>, <code>mcp/</code>, <code>resources/</code>,
-    <code>chats/</code>, and <code>config.json</code>.</p>
-    <p class="mono" style="font-size:13px;color:var(--muted)">
-      Evaluation note: time this step. "Up and running in days" is a core claim — how long
-      from zero to an initialized instance is the first data point you have on it.
-    </p>
+    <div class="callout warn">
+      <p style="margin:0">
+        <b>Use a throwaway or clearly-labelled space.</b> Step 8 loads fabricated data. Keep it
+        <code>private</code> so it stays out of org-wide search — and note that personal spaces
+        never emit webhooks, so if you want step 10's webhook to fire this must be a real space,
+        not your personal one.
+      </p>
+    </div>
   </div>
 </section>
 
@@ -353,27 +371,33 @@ ls -a .nut</code></pre>
   <div class="packbar a"><span class="lbl">Pack A</span> Public facts and role configuration only. Safe to keep.</div>
   <div class="prose">
     <p>
-      Four context documents define who the agents think they are: <code>role</code>,
-      <code>team</code>, <code>agents</code>, and <code>memory</code>. Save each block to a
-      file, then push it with <code>nut context update</code>.
+      Four pages define who the agent thinks it is: <code>context/role</code>,
+      <code>context/team</code>, <code>context/agents</code> and <code>context/memory</code>.
+      Paths nest, so these sit together without needing their own space.
     </p>
     <p>
       These describe <b>seats, not real people</b> — Coconut does not publicly name its
       leadership, and this guide does not invent names for them.
     </p>
     <div class="callout">
-      <p class="kicker">Studio route</p>
+      <p class="kicker">App route, and the one judgement call this product asks of you</p>
+      <p>
+        <b>New page</b>, path <code>context/role</code>, paste, save. Repeat for the other three.
+        No commit step, no directory layout to learn.
+      </p>
       <p style="margin-bottom:0">
-        Open the <b>Code</b> view and create these four files under <code>.nut/context/</code>
-        as <code>role.md</code>, <code>team.md</code>, <code>agents.md</code>, and
-        <code>memory.md</code>, then commit from <b>Source Control</b>. If the Code view will not
-        let you create files there, use the CLI block at the end of this step.
+        Three places can hold a fact and they behave differently. The <b>body</b> is narrative and
+        every edit writes a revision. <b>Frontmatter</b> travels with that revision.
+        <b>Metadata</b> sits alongside, is queryable across pages, and changing it creates
+        <i>no</i> revision but does write an audit event. Put judgement in the body and churn in
+        metadata. Getting this wrong is the new onboarding tax — and it is a better tax than
+        arguing about which of five layers a runbook belonged to.
       </p>
     </div>
   </div>
 
   <div class="block">
-    <div class="blockhead"><span class="fname"><b>role.md</b> · nut context update role</span><button class="copybtn" type="button">Copy</button></div>
+    <div class="blockhead"><span class="fname"><b>context/role</b> · who the agent is</span><button class="copybtn" type="button">Copy</button></div>
     <pre><code># Role
 
 You are operating as the **Head of Product at Coconut AI Inc.** (coconut.dev).
@@ -385,11 +409,16 @@ about Coconut.
 
 ## What we actually ship
 
-A context layer organized into five layers (Identity, Domain, Process, Relationships,
-State), stored Markdown-first with typed page metadata, versioned with lineage, and
-distributed through an MCP server, a REST API, a CLI (`nut`), IDE extensions, an iOS app,
-and Coconut Studio. Each customer instance is a VM running an agent loop over a
-git-versioned `.nut` directory.
+A context layer stored as Markdown **pages** in **spaces**, each page carrying frontmatter
+and typed, queryable **metadata**, versioned as append-only revisions in Postgres, reachable
+through three doors that share one ACL engine — browser, HTTP API, and an MCP server
+exposing `context_*` and `agent_*`. Every space has exactly one agent that runs tasks on
+demand or on a schedule.
+
+**Say this correctly.** Our marketing site and our older documentation still describe a
+different architecture — five context layers, a per-org VM, a git-versioned `.nut`
+directory, a `nut` CLI, a skills marketplace. That is not what ships. Do not carry those
+claims into any artifact produced in this instance.
 
 ## How I want you to work
 
@@ -404,28 +433,34 @@ git-versioned `.nut` directory.
 - **One validated thing beats five half-formed ones.** Commit to a single recommendation
   per run and defend it.
 - **Distinguish what we distribute from what we run on.** We are model-agnostic about which
-  tool consumes context. We are not model-agnostic about our own agent runtime. Do not blur
-  those two claims — external audiences will catch it.
+  tool consumes context, and our own runtime is selectable rather than fixed. Do not overstate
+  either claim — a technical evaluator will check.
+- **Prefer a query to a search.** When you need to know what is true, ask the metadata engine
+  for state rather than asking full-text search for mentions. Our retrieval is Postgres FTS
+  and nothing more; the metadata layer is where the precision is.
 
 ## Standing constraints to respect in any proposal
 
 - The team is small. Any proposal scoped beyond 1–2 weeks for a single engineer needs to be
   reframed smaller or killed.
-- We are invite-only and demo-gated. Proposals that assume self-serve signup are out of
-  scope until that changes.
+- Sales is invite-only and demo-gated, but the product now documents two self-serve paths —
+  the space-template gallery and a local Compose stack. A proposal may build on those; it may
+  not assume a public signup funnel that marketing has not announced.
 - We compete against a free, well-distributed open-source baseline. Any proposal whose value
   a competent engineer could self-host in a weekend needs an explicit answer to "why pay."
 
 ## Vocabulary
 
-Use our own terms precisely: **space**, **page**, **page metadata**, **space agent**,
-**skill**, **job**, **task** (a change proposal), **connector**, **instance**, **lineage**,
-**decay signal**. Do not substitute generic synonyms — inconsistent vocabulary is the exact
-failure mode our product exists to fix.</code></pre>
+Use our own terms precisely: **org**, **space**, **page**, **frontmatter**, **page
+metadata**, **revision**, **space agent**, **task** (an agent task page, not a change
+proposal), **run record**, **view**, **template**, **connector**, **webhook**, **decay
+signal**. Retired: *instance*, *skill*, *job*, *knowledge document*, *the five layers*.
+Inconsistent vocabulary is the exact failure mode our product exists to fix, and we are
+currently committing it in public across two documentation sites.</code></pre>
   </div>
 
   <div class="block">
-    <div class="blockhead"><span class="fname"><b>memory.md</b> · nut context update memory</span><button class="copybtn" type="button">Copy</button></div>
+    <div class="blockhead"><span class="fname"><b>context/memory</b> · standing facts, dated</span><button class="copybtn" type="button">Copy</button></div>
     <pre><code># Memory
 
 Long-lived notes that should survive across sessions. Everything here is drawn from
@@ -456,45 +491,59 @@ can credibly offer owners, lineage, tiered review, and decay signals. That is th
 we defend. It follows that anything which weakens the governance story costs us more than
 it costs a competitor.
 
-### Ongoing — Model-agnostic distribution, not model-agnostic runtime
-Our context serves Claude, ChatGPT, Copilot, and Gemini. Our own agent loop is Claude Code
-and the AI chat endpoint defaults to Claude Sonnet 4.5. Both statements are true. Keep them
-separate in external messaging; conflating them is a credibility risk if a technical
-evaluator notices.
+### Ongoing — Model-agnostic distribution, and a selectable runtime
+Our context serves Claude, ChatGPT, Copilot, and Gemini. Our own runtime is selectable rather
+than fixed. Keep the two claims separate in external messaging and overstate neither; a
+technical evaluator will check both.
+
+### 2026-08-18 — A second documentation site went live, describing different software
+`docs.coconut.md` documents Coco: `org → space → page` over Postgres, append-only revisions,
+**"no git lifecycle"**, `context_*`/`agent_*` MCP tools, Postgres full-text search, and
+Compose/Helm/Terraform deployment. `docs.coconut.dev` is still live, still describes VM
+instances and a git-versioned `.nut` directory, and is still what the marketing nav links to.
+A live MCP connector attached on 2026-08-09 matched the *new* model and nothing in the old
+one. **Treat `docs.coconut.md` as current and `docs.coconut.dev` as historical.** What happens
+to anything running on the older architecture is not documented anywhere.
 
 ## Known open questions
 
-- **Propose-then-publish review is marked "coming soon"** on the platform page while the FAQ
-  describes tiered propagation in the present tense. Until it ships, the governance wedge is
-  partly a promise.
-- **No SOC 2 claim appears anywhere on the public site.** Competitors with narrower scope
-  (Dust, Mem0) advertise SOC 2 Type II.
-- **Layer 02 is named "Domain" on the platform page and "Product" in the FAQ.** Two names for
-  one layer, live simultaneously, on the site of a company selling consistency.
-- **Unit economics of a VM per instance** are unexamined here. Per-tenant cost scales with
-  tenants rather than usage, which is an awkward shape for seat pricing and makes a free
-  tier expensive.
-- **Retrieval method is undocumented.** We say knowledge is "indexed and available for
-  retrieval" and stop. At least one direct competitor publishes its full retrieval
-  architecture.
+- **Propose-then-publish review still has not shipped.** Marked "coming soon" on the platform
+  page, and absent from all 27 pages of the new documentation — no review endpoint, no proposal
+  object, no approval state on a page. Until it ships the governance wedge is partly a promise.
+- **SOC 2 is in flight, not landed.** `trust.coconut.dev` is live with ~57 continuously
+  monitored controls, all passing, but the only downloadable artifact is an engagement letter.
+  Dust and Mem0 advertise completed Type II.
+- **Layer 02 is named "Domain" on the platform page and "Product" in the FAQ.** Still true ten
+  days after first being noticed — and the taxonomy itself appears nowhere in the shipped
+  object model.
+- **Retrieval is now documented, and it is Postgres full-text search.** No embeddings, no
+  vector store, no reranker. That is a defensible bet — that enterprise questions are state
+  questions the metadata engine answers exactly — but nobody has written the defence down, so
+  evaluators score it as a missing feature.
+- **We publish two contradictory documentation sites** and point customers at the older one.
+  For a company selling one consistent governed source of truth, this is the thesis failing in
+  public on its own website.
 
 ## Naming hazard
 
 "Coconut" collides with Coconut Software (banking), Coconut tax software, coconut.co (video
-encoding), and a Meta research paper. We are at coconut.dev, Studio at app.coconut.md,
-Control Plane at app.coconut.dev. Any research task about "Coconut" must disambiguate first
-or it will return the wrong company.
+encoding), and a Meta research paper. We now run six hostnames across two TLDs — coconut.dev,
+docs.coconut.dev, app.coconut.dev, trust.coconut.dev, docs.coconut.md, app.coconut.md — where
+the **top-level domain, not the subdomain**, tells you which product you are reading about.
+Any research task about "Coconut" must disambiguate the company *and* the TLD first, or it
+will return the wrong company or the wrong architecture.
 
 ## Provenance
 
-All of the above traces to coconut.dev, docs.coconut.dev, the GitHub API, or published
-reporting, read 2026-08-08. Nothing here comes from private beta access.</code></pre>
+All of the above traces to coconut.dev, docs.coconut.dev, docs.coconut.md,
+trust.coconut.dev, the GitHub API, or published reporting, read 2026-08-08 and re-verified
+2026-08-18. Nothing here comes from private beta access.</code></pre>
   </div>
 
   <details class="more">
     <summary>▸ Show the remaining two context files (team.md, agents.md)</summary>
     <div class="block" style="border:0;border-radius:0">
-      <div class="blockhead"><span class="fname"><b>team.md</b> · nut context update team</span><button class="copybtn" type="button">Copy</button></div>
+      <div class="blockhead"><span class="fname"><b>context/team</b> · seats, not names</span><button class="copybtn" type="button">Copy</button></div>
       <pre><code># Team
 
 Roles rather than names. Coconut AI Inc. does not publicly name its leadership, so this
@@ -506,9 +555,9 @@ with real names and handles when you run this for a real org.
 | Seat | Owns | Consulted on |
 |---|---|---|
 | Head of Product | Roadmap, positioning, this instance's Domain and State layers | Everything |
-| Founding Engineer — Platform | Instance provisioning, agent runtime, `.nut` spec, CLI | Scope estimates, unit economics |
-| Founding Engineer — Integrations | Connectors, MCP server, OAuth scopes, A2A | Anything touching a source system |
-| Design | Studio, Control Plane, onboarding | Time-to-first-value proposals |
+| Founding Engineer — Platform | Postgres schema and migrations, revisions, the metadata query engine, deployment paths (Compose/Helm/Terraform) | Scope estimates, unit economics |
+| Founding Engineer — Integrations | Connectors, MCP server, OAuth scopes, webhooks, SCIM | Anything touching a source system |
+| Design | App, views, templates gallery, onboarding | Time-to-first-value proposals |
 | GTM / Founder-led sales | Demos, pilots, pricing conversations | Buyer objections, procurement blockers |
 
 ## Ownership convention
@@ -521,7 +570,9 @@ rots, and we should feel that pain ourselves before customers do.
 
 - **Routine update** — the owning seat publishes directly.
 - **High-impact change** (pricing, positioning, security posture, anything customer-facing)
-  — file a task, do not edit the page directly. The owning seat reviews.
+  — do not edit the page directly. Propose the change on its own page and notify the owning
+  seat. **Note the gap:** the product has no propose-then-publish review, so this convention
+  is enforced socially, not by software. We are feeling the thing our customers will feel.
 - **Strategic signal** (a competitor's real shift, not a routine release) — file a
   high-priority task naming the signal, the evidence, and the recommended action.
 
@@ -533,7 +584,7 @@ rots, and we should feel that pain ourselves before customers do.
   so the next run has a cleaner signal to work from.</code></pre>
     </div>
     <div class="block" style="border:0;border-radius:0;margin:0">
-      <div class="blockhead"><span class="fname"><b>agents.md</b> · nut context update agents</span><button class="copybtn" type="button">Copy</button></div>
+      <div class="blockhead"><span class="fname"><b>context/agents</b> · standing rules</span><button class="copybtn" type="button">Copy</button></div>
       <pre><code># Agents
 
 Agents available in this instance and the rules every one of them follows.
@@ -550,22 +601,33 @@ Agents available in this instance and the rules every one of them follows.
    before producing anything. A duplicate finding is worse than no finding.
 5. **Supersede, do not overwrite.** When a fact changes, mark the previous version
    superseded and date the change. History is the product.
-6. **Stay inside your grant.** You are read-only outside explicitly granted scopes. If a task
-   requires a write you do not have, file a task asking for it rather than working around it.
+6. **Stay inside your grant.** A scheduled run executes as the space agent principal —
+   writes at home, read-only across org-visible spaces, nothing in other private spaces. A
+   manual run carries the authority of whoever started it. If a run needs a write it does not
+   have, record the blocked write rather than working around it.
+7. **Record what you fetched.** State the number of external sources actually retrieved in
+   every artifact. A run that fetched nothing may not assert what a live page says — this is
+   the one provenance rule our own product does not yet enforce for us.
 
 ## Agents
 
-### `competitor-intelligence-loop`
+Both live as task pages under `agents/`, with their cadence in frontmatter
+(`schedule`, `scheduleTz`, `scheduleEnabled`) and every execution recorded under
+`agents/runs/&lt;task&gt;/&lt;run-id&gt;`.
+
+### `agents/competitor-intelligence-loop`
 Tracks the named competitor set in `competitors-list.md`. Writes one
-`competitor-{name}.md` per competitor and rewrites the `competitors.md` landscape overview
-on every run. Picks first-run (full baseline) or delta-run (dated changelog of material
-changes only) automatically per competitor.
+`competitor-&lt;name&gt;` page per competitor and rewrites the `competitors` landscape overview on
+every run. Picks first-run (full baseline) or delta-run (dated changelog of material changes
+only) automatically per competitor. Sets `last-reviewed` and `appendUnique`s every URL it
+read into `sources` so re-runs are idempotent.
 **Cadence:** weekly. **Owner:** Head of Product.
 
-### `product-improvement-loop`
+### `agents/product-improvement-loop`
 Produces exactly one validated product proposal per run, or one honest report of why no
-candidate cleared the bar. Four hard gates plus a final confidence score. Files its output
-as a task.
+candidate cleared the bar. Four hard gates plus a final confidence score. Writes the proposal
+as a page and records the verdict in metadata (`gate-status`, `confidence`, `signal-source`)
+so a view can rank runs without opening them.
 **Cadence:** weekly. **Owner:** Head of Product.
 
 ## Escalation path
@@ -579,20 +641,32 @@ action. Agents do not act on strategic signals themselves.
 - Editing pricing, positioning, or security pages directly. Propose via task.
 - Contacting anyone outside the org.
 - Asserting anything about Coconut's funding, headcount, or customers beyond what
-  `memory.md` records as publicly sourced.</code></pre>
+  `memory` records as publicly sourced.
+- Repeating claims from `docs.coconut.dev` — the five layers, VM instances, the `nut` CLI,
+  the skills marketplace — as current product facts.</code></pre>
     </div>
   </details>
 
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · push all four</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code># save the four blocks above as role.md, team.md, agents.md, memory.md first
-nut context update role   --file ./role.md
-nut context update team   --file ./team.md
-nut context update agents --file ./agents.md
-nut context update memory --file ./memory.md
+    <div class="blockhead"><span class="fname"><b>http</b> · or write all four from a terminal</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># save the blocks above as role.md, team.md, agents.md, memory.md first
+for p in role team agents memory; do
+  jq -Rs --arg t "$p" '{title:$t, content:., frontmatter:{}}' &lt; "$p.md" \
+  | curl -s -X PUT "$COCO/pages/coconut/context/$p" \
+      -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" -d @-
+done
 
-# verify
-nut context get role</code></pre>
+# read one back as clean markdown — the same URL a human reads in the browser
+curl -s "$COCO/pages/coconut/context/role.md" -H "Authorization: Bearer $KEY"</code></pre>
+  </div>
+  <div class="prose">
+    <p class="mono" style="font-size:13px;color:var(--muted)">
+      Note what that last line demonstrates: one URL, one resolver, one ACL check — a human gets
+      rendered HTML, an agent gets clean markdown. Updating an <i>existing</i> page requires
+      <code>If-Match</code> with the current ETag and returns <code>412</code> without it, so
+      re-running this loop over pages that already exist fails rather than silently clobbering.
+      That failure is the feature.
+    </p>
   </div>
 </section>
 
@@ -602,18 +676,19 @@ nut context get role</code></pre>
   <div class="packbar a"><span class="lbl">Pack A</span> Five documents, every factual claim traceable to a public source.</div>
   <div class="prose">
     <p>
-      Knowledge documents are what the loops actually read. <code>competitors-list.md</code>
-      is the editable input to the Competitor Intelligence Loop; the other four give the
-      Product Improvement Loop enough to identify the product and respect its constraints.
+      There is no separate knowledge type — these are pages like any other, at
+      <code>kb/&lt;name&gt;</code>. <code>kb/competitors-list</code> is the editable input to the
+      Competitor Intelligence Loop; the other four give the Product Improvement Loop enough to
+      identify the product and respect its constraints.
     </p>
     <div class="callout">
-      <p class="kicker">Studio route</p>
+      <p class="kicker">Keep the paths exactly as shown, and seed metadata now</p>
       <p style="margin-bottom:0">
-        Same as the previous step: create these five as files under
-        <code>.nut/knowledge/</code> in the <b>Code</b> view and commit from
-        <b>Source Control</b>. Keep the filenames exactly as shown — both skill prompts
-        reference <code>competitors-list.md</code>, <code>product.md</code>,
-        <code>constraints.md</code>, and <code>positioning.md</code> by name.
+        Both task prompts reference <code>competitors-list</code>, <code>product</code>,
+        <code>constraints</code> and <code>positioning</code> by name. While you are here attach
+        starting metadata to each — <code>owner</code>, <code>last-verified</code>,
+        <code>confidence</code> — because step 10's view is only as good as the metadata seeded
+        now. This is the step where the product's actual differentiator either gets used or does not.
       </p>
     </div>
   </div>
@@ -681,7 +756,7 @@ a signal.</code></pre>
     <div class="blockhead"><span class="fname"><b>constraints.md</b> · the hard limits any proposal must respect</span><button class="copybtn" type="button">Copy</button></div>
     <pre><code># Constraints — What Any Proposal Must Respect
 
-**Owner:** Head of Product · **Last verified:** 2026-08-08
+**Owner:** Head of Product · **Last verified:** 2026-08-18
 
 The `product-improvement-loop` reads this file. Any proposal that violates a hard
 constraint should be killed at the gate rather than reframed.
@@ -691,32 +766,39 @@ constraint should be killed at the gate rather than reframed.
 | Constraint | Implication for proposals |
 |---|---|
 | **Team of 2–10** | Anything beyond 1–2 weeks for a single engineer must be reframed smaller or killed. No proposal may assume a dedicated team. |
-| **Invite-only, demo-gated** | Proposals assuming self-serve signup, public trials, or PLG loops are out of scope until access changes. |
-| **A VM per instance** | Per-tenant cost scales with tenants, not usage. Proposals that multiply instances — free tiers, per-team sandboxes, ephemeral demo environments — carry a cost the proposal must acknowledge. |
+| **Invite-only, demo-gated** | Sales is gated. The *product* now documents two self-serve paths — the space-template gallery and a local Compose stack — so a proposal may build on those, but may not assume a public signup funnel marketing has not announced. |
+| **Two documented products** | We publish two doc sites describing incompatible object models and link the marketing nav to the older one. Any proposal touching documentation, onboarding, or developer surface must say which product it is for. |
+| **One agent per space** | Automation is scoped to the space. A proposal needing two differently-scoped automations over the same pages must either split the space or explain why the ACL cost is acceptable. |
 | **A free credible OSS baseline exists** | Any proposal whose value a competent engineer could self-host in a weekend needs an explicit "why pay" answer inside the proposal. |
 | **Governance is the wedge** | Anything that weakens ownership, lineage, versioning, or auditability costs us disproportionately. Convenience features that bypass review are net negative. |
 
 ## Surface area already committed
 
-Studio, Control Plane, iOS app, VS Code / Cursor extension, `nut` CLI, REST API, MCP
-server, A2A endpoint, connectors for ten-plus systems, agent runtime, skills marketplace,
-mail system, image/audio/video generation, interactive terminal, full git operations
-including worktrees.
+Browser app, HTTP API, MCP server, connectors for ten-plus systems, space agents with
+schedules and run records, webhooks, page and space templates plus the gallery, export/import,
+views, full-text search, the link graph, SCIM, and three deployment paths (Compose, Helm,
+Terraform).
 
-Every one of these needs maintenance, security review, and documentation. **A proposal that
-adds a new surface must argue why it beats deepening an existing one.** Breadth is the
-expensive way to lose a category race.
+The newer documentation **removed** a great deal — CLI, terminals, git operations, code
+sessions, media generation, the skills marketplace. That was the right call and it must not be
+quietly undone. **A proposal that adds a new surface must argue why it beats deepening an
+existing one**, and a proposal that revives a removed surface must say so explicitly.
 
 ## Where we are structurally weak
 
-- **Retrieval is undocumented.** We say knowledge is "indexed and available for retrieval"
-  and stop there. At least one direct competitor publishes query expansion, reciprocal rank
-  fusion over embeddings and full-text search, and a named reranker. Technical evaluators
-  notice which vendor shows its work.
-- **No SOC 2 claim.** Mechanical blocker in enterprise security review.
-- **Review workflow unshipped.** The load-bearing beam of the governance pitch.
-- **Vocabulary inconsistency on our own site.** Layer 02 is "Domain" on the platform page
-  and "Product" in the FAQ.
+- **Retrieval is Postgres full-text search, and the reason is unpublished.** No embeddings,
+  no reranker, no vector store. A direct competitor publishes query expansion, reciprocal rank
+  fusion over embeddings and full-text, and a named reranker. Our position — that state
+  questions belong to the metadata engine, not to retrieval — is defensible and nowhere argued,
+  so evaluators score it as a missing feature.
+- **SOC 2 is an engagement letter, not a report.** Still a mechanical blocker in enterprise
+  security review, even with ~57 monitored controls published.
+- **Review workflow unshipped.** The load-bearing beam of the governance pitch, absent from a
+  freshly written 27-page object model that found room for webhooks, templates and SCIM.
+- **We publish two contradictory documentation sites** and the marketing nav points at the
+  stale one. This is our own thesis failing in public.
+- **Vocabulary inconsistency on our own site.** Layer 02 is "Domain" on the platform page and
+  "Product" in the FAQ — and the taxonomy appears nowhere in the shipped model.
 - **Name collision.** Procurement teams and journalists researching "Coconut" find four
   other companies first.
 - **One public customer reference.** No case studies, no scale metrics.
@@ -743,8 +825,8 @@ three-point pre-mortem. Anything less does not clear the bar.</code></pre>
       <div class="blockhead"><span class="fname"><b>product.md</b></span><button class="copybtn" type="button">Copy</button></div>
       <pre><code># Product — What Coconut Is
 
-**Owner:** Head of Product · **Last verified:** 2026-08-08 · **Source:** coconut.dev,
-docs.coconut.dev
+**Owner:** Head of Product · **Last verified:** 2026-08-18 · **Source:** coconut.dev,
+docs.coconut.md, docs.coconut.dev, trust.coconut.dev
 
 ## One sentence
 
@@ -752,62 +834,95 @@ Coconut connects an organization's scattered documents, tools, and undocumented 
 into one living, governed source that any AI tool draws from through a permission-aware
 MCP connector.
 
+## Read this first: we document two products
+
+As of 2026-08-18 two documentation sites are live and they describe different software.
+
+| | `docs.coconut.dev` | `docs.coconut.md` |
+|---|---|---|
+| Unit | a Coconut = one provisioned VM | `org → space → page` |
+| Storage | `.nut/` directory, git-versioned | Postgres |
+| Versioning | git branches and worktrees | append-only revisions, **"no git lifecycle"** |
+| MCP tools | `coconuts_* tasks_* knowledge_* skills_*` | `context_* agent_*` |
+| Retrieval | "indexed and available" | Postgres full-text search + metadata query |
+| Deployment | provision an instance | Docker Compose, Helm, Terraform |
+
+**The second one is what ships.** A live MCP connector attached on 2026-08-09 exposed
+`context_*` and `agent_*` and nothing else. The marketing nav still links to the first.
+Treat any claim sourced only to `docs.coconut.dev` as historical.
+
 ## The problem, as we state it
 
-Organizational AI context fails three ways at once:
-
-- **Fragmented** — AI tools do not share context, so every session starts from zero.
-- **Stale** — context goes out of date the moment things change.
-- **Inconsistent** — without a shared source, output varies by tool, team, and session.
+Organizational AI context fails three ways at once: **fragmented** (tools do not share
+context), **stale** (it ages the moment things change), **inconsistent** (output varies by
+tool, team, and session).
 
 The distinction we draw against enterprise search: search helps people *find* information;
-a context layer gives AI the knowledge to *act* on it.
+a context layer gives AI the knowledge to *act* on it. As of the new documentation the
+mechanism behind that is a **query** engine, not a retrieval engine.
 
-## The five layers
+## The object model
 
-| # | Layer | Holds | Investor-firm example |
-|---|---|---|---|
-| 01 | Identity | Who you are, what you are trying to do — mission, goals, OKRs | Fund thesis, mandate, criteria |
-| 02 | Domain | What you work on and the language around it | Focus areas, markets, portfolio, live deals |
-| 03 | Process | How work gets done — templates, frameworks, checklists | Sourcing, diligence, the IC process |
-| 04 | Relationships | Stakeholder maps, who owns what, landmines | Founders, co-investors, LPs |
-| 05 | State | Current initiatives, recent decisions, open questions, metrics | Same |
-
-**Known inconsistency:** the platform page calls layer 02 "Domain"; the FAQ still calls it
-"Product". Both live as of 2026-08-08.
+- **Org → space → page.** A space groups pages around a purpose, carries its own members and
+  visibility (`private` or `org`), and has **exactly one agent**. Every user also has a
+  personal space.
+- **A page has three content layers.** Markdown **body** (narrative), **frontmatter**
+  (travels with the revision), and **metadata** (stored alongside, queryable, patchable
+  without creating a revision).
+- **Reserved prefixes.** `agents/` holds the agent's instructions, task pages and run
+  records; `templates/` holds page templates. Both hidden from listings and search.
+- **Three doors, one ACL engine.** Browser at `/pages/:space/:path`, HTTP with
+  `Accept: text/markdown`, MCP at `POST /mcp`. Identical authorization outcomes.
 
 ## What is genuinely differentiated
 
-- **Page metadata as a query surface.** Typed key-value data alongside every page — scores,
-  stages, dates, owners, sources — queryable across a space. "Every deal in diligence with
-  conviction above 0.7, ranked" is one query, not a re-keyed spreadsheet. Prose carries
-  judgment; metadata carries facts that churn.
-- **Lineage, not overwrite.** A changed decision supersedes rather than overwrites. Every
-  page versioned, any two versions diffable, rollback in one step.
-- **Space agents as principals.** Each space has an agent with standing instructions running
-  on a schedule — folding transcripts into memos, appending sources, flagging stale coverage.
-  Read-only outside explicit grants, every run recorded.
+- **Metadata as a query surface.** Any JSON value. `set` upserts, `append` extends arrays
+  atomically, `appendUnique` makes re-running agents idempotent. Per-key audit trail.
+  Operators `eq neq exists missing gt gte lt lte contains`, AND-ed, with `orderBy`.
+- **Views.** `/views` is a filter builder over the *same* engine agents use, with the whole
+  view state in the URL — a tuned query is a shareable link and a team dashboard.
+- **Agents as scoped principals.** Scheduled runs execute as the space agent principal;
+  manual runs execute with the requesting user's authority.
+- **Automatic link graph.** Backlinks, broken-target flags and a space-wide broken-link
+  report, indexed from Markdown bodies on every write.
 
-## Surfaces
+## Newer capabilities
 
-Coconut Studio, Control Plane, VS Code / Cursor extension, `nut` CLI, iOS app, REST
-`/api/v1`, WebSocket, MCP server at `app.coconut.dev/mcp` (26 tools, OAuth-scoped), and an
-A2A agent card.
+| Capability | What it is |
+|---|---|
+| Webhooks | Four page/metadata events, HMAC-SHA256 signed, retries with backoff, delivery log, SSRF guard re-checked after DNS resolution |
+| Space templates | A gallery merging built-in, org-maintained and opt-in remote catalogues; "Use this template" provisions a whole space |
+| Export / import | Whole spaces as portable JSON bundles (`coco-space-export` v1), the same format space templates are built from |
+| Deployment | Docker Compose, Helm chart, Terraform for AWS. Enterprise artifact is `api + postgres` |
+| Identity | Google Workspace OIDC first-class, Okta profile, SCIM baseline |
+| Native agents | `COCO_NATIVE_AGENTS_MODE=native` plus an "Eve" runtime container, gated by per-org entitlements |
 
-## Architecture note
+## Vertical blueprints
 
-Each "Coconut" is an instance — per the skills documentation, a VM with the `nut` CLI
-installed and a `.nut/` directory for state, where an agent loop reads `SKILL.md` and
-executes `nut` subcommands. The `.nut` directory is git-versioned and holds `context/`,
-`knowledge/`, `skills/`, `jobs/`, `tasks/`, `mcp/`, `resources/`, `chats/`, `config.json`.
+Five, each a metadata schema plus a saved view plus a connector: private-equity deal
+pipeline, B2B SaaS account research, SRE runbooks, legal contract repository, manufacturing
+supplier audit. Every one is the same three primitives dressed for a buyer.
+
+## The five layers
+
+Identity / Domain / Process / Relationships / State appear on the platform page and
+**nowhere in the shipped object model**. There is no layer field and no layer API. Treat the
+taxonomy as sales narrative, not architecture.
+
+**Known inconsistency, still live:** the platform page calls layer 02 "Domain"; the FAQ calls
+it "Product". Both live as of 2026-08-18, ten days after first being noticed.
 
 ## Deployment and security
 
-AWS. AES-256 at rest, TLS 1.2+ in transit, RBAC, MFA, least privilege, audit logging,
-regular penetration testing. Three models: multi-tenant SaaS, single-tenant hosted,
-self-hosted. Assurance artifacts under NDA.
+AES-256 at rest, TLS 1.2+ in transit, RBAC, MFA, least privilege, audit logging, regular
+penetration testing. The security page now describes two models, managed or self-hosted.
+Secrets — webhook signing keys, connector credentials, model keys — are encrypted under a
+required 32-byte `COCO_SETTINGS_ENCRYPTION_KEY`; without it webhook creation returns `503`
+rather than storing plaintext.
 
-**Gap:** no SOC 2 claim appears on the public site.
+**SOC 2 status:** a Vanta Trust Center is live at `trust.coconut.dev` with roughly 57
+continuously monitored controls, all passing. The only downloadable artifact is an
+**engagement letter** — an audit begun, not a report issued.
 
 ## Pricing
 
@@ -816,10 +931,12 @@ Three contact-sales tiers, no public figures: **Team** (first pilot), **Company*
 
 ## Shipped vs promised
 
-- **Shipped:** 1.0 (2026-06-03), versioning, lineage, rollback, ownership, RBAC, MCP with
-  OAuth scopes, connectors, space agents, skills, jobs.
-- **Marked "coming soon":** propose-then-publish review — the tiered-propagation workflow
-  where low-risk updates flow automatically and high-impact changes require confirmation.</code></pre>
+- **Shipped:** append-only revisions, `If-Match`/ETag concurrency, metadata with per-key
+  audit, full-text search, link graph, space agents with schedules and run records,
+  connectors, webhooks, templates, export/import, SCIM.
+- **Still missing:** **propose-then-publish review.** Marked "coming soon" on the platform
+  page and absent entirely from 27 pages of new documentation — no review endpoint, no
+  proposal object, no approval state on a page.</code></pre>
     </div>
     <div class="block" style="border:0;border-radius:0">
       <div class="blockhead"><span class="fname"><b>market.md</b></span><button class="copybtn" type="button">Copy</button></div>
@@ -869,17 +986,21 @@ like ours has a credible exit.
 
 ## The structural threats
 
-1. **The runtime owns the layer above.** Our instances run Claude Code, our skills ship
-   through the Claude Code plugin marketplace, our AI endpoint defaults to Claude Sonnet 4.5,
-   and MCP and the `SKILL.md` spec are Anthropic-authored. Anthropic is our runtime, our
-   distribution channel, our standards body, and a competitor one layer up.
+1. **The protocol owner competes one layer up.** This is narrower than it was: we no longer
+   ship skills through the Claude Code plugin marketplace or write to the `SKILL.md` spec, and
+   that supply-chain dependency is gone. What remains is ordinary and unavoidable — MCP is
+   Anthropic-authored, and Anthropic sells a product one layer up whose every improvement
+   narrows the gap we sell into.
 2. **The free option is credible.** GBrain is MIT-licensed, Markdown-first, git-versioned,
    MCP-served, with a multi-user company-brain mode — 28,015 stars four months after the repo
    was created. It is written by the president of the accelerator funding four of our closest
    rivals. It does not need to win to force us to justify our delta in every first call.
-3. **Governance is our wedge and it is unfinished.** Propose-then-publish review is marked
-   coming soon; no SOC 2 claim is public. Meanwhile Glean, Stack Internal, and Guru are all
-   moving onto governance ground.
+3. **Governance is our wedge and it is unfinished.** Propose-then-publish review is still not
+   shipped and is absent from the new documentation entirely; SOC 2 is an engagement letter,
+   not a report. Meanwhile Glean, Stack Internal, and Guru are all moving onto governance ground.
+4. **We document two products.** Two live doc sites, two object models, and the marketing nav
+   points at the stale one. Every prospect who finds both must be told which is real, and that
+   conversation never helps.
 
 ## What buyers actually ask
 
@@ -887,6 +1008,8 @@ like ours has a credible exit.
 - "What does this do that Glean does not?"
 - "Can we self-host GBrain and get 80% of this for free?"
 - "Do you have SOC 2?"
+- "How does retrieval rank results?"
+- "Which documentation site is current?"
 - "How long until we see value?"
 
 Every one of those has to have a crisp answer that survives a follow-up question.</code></pre>
@@ -945,9 +1068,16 @@ first value, this claim is doing damage rather than work.
 *"AWS, AES-256, TLS 1.2+, RBAC, MFA, audit logging, penetration testing, self-hosted option."*
 
 **Follow-up:** "Do you have SOC 2?"
-**Honest answer:** No public claim exists. Competitors with narrower scope advertise SOC 2
-Type II. For a governance product, an unstated certification status reads as an absent one.
-This is the single most mechanical gap in the enterprise motion.
+**Honest answer:** An audit is under way and visible — `trust.coconut.dev` publishes ~57
+continuously monitored controls, all passing — but the only downloadable artifact is an
+engagement letter, not a report. Competitors with narrower scope advertise completed Type II.
+Say the true thing: in flight, instrumented, not yet certified. It is a far better answer than
+silence and still the most mechanical gap in the enterprise motion.
+
+**Second follow-up:** "How does retrieval rank?"
+**Honest answer:** Postgres full-text search, ACL-filtered, with no embeddings or reranker —
+because ranking prose is not where we compete. State questions go to the metadata engine and
+are answered exactly. Say that plainly rather than letting the evaluator discover it.
 
 ## The one-liner against each threat
 
@@ -966,73 +1096,77 @@ This is the single most mechanical gap in the enterprise motion.
    a query. This is the segment where our metadata design is obviously better than a wiki.
 2. **Leadership** — board prep, synthesis, in-the-moment questions.
 3. **Operating functions** — marketing, sales, CS, product, ops, people.
-4. **Developers** — real surface area (CLI, IDE, git-versioned context, skills), no named
-   buyer. Either a strategic second act or unfunded scope.</code></pre>
+4. **Compliance-shaped work** — legal, supplier audit, SRE runbooks. New, and structurally
+   the best fit after investors: every one is a date field, a score, and a sweep for what has
+   gone stale, which is exactly what metadata queries answer and retrieval never could.
+5. **Developers** — no longer a segment. The CLI, IDE extension and git surface are gone from
+   the shipped product; what remains is an HTTP API for systems, not a developer product.</code></pre>
     </div>
   </details>
 
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · create all five</span><button class="copybtn" type="button">Copy</button></div>
+    <div class="blockhead"><span class="fname"><b>http</b> · create all five, then make them queryable</span><button class="copybtn" type="button">Copy</button></div>
     <pre><code># save the five blocks above into ./kb/ first
-nut knowledge create "Product"          --file ./kb/product.md
-nut knowledge create "Market"           --file ./kb/market.md
-nut knowledge create "Positioning"      --file ./kb/positioning.md
-nut knowledge create "Constraints"      --file ./kb/constraints.md
-nut knowledge create "Competitors List" --file ./kb/competitors-list.md
+for p in product market positioning constraints competitors-list; do
+  jq -Rs --arg t "$p" '{title:$t, content:., frontmatter:{}}' &lt; "./kb/$p.md" \
+  | curl -s -X PUT "$COCO/pages/coconut/kb/$p" \
+      -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" -d @-
 
-# verify
-nut knowledge list</code></pre>
+  curl -s -X PATCH "$COCO/pages/coconut/kb/$p/metadata" \
+    -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
+    -d '{"set":{"owner":"head-of-product","last-verified":"2026-08-18","confidence":0.9,"pack":"A"}}'
+done
+
+# which keys now exist across the space, with usage counts
+curl -s "$COCO/search/metadata/keys" -H "Authorization: Bearer $KEY"</code></pre>
   </div>
   <div class="prose">
     <p class="mono" style="font-size:13px;color:var(--muted)">
-      Check the exact flag with <code>nut knowledge create --help</code> — if your build
-      expects content on stdin or a positional path rather than <code>--file</code>, adjust.
-      Creating these through Studio works equally well.
+      That last call is the quiet good idea: a discoverable key namespace with usage counts, so
+      writers converge on keys that already exist instead of inventing <code>owner</code>,
+      <code>Owner</code> and <code>owned-by</code>. Check it again after step 6 — whether the
+      agent converged on your keys or invented its own is a real test of the vocabulary
+      discipline this product sells.
     </p>
   </div>
 </section>
 
 <!-- ============ STEP 5 ============ -->
 <section class="step" id="s5">
-  <div class="stephead"><span class="stepno">05</span><h2>Install the two skills</h2></div>
+  <div class="stephead"><span class="stepno">05</span><h2>Define the space agent</h2></div>
   <div class="prose">
     <p>
-      Both loops follow Coconut's published shape: a skill defines what the agent does, a job
-      triggers it, and the output is something you can act on.
+      There is no skills system and no job system. The space has <b>one</b> agent, defined
+      entirely by pages: <code>agents/instructions</code> is the persona layered into every run,
+      and each loop is a task page at <code>agents/&lt;task&gt;</code>.
     </p>
     <div class="callout">
-      <p class="kicker">Studio route — this is the natural path</p>
+      <p class="kicker">One agent per space — plan for it</p>
       <p style="margin-bottom:0">
-        Studio → <b>Skills</b> → <b>Create New</b>, then fill four fields: <b>Name</b>
-        (<code>competitor-intelligence-loop</code>), <b>Description</b> (one line),
-        <b>Skill Instructions</b> (paste the whole prompt below), and <b>Tools</b> — the MCP
-        servers the skill may call. Tools matter here: the competitor loop needs web access to
-        research anything, so a skill with no tools attached will produce a confident-sounding
-        file built entirely from model priors. That is worth testing deliberately.
+        Both loops share one persona and one set of connector credentials. If you wanted the
+        competitor loop to have web reach and the improvement loop not to, you could not express
+        that here without splitting the space and dragging the ACLs and page paths with it. That
+        is a real constraint, and worth raising with the founder. <b>Attach a web-capable
+        connector before step 6</b> — a research task with no reach produces a confident-sounding
+        file built entirely from model priors, which is worth provoking deliberately once.
       </p>
     </div>
     <p>
-      Alternatively, describe the skill to an agent that has the
-      <code>coconut-skills-creator</code> meta-skill installed.
+      Paste <code>context/agents</code> from step 3 into <code>agents/instructions</code>, then
+      create the two task pages below.
     </p>
   </div>
-  <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · optional: install the skills-creator meta-skill in Claude Code</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>/plugin marketplace add lovelybunch/coconut-skills
-/plugin install coconut-skills@coconut-skills</code></pre>
-  </div>
-
   <div class="block">
-    <div class="blockhead"><span class="fname"><b>skill 1</b> · competitor-intelligence-loop</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code># Skill builder prompt — `competitor-intelligence-loop`
+    <div class="blockhead"><span class="fname"><b>agents/competitor-intelligence-loop</b></span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># Agent task prompt — `agents/competitor-intelligence-loop`
 
-Paste this into the skill builder. It follows the shape of Coconut's published
-Competitor Intelligence Loop guide, adapted to this instance's file names, escalation
+Paste this into the space agent's task page. It follows the shape of Coconut's published
+Competitor Intelligence Loop guide, adapted to this space's page names, escalation
 triggers, and the disambiguation hazards specific to our competitive set.
 
 ---
 
-I want a skill called `competitor-intelligence-loop` that tracks a named list of
+I want an agent task called `competitor-intelligence-loop` that tracks a named list of
 competitors on a recurring cadence and synthesizes product, pricing, positioning, funding,
 hiring, and sentiment signals into per-competitor knowledge files plus a single landscape
 overview. Each run must decide, per competitor, whether it is a first-run (full baseline)
@@ -1116,23 +1250,29 @@ interpretations you considered and why you rejected them, and the exact next act
 **Run summary.** End with a concise summary: signals found, evidence used, interpretations
 rejected and why.
 
-Once we agree on the skill, install it and set up a recurring weekly job.</code></pre>
+Once we agree on the task, save it as a page under `agents/` and set `schedule`,
+`scheduleTz` and `scheduleEnabled` in its frontmatter for a weekly cadence.
+
+On every competitor page, patch metadata rather than rewriting the body when only state has
+changed: `set` `last-reviewed` and `threat-level`, and `appendUnique` every URL you actually
+read into `sources`. Also `set` `sources-fetched` to the number of pages you genuinely
+retrieved this run — if it is zero, you may not assert what any live page says, and the run
+must be filed as a context gap instead.</code></pre>
   </div>
-
   <div class="block">
-    <div class="blockhead"><span class="fname"><b>skill 2</b> · product-improvement-loop</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code># Skill builder prompt — `product-improvement-loop`
+    <div class="blockhead"><span class="fname"><b>agents/product-improvement-loop</b></span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># Agent task prompt — `agents/product-improvement-loop`
 
-Paste this into the skill builder. It follows the shape of Coconut's published Product
-Improvement Loop guide, adapted to this instance's knowledge files and hard constraints.
+Paste this into the space agent's task page. It follows the shape of Coconut's published
+Product Improvement Loop guide, adapted to this space's pages and hard constraints.
 
-**Note the intended behaviour:** with only the base pack loaded, this skill should file
+**Note the intended behaviour:** with only the base pack loaded, this task should file
 *"No signal this run — context gap."* That is the correct result, not a failure. It only
 produces a proposal once real signal exists in the knowledge base.
 
 ---
 
-I want a skill called `product-improvement-loop` that produces one highly-validated unmet
+I want an agent task called `product-improvement-loop` that produces one highly-validated unmet
 need or incremental enhancement for Coconut. Run it weekly. Each run commits to one
 validated idea, or honestly reports why nothing cleared the bar.
 
@@ -1184,7 +1324,9 @@ proposal:
 
 - Weakens ownership, lineage, versioning, or auditability in exchange for convenience.
 - Assumes self-serve signup while we are invite-only.
-- Multiplies instances without acknowledging that each instance is a VM and per-tenant cost
+- Revives a surface the product deliberately removed — CLI, terminals, git operations, code
+  sessions, media generation, the skills marketplace — without saying so explicitly and
+  arguing why. Or multiplies spaces without acknowledging the per-space agent ceiling and cost
   scales with tenants rather than usage.
 - Adds a new product surface without arguing why it beats deepening an existing one.
 - Could be self-hosted by a competent engineer in a weekend without an explicit "why pay"
@@ -1229,12 +1371,27 @@ defeats the gate.
 All scores ≥4: file the proposal as a task, titled after the user and the change, tagged
 `product-improvement`, medium priority. Body is the full proposal in Markdown.
 
-Once we agree on the skill, install it and set up a recurring weekly job.</code></pre>
-  </div>
+Once we agree on the task, save it as a page under `agents/` and set `schedule`,
+`scheduleTz` and `scheduleEnabled` in its frontmatter for a weekly cadence.
 
+Record the verdict in page metadata, not only in prose, so a view can rank runs without
+opening them: `set` `gate-status` (`passed` or `context-gap`), `confidence` (0–1),
+`signal-source` (the page the signal came from), and `sources-fetched` (the number of external
+pages you actually retrieved). **If `sources-fetched` is 0, `gate-status` must be
+`context-gap`** — a run that fetched nothing is not permitted to assert what a live page says.</code></pre>
+  </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · confirm both installed</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut skill list</code></pre>
+    <div class="blockhead"><span class="fname"><b>http</b> · confirm the agent sees both tasks</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>curl -s "$COCO/spaces/coconut/pages" -H "Authorization: Bearer $KEY" | grep agents/
+
+# reserved prefixes are hidden from listings and search — address them directly
+curl -s "$COCO/pages/coconut/agents/instructions.md" -H "Authorization: Bearer $KEY"</code></pre>
+  </div>
+  <div class="prose">
+    <p class="mono" style="font-size:13px;color:var(--muted)">
+      Schedules live in each task page's frontmatter, not in a separate scheduler. Leave them off
+      for now — steps 6, 7 and 9 run both tasks by hand, and step 10 turns the cadence on.
+    </p>
   </div>
 </section>
 
@@ -1248,19 +1405,23 @@ Once we agree on the skill, install it and set up a recurring weekly job.</code>
     </p>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · run it once by hand</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut skill run competitor-intelligence-loop
+    <div class="blockhead"><span class="fname"><b>run</b> · trigger it by hand, then inspect</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># Run from the task page's Run control, or over MCP with agent_run_task.
+# A manual run executes with YOUR authority — a scheduled one uses the agent principal.
 
-# then inspect what it wrote
-nut knowledge list --search "competitor"
-nut knowledge get competitors.md</code></pre>
+curl -s "$COCO/spaces/coconut/pages" -H "Authorization: Bearer $KEY" | grep competitor
+curl -s "$COCO/pages/coconut/kb/competitors.md" -H "Authorization: Bearer $KEY"
+
+# the run record it wrote about itself
+curl -s "$COCO/spaces/coconut/pages" -H "Authorization: Bearer $KEY" | grep agents/runs</code></pre>
   </div>
   <div class="prose">
     <h3>What should exist afterwards</h3>
     <ul>
-      <li><code>competitor-{name}.md</code> — twelve files, each with a dated baseline under Product and pricing, Positioning, Funding and hiring, and Sentiment.</li>
-      <li><code>competitors.md</code> — one landscape overview, readable at a glance, ending with the <b>"What this means for us"</b> section the adapted prompt asks for.</li>
-      <li>Possibly one or more high-priority tasks, if the run hit an escalation trigger.</li>
+      <li><code>kb/competitor-&lt;name&gt;</code> — twelve pages, each with a dated baseline under Product and pricing, Positioning, Funding and hiring, and Sentiment.</li>
+      <li><code>kb/competitors</code> — one landscape overview, readable at a glance, ending with the <b>"What this means for us"</b> section the adapted prompt asks for.</li>
+      <li>Metadata on every competitor page: <code>last-reviewed</code>, <code>threat-level</code>, a <code>sources</code> array, and <code>sources-fetched</code>.</li>
+      <li>A run record under <code>agents/runs/competitor-intelligence-loop/</code>.</li>
     </ul>
     <h3>Grade it on these</h3>
     <div class="tw">
@@ -1272,6 +1433,8 @@ nut knowledge get competitors.md</code></pre>
           <tr><td><b>Figures dated</b></td><td>Star counts and funding totals carry a date. GBrain's star count moves weekly; an undated number is already wrong.</td></tr>
           <tr><td><b>Rejections shown</b></td><td>Each file lists interpretations considered and discarded. This is the hardest instruction to follow and the best signal of quality.</td></tr>
           <tr><td><b>No padding</b></td><td>A quiet competitor is reported as quiet, not given three paragraphs of filler.</td></tr>
+          <tr><td><b>Metadata actually written</b></td><td><code>PATCH</code>ed, not just narrated in the body. Re-read <code>/search/metadata/keys</code>: did the agent converge on the keys you seeded in step 4, or invent parallel ones? Vocabulary drift inside a product sold to fix vocabulary drift is the finding.</td></tr>
+          <tr><td><b><code>sources-fetched</code> is honest</b></td><td>Compare it to the URLs actually cited. This is the number that catches a run which reasoned confidently without retrieving anything — the failure mode documented in the <a href="index.html#firsthand">First-hand tab</a>, which the product does not yet check for itself.</td></tr>
         </tbody>
       </table>
     </div>
@@ -1286,16 +1449,18 @@ nut knowledge get competitors.md</code></pre>
       <p class="kicker">This is the test</p>
       <p style="margin-bottom:0">
         Only Pack A is loaded. There is no customer feedback, no support data, no churn note —
-        nothing describing a specific user in a specific moment of friction. The skill's own
-        instructions forbid inventing one. <b>The correct output is a task titled "No signal
-        this run — context gap."</b>
+        nothing describing a specific user in a specific moment of friction. The task's own
+        instructions forbid inventing one. <b>The correct output is a page titled "No signal this
+        run — context gap," with <code>gate-status: context-gap</code> in its metadata.</b>
       </p>
     </div>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · run it, then read the task it filed</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut skill run product-improvement-loop
-nut task list</code></pre>
+    <div class="blockhead"><span class="fname"><b>run</b> · trigger it, then query the verdict</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># the verdict is queryable without opening the page
+curl -sG "$COCO/search/metadata" -H "Authorization: Bearer $KEY" \
+  --data-urlencode 'filters=[{"key":"gate-status","op":"exists"}]' \
+  --data-urlencode 'orderBy=confidence' --data-urlencode 'order=desc'</code></pre>
   </div>
   <div class="prose">
     <h3>Read the result carefully</h3>
@@ -1304,7 +1469,7 @@ nut task list</code></pre>
         <thead><tr><th style="width:160px">Outcome</th><th>What it tells you</th></tr></thead>
         <tbody>
           <tr>
-            <td><b>"No signal — context gap"</b>, naming what input would help</td>
+            <td><b><code>gate-status: context-gap</code></b>, naming what input would help</td>
             <td><b>Best case.</b> The discipline is real and enforced. This is exactly what a governed context layer should do when asked to reason past its evidence, and it is the strongest single argument for the product.</td>
           </tr>
           <tr>
@@ -1318,7 +1483,12 @@ nut task list</code></pre>
         </tbody>
       </table>
     </div>
-    <p>Whatever happens, save the output before moving on. You cannot reproduce this state once Pack B is loaded.</p>
+    <p>
+      Whatever happens, save the output before moving on — you cannot reproduce this state once
+      Pack B is loaded. Export the space now if you want a clean snapshot:
+      <code>GET /spaces/coconut/export</code> returns every page you can read as a single JSON
+      bundle, which is also the honest answer to any lock-in question a buyer raises.
+    </p>
   </div>
 </section>
 
@@ -1354,8 +1524,9 @@ nut task list</code></pre>
 &gt; treat any name here as a real person or company. Delete it when the test is done.
 &gt;
 &gt; The *frictions* described are extrapolated from publicly observable gaps
-&gt; (no public SOC 2 claim, review workflow marked coming soon, undocumented retrieval,
-&gt; a VM-per-instance architecture, a heavily collided brand name). The *evidence* is not
+&gt; (SOC 2 an engagement letter rather than a report, review workflow still unshipped,
+&gt; retrieval that is plain Postgres full-text search, two contradictory documentation sites,
+&gt; a heavily collided brand name). The *evidence* is not
 &gt; real — it is a plausible dramatization written to give the loop something to bite on.
 
 **Owner:** Head of Product · **Type:** SYNTHETIC · **Created:** 2026-08-08
@@ -1384,7 +1555,8 @@ nut task list</code></pre>
 
 **2026-06-30 — Director of Operations**
 &gt; "Setup took our team about three weeks, not the days we were promised, and almost all of
-&gt; it was arguing about which of the five layers a thing belonged in. Is a runbook Process or
+&gt; it was arguing about which space a thing belonged in, and whether a fact was frontmatter or
+&gt; metadata. Is a runbook Process or
 &gt; Domain? We had the same argument four times. In the end one person just decided and nobody
 &gt; else agrees with the result."
 
@@ -1401,7 +1573,8 @@ nut task list</code></pre>
 &gt; engineering, it's that the form has a field and we can't leave it empty."
 
 **2026-07-11 — Platform architect**
-&gt; "I asked how retrieval ranks and got 'indexed and available for retrieval.' I evaluated
+&gt; "I asked how retrieval ranks and got 'Postgres full-text search.' No reranker, no
+&gt; embeddings, and no explanation of why not. I evaluated
 &gt; another vendor the same week who walked me through their reranker. I'm not saying yours is
 &gt; worse — I'm saying I can't tell, and I have to write a recommendation."
 
@@ -1422,9 +1595,11 @@ nut task list</code></pre>
    obligation and no notification. Two pilots hit the same silent-conflict problem.
 2. **Decay flags have no moment.** Freshness detection works; there is no ritual that
    consumes it, so the backlog grows until it is ignored.
-3. **Taxonomy is the onboarding tax.** The five layers are the thing teams argue about, and
+3. **Structure is the onboarding tax.** Space boundaries and the frontmatter/metadata split
+   are what teams argue about, and
    the argument is unresolved rather than settled.
-4. **Two mechanical enterprise blockers:** no SOC 2 artifact, and unexplained retrieval.
+4. **Two mechanical enterprise blockers:** no SOC 2 *report* (an engagement letter is not one),
+   and retrieval that is never defended.
 5. **Score opacity.** Metadata scores are trusted less than they should be because the
    evidence behind a number is not visible at the point the number is read.</code></pre>
   </div>
@@ -1478,11 +1653,11 @@ requires a human to diff two versions and infer.
 ## Notable one-offs (fabricated)
 
 - **2026-07-19** — A customer asked whether space agents can run against a read-replica so a
-  long research job doesn't touch the live instance. No, currently.
+  long research job doesn't touch the live space. No, currently.
 - **2026-07-24** — A customer wanted a weekly digest of what their space agent changed. There
   is no digest; they are reading the activity feed manually.
 - **2026-07-31** — A prospect asked for a "what would this look like for us" sandbox before
-  signing. Declined, because standing up an instance is a VM.
+  signing. Declined, because no one offered the template-provisioned space that would cover it.
 
 ## What support says internally (fabricated)
 
@@ -1510,16 +1685,16 @@ requires a human to diff two versions and infer.
 
 | Account (fictional) | Stage lost | Stated reason | Underlying pattern |
 |---|---|---|---|
-| Ardent Health Partners | Security review | No SOC 2 report to attach to the questionnaire | Mechanical compliance blocker, not a product objection |
-| Meridian Freight | Technical evaluation | "Couldn't assess retrieval quality" | Undocumented retrieval loses to a vendor who publishes theirs |
+| Ardent Health Partners | Security review | Trust Center showed controls but no SOC 2 report to attach to the questionnaire | Mechanical compliance blocker, not a product objection |
+| Meridian Freight | Technical evaluation | "Full-text search only, and no one could tell me why" | An undefended retrieval choice loses to a vendor who publishes a pipeline |
 | Talbot &amp; Rowe | First call | "We'll run the open-source one" | No crisp answer to the free-baseline question |
-| Halcyon Systems | Procurement | Timeline — wanted a sandbox before committing | Cannot cheaply stand up an evaluation instance |
+| Halcyon Systems | Procurement | Timeline — wanted a sandbox before committing | Self-serve paths exist in the docs but are not offered in the sales motion |
 
 ## Churned after pilot
 
 ### Kestrel Logistics — did not renew pilot (fabricated)
 Three weeks to configure, mostly spent on taxonomy debates. By the time the context was
-usable, the team had reverted to their old habits and the instance was maintained by one
+usable, the team had reverted to their old habits and the space was maintained by one
 person. **Stated reason:** "It became one more thing to keep current."
 
 **Read:** we sell "maintenance is built in," and the pilot experienced maintenance as a chore
@@ -1543,11 +1718,11 @@ security review goes badly.
 
 | Reason | Count | Fixable by product? |
 |---|---|---|
-| No SOC 2 | 2 | No — this is a compliance program, not a feature |
-| Retrieval opacity | 1 | Yes — documentation, arguably a page |
+| No SOC 2 report | 2 | No — this is a compliance program, not a feature |
+| Retrieval never defended | 1 | Yes — documentation, arguably a single page |
 | Free alternative | 1 | Partly — needs positioning plus a real delta |
 | Time to value / taxonomy friction | 2 | Yes |
-| No cheap evaluation environment | 1 | Yes, but the VM architecture makes it expensive |
+| No cheap evaluation environment | 1 | Yes — a template-provisioned space or a Compose stack would cover it |
 | Champion dependency | 1 | Yes |
 
 **The pattern worth noticing:** the two categories that recur across both lost deals and
@@ -1558,12 +1733,20 @@ gap is real but is not something the product loop can solve.</code></pre>
   </details>
 
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · load the three synthetic files</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut knowledge create "SYNTHETIC Customer Feedback" --file ./signals/feedback.md
-nut knowledge create "SYNTHETIC Support Patterns"  --file ./signals/support-patterns.md
-nut knowledge create "SYNTHETIC Churn Notes"       --file ./signals/churn-notes.md
+    <div class="blockhead"><span class="fname"><b>http</b> · load the three synthetic pages, tagged so you can find them again</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>for p in feedback support-patterns churn-notes; do
+  jq -Rs --arg t "SYNTHETIC $p" '{title:$t, content:., frontmatter:{}}' &lt; "./signals/$p.md" \
+  | curl -s -X PUT "$COCO/pages/coconut/kb/synthetic-$p" \
+      -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" -d @-
 
-nut knowledge list --search "SYNTHETIC"</code></pre>
+  curl -s -X PATCH "$COCO/pages/coconut/kb/synthetic-$p/metadata" \
+    -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
+    -d '{"set":{"pack":"B","synthetic":true,"delete-after-evaluation":true}}'
+done
+
+# every fabricated page, findable in one query — this is how you guarantee the cleanup in step 10
+curl -sG "$COCO/search/metadata" -H "Authorization: Bearer $KEY" \
+  --data-urlencode 'filters=[{"key":"synthetic","op":"eq","value":true}]'</code></pre>
   </div>
 </section>
 
@@ -1572,14 +1755,17 @@ nut knowledge list --search "SYNTHETIC"</code></pre>
   <div class="stephead"><span class="stepno">09</span><h2>Second run — Product Improvement</h2></div>
   <div class="prose">
     <p>
-      Same skill, same instance, real signal now present. This run should clear the gates and
-      file a proposal.
+      Same task, same space, real signal now present. This run should clear the gates and write
+      a proposal.
     </p>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · run and read the proposal</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut skill run product-improvement-loop
-nut task list --full</code></pre>
+    <div class="blockhead"><span class="fname"><b>run</b> · trigger it, then diff against run one</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>curl -sG "$COCO/search/metadata" -H "Authorization: Bearer $KEY" \
+  --data-urlencode 'filters=[{"key":"gate-status","op":"eq","value":"passed"}]'
+
+# per-key history: who set what, when, and what it was before
+curl -s "$COCO/pages/coconut/kb/proposal/metadata/history" -H "Authorization: Bearer $KEY"</code></pre>
   </div>
   <div class="prose">
     <h3>The proposal should contain all eight parts</h3>
@@ -1590,9 +1776,9 @@ nut task list --full</code></pre>
 
     <h3>Grade it on these</h3>
     <ul>
-      <li><b>Did it name the source file?</b> "Drawn from <code>feedback.md</code>, Kestrel Logistics, 2026-06-30" is grounded. "Based on customer feedback" is not.</li>
-      <li><b>Did it respect <code>constraints.md</code>?</b> A proposal scoped beyond 1–2 weeks for one engineer, or assuming self-serve signup, should have been killed at gate 4.</li>
-      <li><b>Did it check what Coconut already ships?</b> Gate 2 requires searching existing parts of the product. Proposing something <code>product.md</code> already describes is a hard fail.</li>
+      <li><b>Did it name the source page?</b> "Drawn from <code>kb/synthetic-feedback</code>, Kestrel Logistics, 2026-06-30" is grounded, and should also appear as <code>signal-source</code> in metadata. "Based on customer feedback" is not.</li>
+      <li><b>Did it respect <code>kb/constraints</code>?</b> A proposal scoped beyond 1–2 weeks for one engineer, or one that quietly revives a surface the product deliberately removed, should have been killed at gate 4.</li>
+      <li><b>Did it check what Coconut already ships?</b> Gate 2 requires searching the existing product. Proposing something <code>kb/product</code> already describes is a hard fail — and note that <code>kb/product</code> now lists webhooks, templates, views and export, so the space of "not yet built" is smaller than it was.</li>
       <li><b>Is the pre-mortem actually harsh?</b> Three specific failure modes, not three restatements of the risk of it being unpopular.</li>
       <li><b>Did it show the confidence scores?</b> Four scores, and a kill if any is ≤3.</li>
     </ul>
@@ -1614,24 +1800,81 @@ nut task list --full</code></pre>
 
 <!-- ============ STEP 10 ============ -->
 <section class="step" id="s10">
-  <div class="stephead"><span class="stepno">10</span><h2>Schedule the jobs, and what to grade overall</h2></div>
+  <div class="stephead"><span class="stepno">10</span><h2>Schedule, query, and what to grade overall</h2></div>
   <div class="prose">
-    <p>Set both loops on a weekly cadence, in Studio's scheduler or via the CLI.</p>
+    <p>
+      Three things turn this from a demo into an operating system: a cadence, a view, and a
+      webhook. All three are new since the previous version of this guide, and together they are
+      the strongest argument the product has.
+    </p>
+    <h3>1 — Cadence lives in frontmatter</h3>
+    <p>
+      Edit each task page's frontmatter, or use the Schedule card on the page. There is no
+      separate scheduler to keep in sync, and because the schedule is part of the page it is
+      versioned and diffable like everything else.
+    </p>
+  </div>
+  <div class="block">
+    <div class="blockhead"><span class="fname"><b>agents/competitor-intelligence-loop</b> · frontmatter</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code>---
+schedule: "0 7 * * MON"
+scheduleTz: "Europe/London"
+scheduleEnabled: true
+---</code></pre>
+  </div>
+  <div class="prose">
+    <div class="callout">
+      <p class="kicker">Read this before you enable it</p>
+      <p style="margin-bottom:0">
+        A <b>scheduled</b> run executes as the <b>space agent principal</b> — write access at
+        home, read-only across org-visible spaces, nothing in other private spaces. Your
+        <b>manual</b> runs in steps 6, 7 and 9 executed with <i>your</i> authority. So a task that
+        worked by hand can fail on a schedule, and that is correct behaviour rather than a bug.
+        Turn the cadence on, then check that the first unattended run wrote what the manual one
+        did. Most agent platforms have one identity and hope; this is the best design decision in
+        the product.
+      </p>
+    </div>
+
+    <h3>2 — Build the view that makes it a dashboard</h3>
+    <p>
+      This is the capability the previous version of this guide could not demonstrate at all.
+      Open <code>/views</code>, filter, scope, order — the whole view state lives in the URL, so a
+      tuned query is a link you paste into a channel.
+    </p>
   </div>
   <div class="block sh">
-    <div class="blockhead"><span class="fname"><b>shell</b> · weekly jobs</span><button class="copybtn" type="button">Copy</button></div>
-    <pre><code>nut coconut job create --name "Competitor Intelligence — weekly" \
-  --skill competitor-intelligence-loop --schedule weekly
+    <div class="blockhead"><span class="fname"><b>http</b> · three views worth saving</span><button class="copybtn" type="button">Copy</button></div>
+    <pre><code># stale coverage — what the loops have quietly stopped maintaining
+curl -sG "$COCO/search/metadata" -H "Authorization: Bearer $KEY" \
+  --data-urlencode 'filters=[{"key":"last-reviewed","op":"lt","value":"2026-08-04"}]' \
+  --data-urlencode 'orderBy=last-reviewed'
 
-nut coconut job create --name "Product Improvement — weekly" \
-  --skill product-improvement-loop --schedule weekly
+# runs that passed every gate while fetching nothing
+curl -sG "$COCO/search/metadata" -H "Authorization: Bearer $KEY" \
+  --data-urlencode 'filters=[{"key":"sources-fetched","op":"eq","value":0},{"key":"gate-status","op":"eq","value":"passed"}]'
 
-nut coconut job list</code></pre>
+# everything fabricated, for the cleanup below
+curl -sG "$COCO/search/metadata" -H "Authorization: Bearer $KEY" \
+  --data-urlencode 'filters=[{"key":"synthetic","op":"eq","value":true}]'</code></pre>
   </div>
   <div class="prose">
     <p class="mono" style="font-size:13px;color:var(--muted)">
-      Flag names vary by build — confirm with <code>nut coconut job create --help</code>, or
-      create both from Studio → Schedule, which is the documented path.
+      The second query is the one to dwell on. It finds runs that cleared every quality gate while
+      retrieving nothing — the failure mode documented in the
+      <a href="index.html#firsthand">First-hand tab</a>. The product ships every primitive needed
+      to catch it and does not run the check on itself. You can, in one query, in about a minute.
+    </p>
+
+    <h3>3 — A webhook, to prove the loop closes outward</h3>
+    <p>
+      Admin → Manage webhooks, or <code>POST /admin/webhooks</code>. Subscribe to
+      <code>page.metadata.updated</code> scoped to this space and point it at any request-bin
+      endpoint. Every delivery is HMAC-SHA256 signed as <code>sha256=&lt;hex&gt;</code>, the
+      signing secret is returned exactly once, non-2xx responses retry with backoff, and every
+      attempt lands in a delivery log. Endpoints must be https, and private or reserved addresses
+      are rejected again <i>at delivery time, after DNS resolution</i> — the most carefully
+      written thing on the whole documentation site.
     </p>
 
     <h3>The second week is the real test</h3>
@@ -1645,7 +1888,8 @@ nut coconut job list</code></pre>
       <li><b>Was "nothing changed" said plainly?</b> For a genuinely quiet competitor, the honest entry is one line. Padding here predicts padding everywhere.</li>
       <li><b>Did the landscape file get rewritten, not appended?</b> It is specified as a rewrite every run.</li>
       <li><b>Did run two avoid repeating run one's proposal?</b> The duplicate check is explicit. Re-proposing the same idea means the task list is not actually being read.</li>
-      <li><b>Did lineage hold?</b> Open a competitor file's version history. Can you diff two versions and see exactly what changed and when? This is the governance claim, tested.</li>
+      <li><b>Did lineage hold?</b> Open a competitor page's version history. Can you diff two revisions and see exactly what changed and when? Then open <code>/metadata/history</code> and check the same for a single key. The governance claim, tested twice.</li>
+      <li><b>Did the metadata stay clean?</b> Re-read <code>/search/metadata/keys</code>. Key sprawl across two runs means the convergence mechanism is not working — and key sprawl is how a metadata layer rots.</li>
     </ul>
 
     <h3>Questions this exercise is designed to answer</h3>
@@ -1658,6 +1902,8 @@ nut coconut job list</code></pre>
           <tr><td>"Every fact carries its source"</td><td>Competitor baselines contain unattributed claims.</td></tr>
           <tr><td>"Superseded, not overwritten"</td><td>A delta-run rewrites a baseline, or version history cannot show what changed.</td></tr>
           <tr><td>"Maintenance is built in"</td><td>You have to prompt the loops manually for anything useful to happen.</td></tr>
+          <tr><td>"Changes propagate with review"</td><td><b>Already falsified.</b> There is no review step to test — no proposal object, no approval state. A correction is a <code>PUT</code> with a current ETag and it lands. Confirm it in ten seconds, then ask when tiered propagation ships.</td></tr>
+          <tr><td>"Agents are permissioned principals"</td><td>A scheduled run writes somewhere its space membership does not cover, or a manual run is silently granted agent-level reach.</td></tr>
           <tr><td>"Model-agnostic"</td><td>Nothing here tests it. Add the MCP connector to two different tools and ask both the same question.</td></tr>
         </tbody>
       </table>
@@ -1666,9 +1912,12 @@ nut coconut job list</code></pre>
     <div class="callout dang">
       <p class="kicker">Clean up</p>
       <p style="margin-bottom:0">
-        When you are finished, delete the three <code>SYNTHETIC</code> knowledge documents.
-        Anything the loops derived from them — proposals, tasks, landscape entries — is
-        downstream of fabricated evidence and should not survive into notes you rely on.
+        When you are finished, delete every page carrying <code>synthetic: true</code> — the
+        query above lists them all, which is exactly why you tagged them in step 8. Anything the
+        loops derived from them is downstream of fabricated evidence and should not survive into
+        notes you rely on. Note the asymmetry while you are here: <b>revisions are append-only and
+        nothing is ever destroyed</b>, so deleting a page is not the same as erasing its history.
+        For a genuinely clean state, use a throwaway space.
       </p>
     </div>
   </div>
@@ -1677,10 +1926,12 @@ nut coconut job list</code></pre>
 <div class="prose" style="margin-top:44px">
   <h2>What this guide deliberately does not do</h2>
   <ul>
-    <li><b>Invent Coconut's roadmap, OKRs, metrics, or headcount.</b> None of that is public. Pack A holds only what can be verified; the Identity and State layers stay thin as a result, which is itself an honest reflection of what an outside evaluator can know.</li>
-    <li><b>Name real Coconut employees.</b> The company does not publicly name its leadership, so <code>team.md</code> describes seats.</li>
+    <li><b>Invent Coconut's roadmap, OKRs, metrics, or headcount.</b> None of that is public. Pack A holds only what can be verified, so the context stays thin in places — an honest reflection of what an outside evaluator can know.</li>
+    <li><b>Name real Coconut employees.</b> The company does not publicly name its leadership, so <code>context/team</code> describes seats.</li>
     <li><b>Test the connectors.</b> Everything here is loaded by hand. Attaching Slack, Drive, or HubSpot and watching whether context genuinely stays current is the next evaluation, and the harder one.</li>
     <li><b>Test permissions.</b> Single-seat setup. Multi-user scoping, the MCP permission model, and whether agents really are read-only outside their grants all need a second seat to test properly.</li>
+    <li><b>Test templates, import, or SCIM.</b> Space templates are the most strategically interesting thing in the new documentation — a solutions catalogue with a deep-linkable install path. Exercising the gallery, authoring a template, and importing a bundle into a second deployment is a separate evaluation, and a worthwhile one.</li>
+    <li><b>Resolve which product you are on.</b> This guide assumes <code>docs.coconut.md</code>. If your instance answers to <code>coconuts_*</code> and <code>knowledge_*</code> MCP tools rather than <code>context_*</code>, you are on the older architecture and none of the paths above will match. That question — and what happens to instances still on it — is the first thing to put to the founder.</li>
   </ul>
   <p>
     The companion <a href="index.html">analysis</a> and
@@ -1697,12 +1948,14 @@ nut coconut job list</code></pre>
     <p style="margin:0 0 8px">
       <a href="index.html">← Analysis</a> ·
       <a href="competitors.html">Competitor database</a> ·
-      <a href="https://docs.coconut.dev/guides/product/overview">Coconut's own product loop guides ↗</a>
+      <a href="https://docs.coconut.md/">Coconut's own documentation ↗</a>
     </p>
     <p style="margin:0;max-width:78ch">
-      Compiled 8 August 2026. Pack A is drawn from public sources; <b>Pack B is fabricated
-      test data and nothing in it is real</b>. Not affiliated with, commissioned by, or
-      endorsed by Coconut AI Inc. CLI flags vary by build — verify with <code>--help</code>.
+      Compiled 8 August 2026, rebuilt 18 August against the documentation at docs.coconut.md.
+      Pack A is drawn from public sources; <b>Pack B is fabricated test data and nothing in it is
+      real</b>. Not affiliated with, commissioned by, or endorsed by Coconut AI Inc. Routes and
+      field names come from published documentation, not from a running instance — verify against
+      your own before scripting anything.
     </p>
   </div>
 </footer>
